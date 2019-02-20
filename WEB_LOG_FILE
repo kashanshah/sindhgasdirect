@@ -1,0 +1,16 @@
+
+Thu, 03 Nov 2016 12:47:34 +0500: 
+EVENT DELETED by admin: 
+Event ID='1', Title='test', StartDate='2016-11-02 00:00:00', EndDate='2016-11-04 00:00:00', Details='dsdsf'
+
+Thu, 03 Nov 2016 12:46:48 +0500: 
+EVENT ADDED by admin: 
+Event ID='1', Title='test', StartDate='2016-11-02', EndDate='2016-11-04', Details='dsdsf'
+
+Thu, 03 Nov 2016 09:48:43 +0500: 
+EVENT EDITED by admin: 
+Event ID='2', Title='Iqbal Day Holiday', StartDate='2016-11-09', EndDate='2016-11-09', Details='Public holiday on 9th November on account of Iqbal day.'
+
+Thu, 03 Nov 2016 09:48:08 +0500: 
+EVENT ADDED by admin: 
+Event ID='2', Title='Iqbal Day Holiday', StartDate='2016-10-09', EndDate='2016-10-09', Details='Public holiday on 9th November on account of Iqbal day.'
