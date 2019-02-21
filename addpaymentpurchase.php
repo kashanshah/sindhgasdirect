@@ -21,6 +21,7 @@ get_right(array(1, 2));
 	$PImage="";
 	$DateAdded = "";
 	$DateModified = "";
+    $NewPayment = 0;
 
 // FOR SUPPLIER
 	$NewOldSupplier = 0;
@@ -41,7 +42,7 @@ get_right(array(1, 2));
 	$Note = '';
 
 	
-	$query="SELECT p.ID, p.ShopID, p.GasRate, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == 1 ? '' : ' AND ShopID = '.(int)$_SESSION["ID"]) . ' AND p.ID = '.(int)$ID;
+	$query="SELECT p.ID, p.ShopID, p.GasRate, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND ShopID = '.(int)$_SESSION["ID"]) . ' AND p.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -275,17 +276,17 @@ while($data = mysql_fetch_array($resource)){
 						</div>
 					</div>
                     <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Balance</label>
-						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Balance Amount" readonly="" name="Balance" value="<?php echo $row["Balance"]; ?>" id="Balance">
-						</div>
-					</div>
-                    <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
 							<input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
 						</div>
 					</div>
+                    <div class="form-group">
+                        <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
+                        <div class="col-md-12">
+                            <input type="number" class="form-control" placeholder="Enter the Balance Amount" readonly="" name="Balance" value="<?php echo $row["Balance"]; ?>" id="Balance">
+                        </div>
+                    </div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">

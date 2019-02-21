@@ -5,7 +5,7 @@ get_right(array(1, 3));
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 	{
-		if($_SESSION["RoleID"] == 1){
+		if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
 			foreach($_REQUEST['ids'] as $CID)	
 			{
 				//echo $CID;exit();
@@ -21,7 +21,7 @@ get_right(array(1, 3));
 	}
 	if(isset($_REQUEST['DID']))
 	{
-		if($_SESSION["RoleID"] == 1){
+		if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
 			mysql_query("DELETE FROM sales WHERE ID = ".$_REQUEST['DID']."");
 			mysql_query("DELETE FROM sale_details WHERE SaleID = ".$_REQUEST['DID']."");
 			mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = ".$_REQUEST['DID']."");
@@ -33,7 +33,7 @@ get_right(array(1, 3));
 			redirect($self);
 		}
 	}
-$sql="SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " . ($_SESSION["RoleID"] == 1 ? '' : ' AND p.ShopID = '.(int)$_SESSION["ID"]);
+$sql="SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND p.ShopID = '.(int)$_SESSION["ID"]);
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -135,14 +135,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
 					   <?php
-						if($_SESSION["RoleID"] == 3){
+						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
 						?>
                        <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addsale.php'" data-original-title="" title="">Add Sale</button>
 						<?php
 						}
 						?>
 					   <?php
-						if($_SESSION["RoleID"] == 1){
+						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
 						?>
 						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
 						<?php
@@ -166,7 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Date Modified</th>
                         <th>Invoices</th>
 					   <?php
-						if($_SESSION["RoleID"] == 3){
+						if($_SESSION["RoleID"] == ROLE_ID_SHOP){
 						?>
                         <th></th>
 					   <?php
@@ -209,7 +209,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td class="text-center">
 							<a class="btn btn-primary btn-sm" href="viewsale.php?ID=<?php echo $row["ID"]; ?>">View Details</a>
 					   <?php
-						if($_SESSION["RoleID"] == 3){
+						if($_SESSION["RoleID"] == ROLE_ID_SHOP){
 						?>
 						  <?php echo ($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-sm" href="addpaymentsale.php?ID='.$row["ID"].'">Add Payment</a>' : ''); ?>
 					   <?php

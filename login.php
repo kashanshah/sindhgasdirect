@@ -22,9 +22,9 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
 		}
 			
 		else if($msg=='')
-		{	
+		{
 			$query="SELECT ID, Username, RoleID, Password ,Email FROM users WHERE Status=1 AND Username='".dbinput($Username)."'";
-			$result = mysql_query ($query) or die("Query error: ". mysql_error()); 
+			$result = mysql_query($query) or die("Query error: ". mysql_error());
 			$num = mysql_num_rows($result);
 			// echo $num;
 			// exit();
@@ -38,8 +38,8 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
 			}
 			else
 			{
-				
-				$row = mysql_fetch_array($result,MYSQL_ASSOC);
+
+				$row = mysql_fetch_array($result);
 				// echo dboutput($row["Password"]);
 				// exit();
 				if(dboutput($row["Password"]) == $Password)

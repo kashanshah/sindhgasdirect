@@ -67,7 +67,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				ShopID='".(int)($_SESSION["ID"])."',
 				GasRate='".(float)GAS_RATE."',
 				Total='".(float)($TotalAmount)."',
-				Balance='".(float)($Balance)."',
+				Balance='".(int)($Balance)."',
 				Paid='".(float)$Paid."',
 				Unpaid='".(float)($TotalAmount - $Balance - $Paid)."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',
@@ -75,7 +75,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				";
 		mysql_query($query3) or die(mysql_error());
 		$InvoiceID = mysql_insert_id();
-		mysql_query("UPDATE users SET Balance=Balance-'".(float)$Balance."' WHERE ID=".$_SESSION["ID"]) or die(mysql_error());
+		mysql_query("UPDATE users SET Balance=Balance-".(int)$Balance." WHERE ID=".$_SESSION["ID"]) or die(mysql_error());
 		mysql_query("UPDATE purchases SET RefNum='".generate_refno($InvoiceID)."' WHERE ID=".$InvoiceID);
 		$i = 0;
 		foreach($CylinderID as $CID){
@@ -321,8 +321,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Balance</label>
 							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo $Balance; ?>" id="Balance" max="<?php echo $Balance; ?>">
-								<p class="help">Account balance: <?php echo $Balance; ?></p>
+                                <input type="number" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (int)$Balance; ?>" id="Balance" max="<?php echo (int)$Balance; ?>">
+								<p class="help">Account balance: <?php echo (int)$Balance; ?></p>
 							</div>
 						</div>
 						<div class="form-group">
@@ -488,7 +488,7 @@ $(document).ready(function() {
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CylinderPrice CylinderPrice'+i+'">' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '</span></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" name="RetailPrice[]" class="RetailPrice RetailPrice'+i+'" required="" value="' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '" /></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');" class="fa fa-times"></i></a></div></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');" ><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
 			i = i + 1;
 			gettotal();

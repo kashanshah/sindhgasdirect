@@ -4,24 +4,38 @@
 	date_default_timezone_set("Asia/Karachi");
 	$self  = $_SERVER['PHP_SELF'];
 
-	$Theme= 0;
- include("DBConnection.php"); 
-	
-	
-	
-	
+$Theme= 0;
+ include("DBConnection.php");
+
 	global $dbh;
 	$path= explode("/", $_SERVER["PHP_SELF"]);
 
-	$dbh=mysql_connect (DB_HOST, DB_USERNAME, DB_PASSWORD) or die ('Could not connect to the database because: ' . mysql_error());
-	mysql_select_db(DB_NAME);
-	
-	
-	
-	$settingResultSet=mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Domain, Address, GasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
+	if(!function_exists('mysql_connect')){
+        $GLOBALS['dbglobal'] = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);
+        if (mysqli_connect_errno()) {
+            printf("Could not connect to the database because: %s\n", mysqli_connect_error());
+            exit();
+        }else{
+            mysqli_select_db($GLOBALS['dbglobal'], DB_NAME);
+        }
+    }
+	else{
+        $dbh=mysql_connect (DB_HOST, DB_USERNAME, DB_PASSWORD) or die ('Could not connect to the database because: ' . mysql_error());
+        mysql_select_db(DB_NAME);
+    }
+
+
+
+
+$settingResultSet=mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Domain, Address, GasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
 	$settingRecordSet=mysql_fetch_assoc($settingResultSet);
 	$ENQUIRIES_CATEGORIES = array("General enquiries", "Advertisement enquiries", "Website feedback", "Other comments");
 
+	define("ROLE_ID_ADMIN", 1);
+	define("ROLE_ID_DRIVER", 2);
+	define("ROLE_ID_SHOP", 3);
+	define("ROLE_ID_CUSTOEMR", 4);
+	define("ROLE_ID_SALES", 5);
 	define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
 	define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 	define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
@@ -216,16 +230,6 @@
 		return random_color_part() . random_color_part() . random_color_part();
 	}
 	
-	function TotalStudents()
-	{
-		return mysql_num_rows(mysql_query("SELECT ID FROM users WHERE RoleID=2"));
-	}
-	
-	function TotalAdmins()
-	{
-		return mysql_num_rows(mysql_query("SELECT ID FROM users WHERE RoleID=1"));
-	}
-	
 	function ClassStrength($ClassID)
 	{
 		return mysql_num_rows(mysql_query("SELECT ID FROM students WHERE ClassID=".$ClassID));
@@ -348,9 +352,13 @@
 		
 		if (function_exists('mysql_real_escape_string'))
 			return mysql_real_escape_string($string, $dbh);
+		elseif (function_exists('mysqli_real_escape_string'))
+			return mysqli_real_escape_string($GLOBALS['dbglobal'], $string);
 		elseif (function_exists('mysql_escape_string'))
 			return mysql_escape_string($string);
-		
+		elseif (function_exists('mysqli_escape_string'))
+			return mysqli_escape_string($GLOBALS['dbglobal'], $string);
+
 		return dbinput($string);
 	}
 	
@@ -895,6 +903,7 @@
 		$res = mysql_query("SELECT cs.*, u.RoleID FROM cylinderstatus cs LEFT JOIN users u ON cs.HandedTo=u.ID WHERE cs.CylinderID = ".(int)$ID." ORDER BY ID DESC LIMIT 1") or die(mysql_error());
 		$ret = 0;
 		if(mysql_num_rows($res) == 0){
+		    $res = mysql_fetch_array($res);
 			$ret = getValue('cylinders', 'TierWeight', 'ID', $res["CylinderID"]);
 		}
 		else{
@@ -937,16 +946,16 @@
 	}
 	function getCylinderStatus($RoleID = 0)
 	{
-		if($RoleID == 1 || $RoleID == 0){
+		if($RoleID == ROLE_ID_ADMIN || $RoleID == 0){
 			$ret = "Admin Custody";
 		}
-		else if($RoleID == 2){
-			$ret = "Dispatched to salesman";
+		else if($RoleID == ROLE_ID_DRIVER){
+			$ret = "Dispatched to driver";
 		}
-		else if($RoleID == 3){
+		else if($RoleID == ROLE_ID_SHOP){
 			$ret = "Handed over to shop";
 		}
-		else if($RoleID == 4){
+		else if($RoleID == ROLE_ID_CUSTOEMR){
 			$ret = "Lended to customer";
 		}
 		else{
@@ -1197,5 +1206,44 @@
 				return "nine";
 		}
 	}
-	
-?>
+
+
+function mysql_error(){
+	return mysqli_error($GLOBALS['dbglobal']);
+}
+
+function mysql_query($query){
+	return mysqli_query($GLOBALS['dbglobal'], $query);
+}
+
+function mysql_fetch_assoc($query){
+	return mysqli_fetch_assoc($query);
+}
+
+function mysql_fetch_array($query){
+	return mysqli_fetch_array($query, MYSQLI_ASSOC);
+}
+
+function mysql_num_rows($query){
+	return mysqli_num_rows($query);
+}
+
+function mysql_insert_id(){
+	return mysqli_insert_id($GLOBALS['dbglobal']);
+}
+
+function mysql_data_seek($a, $b=0){
+	return mysqli_data_seek($a, $b);
+}
+
+function mysql_result($res,$row=0,$col=0){
+	$numrows = mysqli_num_rows($res);
+	if ($numrows && $row <= ($numrows-1) && $row >=0){
+		mysqli_data_seek($res,$row);
+		$resrow = (is_numeric($col)) ? mysqli_fetch_row($res) : mysqli_fetch_assoc($res);
+		if (isset($resrow[$col])){
+			return $resrow[$col];
+		}
+	}
+	return false;
+}

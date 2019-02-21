@@ -67,7 +67,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				'.($NewOldCustomer == "1" ? 'Name ="'.($CustomerName == '' ? 'Anonymous' : $CustomerName).'", DateAdded="NOW", ' : '').'
 				Username = "'.time().'",
 				Password = "'.generate_refno(rand()).generate_refno(time()).'",
-				RoleID = "4",
+				RoleID = "'.ROLE_ID_CUSTOEMR.'",
 				Number = "'.dbinput($Number).'",
 				Email = "'.dbinput($Email).'",
 				Address = "'.dbinput($Address).'",
@@ -85,7 +85,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 			Note = '".dbinput($Note)."'") or die(mysql_error());
 		$InvoiceID = mysql_insert_id();
 
-		mysql_query("UPDATE users SET Balance=Balance-'".(float)$Balance."' WHERE ID=".$CustomerID);
+		mysql_query("UPDATE users SET Balance=Balance-'".(int)$Balance."' WHERE ID=".$CustomerID);
 
 		if($NewOldCustomer == 1)
 		{
@@ -424,7 +424,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<div class="col-md-8">
 								<select class="form-control select2" data-placeholder="Select The Customer" name="CustomerID" style="width: 100%;">
 									<?php
-										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=4") or die(mysql_error());
+										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=".ROLE_ID_CUSTOEMR) or die(mysql_error());
 										$n = mysql_num_rows($r);
 										if($n == 0)
 										{

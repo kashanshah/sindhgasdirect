@@ -1,6 +1,6 @@
 <style>
     <?php
-    if($_SESSION["RoleID"] == 1){ ?>
+    if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
     .skin-blue .main-header li.user-header,
     .skin-blue .main-header .navbar,
     .skin-blue .main-header .navbar .nav > li > a:hover, .skin-blue .main-header .navbar .nav > li > a:active, .skin-blue .main-header .navbar .nav > li > a:focus, .skin-blue .main-header .navbar .nav .open > a, .skin-blue .main-header .navbar .nav .open > a:hover, .skin-blue .main-header .navbar .nav .open > a:focus, .skin-blue .main-header .navbar .nav > .active > a, .skin-blue .main-header .navbar .sidebar-toggle:hover, .skin-blue .main-header .logo, .skin-blue .main-header .logo:hover, .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a
@@ -17,7 +17,7 @@
     }
     <?php
     }
-    else if($_SESSION["RoleID"] == 3){ ?>
+    else if($_SESSION["RoleID"] == ROLE_ID_SHOP){ ?>
     .skin-blue .main-header li.user-header,
     .skin-blue .main-header .navbar,
     .skin-blue .main-header .navbar .nav > li > a:hover, .skin-blue .main-header .navbar .nav > li > a:active, .skin-blue .main-header .navbar .nav > li > a:focus, .skin-blue .main-header .navbar .nav .open > a, .skin-blue .main-header .navbar .nav .open > a:hover, .skin-blue .main-header .navbar .nav .open > a:focus, .skin-blue .main-header .navbar .nav > .active > a, .skin-blue .main-header .navbar .sidebar-toggle:hover, .skin-blue .main-header .logo, .skin-blue .main-header .logo:hover, .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a
@@ -34,7 +34,7 @@
     }
     <?php
     }
-    else if($_SESSION["RoleID"] == 5){ ?>
+    else if($_SESSION["RoleID"] == ROLE_ID_SALES){ ?>
     .skin-blue .main-header li.user-header,
     .skin-blue .main-header .navbar,
     .skin-blue .main-header .navbar .nav > li > a:hover, .skin-blue .main-header .navbar .nav > li > a:active, .skin-blue .main-header .navbar .nav > li > a:focus, .skin-blue .main-header .navbar .nav .open > a, .skin-blue .main-header .navbar .nav .open > a:hover, .skin-blue .main-header .navbar .nav .open > a:focus, .skin-blue .main-header .navbar .nav > .active > a, .skin-blue .main-header .navbar .sidebar-toggle:hover, .skin-blue .main-header .logo, .skin-blue .main-header .logo:hover, .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a

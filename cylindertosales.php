@@ -194,7 +194,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<form id="cart_update" action="cart_update.php" class="form-horizontal" method="post" enctype="multipart/form-data"> -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
               <div class="col-md-6">
-              <div class="box box-default">
+              <div class="box ">
 				<div class="box-header with-border">
 				  <h3 class="box-title">Select Cylinder</h3>
 				  <div class="box-tools pull-right">
@@ -252,7 +252,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<form id="mainForm" action="<?php echo $_SERVER["PHP_SELF"]; ?>" class="form-horizontal cart-form" method="post" enctype="multipart/form-data">
               <div class="col-md-6">
               <!-- SPACE FOR CART -->
-              <div class="box box-default">
+              <div class="box ">
 				<div class="box-header with-border">
 				  <h3 class="box-title">Cylinder Information</h3>
 				</div>
@@ -289,7 +289,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<div class="col-md-8">
 								<select class="form-control" required name="HandedTo" id="HandedTo" style="width: 100%;">
 									<?php
-										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = 2") or die(mysql_error());
+										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = ".ROLE_ID_DRIVER) or die(mysql_error());
 										$n = mysql_num_rows($r);
 										if($n == 0)
 										{
@@ -320,7 +320,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						  </div>
 				<?php if(CAPTCHA_VERIFICATION == 1) { ?>
 				  <div class="col-md-6">
-				  <div class="box box-default">
+				  <div class="box ">
 					<div class="box-header with-border">
 					  <h3 class="box-title">Human Verification</h3>
 					  <div class="box-tools pull-right">

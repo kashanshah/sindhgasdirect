@@ -251,9 +251,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<label class="col-md-3 control-label" for="example-text-input">Role</label>
 						<div class="col-md-6">
 							<select class="form-control" name="RoleID">
-								<option value="1" <?php echo ($RoleID == "1" ? 'selected=""' : ''); ?> >Admin</option>
-								<option value="2" <?php echo ($RoleID == "2" ? 'selected=""' : ''); ?> >Manager</option>
-								<option value="3" <?php echo ($RoleID == "3" ? 'selected=""' : ''); ?> >Salesman</option>
+								<option value="1" <?php echo ($RoleID == ROLE_ID_ADMIN ? 'selected=""' : ''); ?> >Admin</option>
+								<option value="2" <?php echo ($RoleID == ROLE_ID_DRIVER ? 'selected=""' : ''); ?> >Driver</option>
+								<option value="3" <?php echo ($RoleID == ROLE_ID_SHOP ? 'selected=""' : ''); ?> >Shop</option>
 							</select>
 						</div>
 					</div>

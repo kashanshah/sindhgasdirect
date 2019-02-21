@@ -60,13 +60,10 @@ get_right(array(1, 2));
 					</div>';
 			if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
 			{
-				if(is_file(DIR_USER_IMAGES . $StoreImage))
-					unlink(DIR_USER_IMAGES . $StoreImage);
-			
 				ini_set('memory_limit', '-1');
 				
 				$tempName2 = $_FILES["File"]['tmp_name'];
-				$realName2 = "S".$UserID.".".$ext2;
+				$realName2 = "S".$ID.".".$ext2;
 				$StoreImage = $realName2; 
 				$target2 = DIR_USER_IMAGES . $realName2;
 

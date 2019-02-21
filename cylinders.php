@@ -146,7 +146,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		<tbody>
 <?php while($row=mysql_fetch_array($resource))
 {
-	if($_SESSION["RoleID"] == 1 || (getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == 4 && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]))){
+	if($_SESSION["RoleID"] == ROLE_ID_ADMIN || (getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == 4 && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]))){
 	?>
                       <tr>
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>

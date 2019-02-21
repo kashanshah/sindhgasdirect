@@ -40,7 +40,7 @@ get_right(array(1, 3));
 	$Note = '';
 
 	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == 1 ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
+	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -171,7 +171,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="box ">
                 <div class="box-header">
                       <div class="btn-group-right">
-                       <button style="float:right;margin-right:15px;" type="button" onClick="location.href='addsale.php'" class="btn btn-group-vertical btn-info">Reset</button>
+                          <?php
+                          if($_SESSION["RoleID"] == ROLE_ID_SHOP){
+                              ?>
+                              <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="/addpaymentsale.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
+                              <?php
+                          }
+                          ?>
                        <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-danger" onClick="location.href='sales.php'" >Back</button>
                       </div>
 				</div>
