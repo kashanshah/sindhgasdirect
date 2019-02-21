@@ -135,7 +135,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
 					   <?php
-						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
+						if($_SESSION["RoleID"] == ROLE_ID_SHOP){
 						?>
                        <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addsale.php'" data-original-title="" title="">Add Sale</button>
 						<?php

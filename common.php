@@ -822,6 +822,7 @@ $settingResultSet=mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Doma
 	}
 	function getCurrentHandedBy($ID)
 	{
+	    // RETURNS LAST SHOP ID
 		$res = mysql_query("SELECT cs.*, u.ID AS UID FROM cylinderstatus cs LEFT JOIN users u ON cs.PerformedBy=u.ID WHERE cs.CylinderID = ".(int)$ID." ORDER BY ID DESC LIMIT 1") or die(mysql_error());
 		$ret = 0;
 		if(mysql_num_rows($res) == 0){

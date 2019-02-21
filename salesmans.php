@@ -1,22 +1,45 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(1, 2, 3));
-
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 $msg='';
-$sql="SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
+if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
+{
+    foreach($_REQUEST['ids'] as $CID)
+    {
+        //echo $CID;exit();
+        $query = "DELETE FROM users WHERE ID = ".$CID."";
+        mysql_query($query);
+        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <p><i class="icon fa fa-ban"></i> Salesman(s) Deleted!</p>
+                  </div>';
+    }
+}
+if(isset($_REQUEST['DID']))
+{
+    $query = "DELETE FROM users WHERE ID = ".$_REQUEST['DID']."";
+    mysql_query($query);
+    $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <p><i class="icon fa fa-ban"></i> Salesman Deleted!</p>
+                  </div>';
+    redirect($self);
+}
+
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " u.RoleID = ".ROLE_ID_SALES." AND u.ShopID = ".$_SESSION["ID"]." AND ") ." u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
 <!DOCTYPE html>
 <!--
-This is a starter template page. Use this page to start your new product from
+This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Inventory</title>
+    <title><?php echo SITE_TITLE; ?>- Salesmans Management</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -77,12 +100,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Inventory
-                <small>View Inventory</small>
+                Salesmans Management
+                <small>View All Salesmans</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Cylinders</li>
+                <li class="active">Salesmans</li>
             </ol>
         </section>
 
@@ -96,8 +119,7 @@ desired effect
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                                <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addcylinder.php'" data-original-title="" title="">Add Cylinder</button>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()" class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print Bar Codes</button>
+                                <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addsalesman.php" data-original-title="" title="">Add New</a>
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                             </div>
                         </div><!-- /.box-header -->
@@ -107,53 +129,35 @@ desired effect
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-
-                                        <th>BarCode</th>
-                                        <th>Short Description</th>
-                                        <th>Tier Weight (KG)</th>
-                                        <th>Current Weight (KG)</th>
-                                        <th>Current Gas Weight (KG)</th>
-                                        <th>Status</th>
-                                        <th>Date Manufacturing</th>
-                                        <th>Date Added</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Balance</th>
+                                        <th>Address</th>
+                                        <th>Contact Number</th>
+                                        <th>Remarks</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php while($row=mysql_fetch_array($resource))
                                     {
-                                        if((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOEMR && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]))){
-                                            ?>
-                                            <tr>
-                                                <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
-
-                                                <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
-                                                <td><?php echo $row["ShortDescription"]; ?></td>
-                                                <td><?php echo $row["TierWeight"]; ?></td>
-                                                <td><?php echo getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"]); ?></td>
-                                                <td><?php echo (getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"])) - $row["TierWeight"]; ?></td>
-                                                <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])).'<br/>'.getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
-                                                <td><?php echo $row["ManufacturingDate"]; ?></td>
-                                                <td><?php echo $row["DateAdded"]; ?></td>
-
-                                                <td>
-                                                    <div class="btn-group">
-
-                                                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                            <span class="caret"></span>
-                                                            <span class="sr-only">Toggle Dropdown</span>
-                                                        </button>
-                                                        <ul class="dropdown-menu" role="menu">
-                                                            <li><a href="editcylinder.php?ID=<?php echo $row["ID"]; ?>">Edit</a></li>
-                                                            <li class="divider"></li>
-                                                            <li class="divider"></li>
-                                                            <li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php }
-                                    }
+                                        ?>
+                                        <tr>
+                                            <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                            <td><?php echo $row["Username"]; ?></td>
+                                            <td><?php echo $row["Name"]; ?></td>
+                                            <td><?php echo $row["Role"]; ?></td>
+                                            <td>Rs. <?php echo $row["Balance"]; ?></td>
+                                            <td><?php echo $row["Address"]; ?></td>
+                                            <td><?php echo $row["Number"]; ?></td>
+                                            <td><?php echo $row["Remarks"]; ?></td>
+                                            <td>
+                                                <a class="btn btn-primary btn-xs" title="Edit" href="editsalesman.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    <?php }
                                     ?>
                                     </tbody>
                                 </table>
@@ -226,23 +230,11 @@ desired effect
         {
             if(confirm("Are you sure you want to delete"))
             {
-                $("#frmPages").attr("action", "<?php echo $self; ?>");
                 $("#frmPages").submit();
             }
         }
         else{
             alert("None of the list is selected");
-        }
-    }
-    function printBarCodes()
-    {
-        if($(".chkIds").is(":checked"))
-        {
-            $("#frmPages").attr("action", "printbarcodes.php");
-            $("#frmPages").submit();
-        }
-        else{
-            alert("Please select a cylinder!");
         }
     }
     function doSingleDelete(did)

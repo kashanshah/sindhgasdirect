@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 
 $msg='';
 $Username = time();			$Password = "";			$Email = "";			$Image="";
@@ -45,9 +45,10 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 
         mysql_query("INSERT into users SET
 						Status='".(int)$Status."', DateAdded=NOW(),
-						RoleID='".(int)ROLE_ID_CUSTOEMR."',
-						Username='".dbinput($Username)."',
-						Password = '".generate_refno(rand()).generate_refno(time())."',
+						RoleID='".(int)ROLE_ID_SALES."',
+						ShopID='".($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $ShopID)."',
+						Username = '".dbinput($Username)."',
+						Password = '".dbinput($Password)."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
@@ -58,7 +59,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
         $UserID = mysql_insert_id();
         $msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Customer has been added.
+						Salesman has been added.
 					</div>';
         if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
         {
@@ -80,14 +81,14 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
                 $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$UserID;
                 mysql_query($query2) or die(mysql_error());
                 $_SESSION["msg"] = $msg;
-                redirect("addcustomer.php");
+                redirect("addsalesman.php");
             }
             else
             {
                 $msg='<div class="alert alert-warning alert-dismissable">
 						<i class="fa fa-ban"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<b>Customer has been added but Image can not be uploaded.</b>
+						<b>Salesman has been added but Image can not be uploaded.</b>
 						</div>';
             }
         }
@@ -96,10 +97,10 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<b>Customer has been added.</b>
+					<b>Salesman has been added.</b>
 					</div>';
             $_SESSION["msg"] = $msg;
-            redirect("addcustomer.php");
+            redirect("addsalesman.php");
         }
     }
 }
@@ -114,7 +115,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Customer</title>
+    <title><?php echo SITE_TITLE; ?>- Add Salesman</title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -177,12 +178,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Customer
+                Add Salesman
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="customers.php"><i class="fa fa-dashboard"></i> Customers</a></li>
-                <li class="active">Add Customer</li>
+                <li><a href="salesmans.php"><i class="fa fa-dashboard"></i> Salesmans</a></li>
+                <li class="active">Add Salesman</li>
             </ol>
         </section>
 
@@ -195,7 +196,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="customers.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="salesmans.php" >Back</a>
                                     <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -222,6 +223,12 @@ desired effect
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Username;?>" name="Username">
                                         <p class="help-block">Choose A Unique Username</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="Password">Password</label>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" id="Password" value="<?php echo $Password;?>" name="Password" required min="3" max="20">
                                     </div>
                                 </div>
                                 <div class="form-group">

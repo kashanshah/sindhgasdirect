@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_SALES));
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
