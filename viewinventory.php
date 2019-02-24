@@ -2,9 +2,9 @@
 <?php include("checkadminlogin.php");
 get_right(array(1, 2, 3));
 
-$msg='';
-$sql="SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
-$resource=mysql_query($sql) or die(mysql_error());
+$msg = '';
+$sql = "SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
+$resource = mysql_query($sql) or die(mysql_error());
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?php echo SITE_TITLE; ?>- Inventory</title>
-    <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
+    <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE . SITE_LOGO ?>' type='image/x-icon'>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -91,18 +91,33 @@ desired effect
             <div class="row">
                 <div class="col-xs-12">
                     <!-- /.box -->
-                    <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
+                    <?php if (isset($_SESSION["msg"]) && $_SESSION["msg"] != "") {
+                        echo $_SESSION["msg"];
+                        $_SESSION["msg"] = "";
+                    } ?>
                     <div class="box">
                         <div class="box-header">
                             <div class="btn-group-right">
-                                <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                                <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addcylinder.php'" data-original-title="" title="">Add Cylinder</button>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()" class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print Bar Codes</button>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
+                                <button style="float:right;" type="button" class="btn btn-group-vertical btn-info"
+                                        onClick="location.href='dashboard.php'">Back
+                                </button>
+                                <button style="float:right;;margin-right:15px;" type="button"
+                                        class="btn btn-group-vertical btn-success"
+                                        onClick="location.href='addcylinder.php'" data-original-title="" title="">Add
+                                    Cylinder
+                                </button>
+                                <button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()"
+                                        class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print
+                                    Bar Codes
+                                </button>
+                                <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()"
+                                        class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete
+                                </button>
                             </div>
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
-                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
+                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
+                                  method="post">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
@@ -120,34 +135,43 @@ desired effect
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php while($row=mysql_fetch_array($resource))
-                                    {
-                                        if((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOEMR && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]))){
+                                    <?php while ($row = mysql_fetch_array($resource)) {
+                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOEMR && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]) || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_ADMIN && $_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
                                             ?>
                                             <tr>
-                                                <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                                <td style="width:5%"><input type="checkbox"
+                                                                            value="<?php echo $row["ID"]; ?>"
+                                                                            name="ids[]" class="no-margin chkIds"></td>
 
-                                                <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
+                                                <td>
+                                                    <center><img
+                                                                src="<?php echo 'barcode.php?text=' . $row["BarCode"]; ?>"
+                                                                height="50"
+                                                                width="150"><br/><?php echo $row["BarCode"]; ?></center>
+                                                </td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
                                                 <td><?php echo $row["TierWeight"]; ?></td>
                                                 <td><?php echo getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"]); ?></td>
                                                 <td><?php echo (getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"])) - $row["TierWeight"]; ?></td>
-                                                <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])).'<br/>'.getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
+                                                <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])) . '<br/>' . getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                                                 <td><?php echo $row["ManufacturingDate"]; ?></td>
                                                 <td><?php echo $row["DateAdded"]; ?></td>
 
                                                 <td>
                                                     <div class="btn-group">
 
-                                                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                        <button type="button" class="btn btn-warning dropdown-toggle"
+                                                                data-toggle="dropdown" aria-expanded="false">
                                                             <span class="caret"></span>
                                                             <span class="sr-only">Toggle Dropdown</span>
                                                         </button>
                                                         <ul class="dropdown-menu" role="menu">
-                                                            <li><a href="editcylinder.php?ID=<?php echo $row["ID"]; ?>">Edit</a></li>
+                                                            <li><a href="editcylinder.php?ID=<?php echo $row["ID"]; ?>">Edit</a>
+                                                            </li>
                                                             <li class="divider"></li>
                                                             <li class="divider"></li>
-                                                            <li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a></li>
+                                                            <li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -210,9 +234,9 @@ desired effect
 </script>
 <script language="javascript">
 
-    $(document).ready(function(){
+    $(document).ready(function () {
 
-        $(".checkUncheckAll").click(function() {
+        $(".checkUncheckAll").click(function () {
 
             $(".chkIds").prop("checked", $(this).prop("checked"));
 
@@ -220,38 +244,31 @@ desired effect
 
     });
 
-    function doDelete()
-    {
-        if($(".chkIds").is(":checked"))
-        {
-            if(confirm("Are you sure you want to delete"))
-            {
+    function doDelete() {
+        if ($(".chkIds").is(":checked")) {
+            if (confirm("Are you sure you want to delete")) {
                 $("#frmPages").attr("action", "<?php echo $self; ?>");
                 $("#frmPages").submit();
             }
-        }
-        else{
+        } else {
             alert("None of the list is selected");
         }
     }
-    function printBarCodes()
-    {
-        if($(".chkIds").is(":checked"))
-        {
+
+    function printBarCodes() {
+        if ($(".chkIds").is(":checked")) {
             $("#frmPages").attr("action", "printbarcodes.php");
             $("#frmPages").submit();
-        }
-        else{
+        } else {
             alert("Please select a cylinder!");
         }
     }
-    function doSingleDelete(did)
-    {
 
-        if(confirm("Are you sure you want to delete"))
-        {
+    function doSingleDelete(did) {
 
-            location.href='<?php echo $self;?>?DID='+did;
+        if (confirm("Are you sure you want to delete")) {
+
+            location.href = '<?php echo $self;?>?DID=' + did;
         }
 
     }

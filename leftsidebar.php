@@ -80,6 +80,22 @@
 
                 <?php
             }
+            else if ($_SESSION["RoleID"] == ROLE_ID_DRIVER) {
+                ?>
+                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
+                    <a href="#"><i class="fa fa-cube"></i> <span>Inventory</span> <i
+                                class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?>">
+                            <a href="viewinventory.php"><i class="fa fa-circle-o"></i>View Current Inventory </a></li>
+                    </ul>
+                </li>
+
+                <!--NEW MENU -->
+
+
+                <?php
+            }
             else if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                 ?>
                 <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>">

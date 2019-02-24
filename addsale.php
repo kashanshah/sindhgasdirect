@@ -411,7 +411,7 @@ desired effect
                                                 <div class="col-md-8">
                                                     <input type="number" class="form-control"
                                                            placeholder="Enter the payable amount" readonly=""
-                                                           name="Unpaid" value="<?php echo $Unpaid; ?>" id="Unpaid"
+                                                           name="Unpaid" value="0" id="Unpaid"
                                                            disabled>
                                                 </div>
                                             </div>
