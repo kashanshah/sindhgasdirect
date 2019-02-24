@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(3));
+get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 
 	$ID = "";
 	$msg = "";

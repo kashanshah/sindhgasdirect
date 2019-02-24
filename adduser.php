@@ -4,7 +4,7 @@ get_right(array(1, 2));
 
 	$msg='';				
 	$Username = "";			$Password = "";			$Email = "";			$Image="";
-	$Name = "";				$Number = "";
+	$Name = "";				$Number = "";           $ShopID = 0;
 	$Address = "";			$RoleID = 1;
 	$Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 
@@ -47,6 +47,7 @@ get_right(array(1, 2));
 			mysql_query("INSERT into users SET
 						Status='".(int)$Status."', DateAdded=NOW(),
 						RoleID='".(int)$RoleID."',
+						ShopID='".(int)$ShopID."',
 						Username='".dbinput($Username)."',
 						Password='".dbinput($Password)."',
 						Email='".dbinput($Email)."',
@@ -221,7 +222,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="form-group">
 						<label class="col-md-3 control-label" for="example-text-input">Role</label>
 						<div class="col-md-6">
-							<select class="form-control" name="RoleID">
+							<select class="form-control" name="RoleID" id="RoleID">
 								<?php
 									$r = mysql_query("SELECT ID, Name FROM roles") or die(mysql_error());
 									$n = mysql_num_rows($r);
@@ -232,17 +233,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</select>
 						</div>
 					</div>
-                    <div class="form-group">
-						<label class="col-md-3 control-label" for="example-text-input">Username</label>
+                    <div class="form-group" id="ShopIDDiv" style="display:none;">
+						<label class="col-md-3 control-label" for="example-text-input">Shop</label>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="example-text-input" value="<?php echo $Username;?>" name="Username">
+							<select class="form-control" name="ShopID" id="ShopID">
+                                <option value="<?php echo $Rs['ID']; ?>" <?php if($ShopID==0) { echo 'selected=""'; } ?>></option>
+								<?php
+									$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = '".ROLE_ID_SHOP."'") or die(mysql_error());
+									$n = mysql_num_rows($r);
+									while($Rs = mysql_fetch_assoc($r)) { ?>
+									<option value="<?php echo $Rs['ID']; ?>" <?php if($ShopID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
+									<?php }
+								?>
+							</select>
+						</div>
+					</div>
+                    <div class="form-group" id="UsernameDiv">
+						<label class="col-md-3 control-label" for="Username">Username</label>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="Username" value="<?php echo $Username;?>" name="Username">
 							<p class="help-block">Choose A Unique Username</p>
 						</div>
 					</div>
-                    <div class="form-group">
-						<label class="col-md-3 control-label" for="example-text-input">Password</label>
+                    <div class="form-group" id="PasswordDiv">
+						<label class="col-md-3 control-label" for="Password">Password</label>
 						<div class="col-md-6">
-							<input type="password" class="form-control" id="example-text-input" value="<?php echo $Password;?>" name="Password">
+							<input type="password" class="form-control" id="Password" value="<?php echo $Password;?>" name="Password">
 						</div>
 					</div>
                     <div class="form-group">
@@ -345,13 +361,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $(function () {
         //Initialize Select2 Elements
         $(".select2").select2();
-
-        //iCheck for checkbox and radio inputs
-        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-          checkboxClass: 'icheckbox_minimal-blue',
-          radioClass: 'iradio_minimal-blue'
-        });
+          $("#RoleID").change();
       });
+      $("#RoleID").change(function(){
+          if($(this).val() == <?php echo ROLE_ID_SALES; ?> || $(this).val() == <?php echo ROLE_ID_CUSTOEMR; ?>){
+              $("#ShopIDDiv").slideDown();
+          }else{
+              $('#ShopID option[value="0"]').prop("checked", true);
+              $("#ShopIDDiv").slideUp();
+          }
+          if($(this).val() == <?php echo ROLE_ID_CUSTOEMR; ?>) {
+              $("#Username").val('<?php echo time(); ?>');
+              $("#Password").val('<?php echo time(); ?>');
+              $("#UsernameDiv").slideUp();
+              $("#PasswordDiv").slideUp();
+          }else{
+              $("#Username").val('<?php echo time(); ?>');
+              $("#Password").val('<?php echo time(); ?>');
+              $("#UsernameDiv").slideDown();
+              $("#PasswordDiv").slideDown();
+          }
+          })
     </script>
 </body>
 </html>

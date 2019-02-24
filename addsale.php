@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(3));
+get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $ID = "";
 $msg = "";
@@ -47,7 +47,6 @@ $Print = ((isset($_COOKIE["PrintSlipsByDefault"]) && ctype_digit($_COOKIE["Print
 
 
 if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
-    echo 'asd';exit();
     $msg = "";
     foreach ($_POST as $key => $value) {
         $$key = $value;
@@ -307,7 +306,7 @@ desired effect
                                                 echo '<option value="0">No Cylinder Added</option>';
                                             } else {
                                                 while ($Rs = mysql_fetch_assoc($r)) {
-                                                    if (getCurrentStatus($Rs["ID"]) == 3 && getCurrentHandedTo($Rs["ID"]) == $_SESSION["ID"]) {
+                                                    if (getCurrentStatus($Rs["ID"]) == ROLE_ID_SHOP && getCurrentHandedTo($Rs["ID"]) == $_SESSION["ID"]) {
                                                         ?>
                                                         <option data-tierweight="<?php echo $Rs["TierWeight"]; ?>"
                                                                 data-weight="<?php echo getCurrentPurchaseWeight($Rs["ID"]); ?>"
@@ -360,7 +359,7 @@ desired effect
                                             <th>Gas Weight</th>
                                             <th>Current Full Weight</th>
                                             <th>Current Gas Weight</th>
-                                            <th>Gas Rate</th>
+                                            <th style="display: none">Gas Rate</th>
                                             <th>Price</th>
                                             <th><a class="btn btn-danger dropdown-toggle"
                                                    href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Clear All</a></th>
@@ -389,7 +388,7 @@ desired effect
                                                 <label class="col-md-3 control-label" for="example-text-input">Total
                                                     Amount</label>
                                                 <div class="col-md-8">
-                                                    <input type="number" class="form-control"
+                                                    <input type="number" step="any" class="form-control"
                                                            placeholder="Enter the Total Payable Amount" readonly=""
                                                            name="TotalAmount" value="<?php echo $TotalAmount; ?>"
                                                            id="TotalAmount">
@@ -399,7 +398,7 @@ desired effect
                                                 <label class="col-md-3 control-label"
                                                        for="example-text-input">Balance</label>
                                                 <div class="col-md-8">
-                                                    <input type="number" class="form-control" placeholder="" readonly=""
+                                                    <input type="number" step="any" class="form-control" placeholder="" readonly=""
                                                            name="Balance" value="<?php echo $Balance; ?>" id="Balance"
                                                            data-balance="0">
                                                     <p class="help">Account balance: <?php echo $Balance; ?></p>
@@ -409,7 +408,7 @@ desired effect
                                                 <label class="col-md-3 control-label" for="example-text-input">Amount
                                                     Payable</label>
                                                 <div class="col-md-8">
-                                                    <input type="number" class="form-control"
+                                                    <input type="number" step="any" class="form-control"
                                                            placeholder="Enter the payable amount" readonly=""
                                                            name="Unpaid" value="0" id="Unpaid"
                                                            disabled>
@@ -419,7 +418,7 @@ desired effect
                                                 <label class="col-md-3 control-label" for="example-text-input">Amount
                                                     Paying</label>
                                                 <div class="col-md-8">
-                                                    <input type="number" class="form-control"
+                                                    <input type="number" step="any" class="form-control"
                                                            placeholder="Enter the Amount Paying" name="Paid"
                                                            value="<?php echo $Paid; ?>" id="Paid">
                                                 </div>
@@ -760,10 +759,10 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('tierweight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td>' + gasWeight.toFixed(2) + 'KG</td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight').toFixed(2) + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight.toFixed(2) + '</span>KG</td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" class="CurrentGasRate CurrentGasRate' + i + '" value="' + (parseFloat($("[name='CylinderID'] option:selected").data('price')) / gasWeight).toFixed(2) + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + ($("[name='CylinderID'] option:selected").data('price')).toFixed(2) + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight').toFixed(2) + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td style="display:none;"><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight.toFixed(2) + '</span>KG</td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + (parseFloat($("[name='CylinderID'] option:selected").data('price')) / gasWeight).toFixed(2) + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + ($("[name='CylinderID'] option:selected").data('price')).toFixed(2) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
             i = i + 1;

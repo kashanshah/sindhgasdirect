@@ -420,8 +420,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		
 	}
 	
-$('#mainForm').submit(function () {
-	e.preventDefault();
+$('#mainForm').submit(function (e) {
+    if (!$("#myModal").hasClass("in")) {
+        e.preventDefault();
+        $("#myModal").modal('show');
+    }
 });
 
 $(document).ready(function() {

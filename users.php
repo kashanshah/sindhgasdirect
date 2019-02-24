@@ -26,7 +26,7 @@ get_right(array(1, 2));
 			redirect($self);
 	}
 
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -132,6 +132,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Username</th>
                         <th>Name</th>
                         <th>Role</th>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                              <th>Shop</th>
+                          <?php } ?>
                         <th>Balance</th>
                         <th>Address</th>
                         <th>Contact Number</th>
@@ -148,6 +151,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td><?php echo $row["Username"]; ?></td>
                         <td><?php echo $row["Name"]; ?></td>
                         <td><?php echo $row["Role"]; ?></td>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                              <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                          <?php } ?>
                         <td>Rs. <?php echo $row["Balance"]; ?></td>
                         <td><?php echo $row["Address"]; ?></td>
                         <td><?php echo $row["Number"]; ?></td>

@@ -52,6 +52,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
 						Address='".dbinput($Address)."',
+						ShopID = '".(int)$_SESSION["ID"]."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
 						") or die(mysql_error());

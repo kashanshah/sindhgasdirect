@@ -291,8 +291,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<th>Gas Weight</th>
 							<th>Current Full Weight</th>
 							<th>Current Gas Weight</th>
-							<th>Price (<?php echo GAS_RATE; ?>/KG)</th>
-							<th>Retail Price</th>
+							<th style="display: none">Price (<?php echo GAS_RATE; ?>/KG)</th>
+							<th style="display: none">Retail Price</th>
 							<th><a class="btn btn-danger dropdown-toggle" href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Clear All</a></th>
 						  </tr>
 						</thead>
@@ -486,8 +486,8 @@ $(document).ready(function() {
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td>'+gasWeight+'KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CylinderPrice CylinderPrice'+i+'">' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '</span></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" name="RetailPrice[]" class="RetailPrice RetailPrice'+i+'" required="" value="' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '" /></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display:none"><span class="CylinderPrice CylinderPrice'+i+'">' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '</span></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display:none"><input type="number" name="RetailPrice[]" class="RetailPrice RetailPrice'+i+'" required="" value="' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');" ><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
 			i = i + 1;

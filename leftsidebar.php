@@ -152,52 +152,13 @@
             }
             else if ($_SESSION["RoleID"] == ROLE_ID_SALES) {
                 ?>
-                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>">
-                    <a href="#"><i class="fa fa-group"></i> <span>Customers</span> <i
-                                class="fa fa-angle-left pull-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?>">
-                            <a href="customers.php"><i class="fa fa-circle-o"></i>View Customers</a></li>
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?>">
-                            <a href="addcustomer.php"><i class="fa fa-circle-o"></i>Add New Customer</a></li>
-                    </ul>
-                </li>
 
-                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
-                    <a href="#"><i class="fa fa-cube"></i> <span>Inventory</span> <i
-                                class="fa fa-angle-left pull-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?>">
-                            <a href="viewinventory.php"><i class="fa fa-circle-o"></i>View Current Inventory </a></li>
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
-                            <a href="returntoshop.php"><i class="fa fa-circle-o"></i>Cylinder Return from Customer </a></li>
-                    </ul>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?>">
+                    <a href="addsale.php"><i class="fa fa-circle-o"></i> <span>Add Sale</span></a>
                 </li>
-
-                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "useraccounts.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "purchases.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpurchase.php") ? 'active' : ''); ?>">
-                    <a href="#"><i class="fa fa-cube"></i> <span>Accounts</span> <i
-                                class="fa fa-angle-left pull-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?>">
-                            <a href="sales.php"><i class="fa fa-circle-o"></i>Sales</a></li>
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "purchases.php") ? 'active' : ''); ?>">
-                            <a href="purchases.php"><i class="fa fa-circle-o"></i>Purchases</a></li>
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "useraccounts.php") ? 'active' : ''); ?>">
-                            <a href="useraccounts.php"><i class="fa fa-circle-o"></i>User Accounts</a></li>
-                    </ul>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
+                    <a href="returntoshop.php"><i class="fa fa-circle-o"></i>Cylinder Return from Customer </a></li>
                 </li>
-
-                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "salesmans.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsalesman.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editsalesman.php") ? 'active' : ''); ?>">
-                    <a href="#"><i class="fa fa-group"></i> <span>User Management</span> <i
-                                class="fa fa-angle-left pull-right"></i></a>
-                    <ul class="treeview-menu">
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "salesmans.php") ? 'active' : ''); ?>">
-                            <a href="salesmans.php"><i class="fa fa-circle-o"></i>View All Users</a></li>
-                        <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsalesman.php") ? 'active' : ''); ?>">
-                            <a href="addsalesman.php"><i class="fa fa-circle-o"></i>Add New Users</a></li>
-                    </ul>
-                </li>
-
 
                 <!--NEW MENU -->
 

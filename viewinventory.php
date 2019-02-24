@@ -101,6 +101,7 @@ desired effect
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info"
                                         onClick="location.href='dashboard.php'">Back
                                 </button>
+                                <?php if($_SESSION["RoleID"] != ROLE_ID_DRIVER){ ?>
                                 <button style="float:right;;margin-right:15px;" type="button"
                                         class="btn btn-group-vertical btn-success"
                                         onClick="location.href='addcylinder.php'" data-original-title="" title="">Add
@@ -113,6 +114,7 @@ desired effect
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()"
                                         class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete
                                 </button>
+                                <?php } ?>
                             </div>
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
