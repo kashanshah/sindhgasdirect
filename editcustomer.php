@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
+get_right(array(ROLE_ID_PLANTS, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";
@@ -34,7 +34,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
         }
     }
@@ -53,7 +53,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						") or die(mysql_error());
         $msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Admin has been added.
+						Customer has been updated.
 					</div>';
         if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
         {
@@ -69,7 +69,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             if($moved2)
             {
 
-                $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$UserID;
+                $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$ID;
                 mysql_query($query2) or die(mysql_error());
                 $_SESSION["msg"] = $msg;
                 redirect("editcustomer.php?ID=".$ID);
@@ -101,9 +101,9 @@ else
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Invalide user ID</b>
+				<b>Invalide customer ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("customers.php");
 }
 $sql="SELECT * FROM users where ID=".$ID;
 $resource=mysql_query($sql) or die(mysql_error());
@@ -118,9 +118,9 @@ else
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Invalide user ID</b>
+				<b>Invalide customer ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("customers.php");
 }
 
 
@@ -134,7 +134,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Edit User</title>
+    <title><?php echo SITE_TITLE; ?>- Edit Customer</title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -197,12 +197,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Edit User
+                Edit Customer
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="users.php"><i class="fa fa-dashboard"></i> Users</a></li>
-                <li class="active">Edit User</li>
+                <li><a href="customers.php"><i class="fa fa-dashboard"></i> Customers</a></li>
+                <li class="active">Edit Customer</li>
             </ol>
         </section>
 
@@ -215,7 +215,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="users.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="customers.php" >Back</a>
                                     <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -234,14 +234,7 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Image</label>
                                     <div class="col-md-6">
                                         <input type="file" name="File">
-                                        <?php if(isset($Image) && $Image!="") echo '<img style="width:100px;height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="example-text-input">Username</label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="example-text-input" readonly disabled value="<?php echo $Username;?>" name="Username">
-                                        <p class="help-block">Choose A Unique Username</p>
+                                        <?php if(isset($Image) && $Image!="") echo '<img style="max-width:150px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
                                     </div>
                                 </div>
                                 <div class="form-group">

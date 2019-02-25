@@ -65,7 +65,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", ' : '') . '
 				Username = "' . time() . '",
 				Password = "' . generate_refno(rand()) . generate_refno(time()) . '",
-				RoleID = "' . ROLE_ID_CUSTOEMR . '",
+				RoleID = "' . ROLE_ID_CUSTOMER . '",
 				Number = "' . dbinput($Number) . '",
 				Email = "' . dbinput($Email) . '",
 				Address = "' . dbinput($Address) . '",
@@ -456,7 +456,7 @@ desired effect
                                                             data-placeholder="Select The Customer" name="CustomerID"
                                                             style="width: 100%;">
                                                         <?php
-                                                        $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=" . ROLE_ID_CUSTOEMR) or die(mysql_error());
+                                                        $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
                                                         if ($n == 0) {
                                                             echo '<option value="0">No User Added</option>';

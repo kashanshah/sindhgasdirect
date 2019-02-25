@@ -112,7 +112,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 				$msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.</b>
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
 			}
 		}

@@ -138,7 +138,7 @@ desired effect
                                     </thead>
                                     <tbody>
                                     <?php while ($row = mysql_fetch_array($resource)) {
-                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOEMR && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]) || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_ADMIN && $_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
+                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOMER && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]) || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_ADMIN && $_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
                                             ?>
                                             <tr>
                                                 <td style="width:5%"><input type="checkbox"

@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANTS, ROLE_ID_SHOP));
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
@@ -11,7 +11,7 @@ if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
         mysql_query($query);
         $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <p><i class="icon fa fa-ban"></i> Salesman(s) Deleted!</p>
+                    <i class="icon fa fa-ban"></i> Salesman(s) Deleted!
                   </div>';
     }
 }
@@ -21,12 +21,12 @@ if(isset($_REQUEST['DID']))
     mysql_query($query);
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <p><i class="icon fa fa-ban"></i> Salesman Deleted!</p>
+                    <i class="icon fa fa-ban"></i> Salesman Deleted!
                   </div>';
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " u.RoleID = ".ROLE_ID_SALES." AND u.ShopID = ".$_SESSION["ID"]." AND ") ." u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_SALES)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -116,6 +116,7 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
+                        <?php if($_SESSION["RoleID"] == ROLE_ID_SHOP){?>
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
@@ -123,6 +124,7 @@ desired effect
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                             </div>
                         </div><!-- /.box-header -->
+                        <?php } ?>
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -131,8 +133,9 @@ desired effect
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <th>Username</th>
                                         <th>Name</th>
-                                        <th>Role</th>
-                                        <th>Balance</th>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <th>Shop</th>
+                                        <?php } ?>
                                         <th>Address</th>
                                         <th>Contact Number</th>
                                         <th>Remarks</th>
@@ -147,8 +150,9 @@ desired effect
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
-                                            <td><?php echo $row["Role"]; ?></td>
-                                            <td>Rs. <?php echo $row["Balance"]; ?></td>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                            <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>

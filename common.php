@@ -33,8 +33,9 @@ $ENQUIRIES_CATEGORIES = array("General enquiries", "Advertisement enquiries", "W
 define("ROLE_ID_ADMIN", 1);
 define("ROLE_ID_DRIVER", 2);
 define("ROLE_ID_SHOP", 3);
-define("ROLE_ID_CUSTOEMR", 4);
+define("ROLE_ID_CUSTOMER", 4);
 define("ROLE_ID_SALES", 5);
+define("ROLE_ID_PLANTS", 6);
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
@@ -943,31 +944,12 @@ function getCylinderStatus($RoleID = 0)
         $ret = "Dispatched to driver";
     } else if ($RoleID == ROLE_ID_SHOP) {
         $ret = "Handed over to shop";
-    } else if ($RoleID == ROLE_ID_CUSTOEMR) {
+    } else if ($RoleID == ROLE_ID_CUSTOMER) {
         $ret = "Lended to customer";
     } else {
         $ret = "Status not found";
     }
     return $ret;
-}
-
-function last_month_paid($ID)
-{
-    $res = mysql_query("SELECT Month FROM fees WHERE StudentID = " . (int)$ID . " AND Year = (SELECT MAX(Year) FROM fees  WHERE StudentID = " . (int)$ID . ") AND DateAdded = (SELECT MAX(DateAdded) FROM fees  WHERE StudentID = " . (int)$ID . ")") or die(mysql_error());
-
-    $Rs = mysql_fetch_assoc($res);
-    $Month = $Rs['Month'];
-    return $Month;
-}
-
-function last_month_payroll($ID)
-{
-
-    $res = mysql_query("SELECT Month FROM payroll WHERE EmployeeID = " . (int)$ID . " AND Year = (SELECT MAX(Year) FROM payroll  WHERE EmployeeID = " . (int)$ID . ") AND DateAdded = (SELECT MAX(DateAdded) FROM payroll  WHERE EmployeeID = " . (int)$ID . ")") or die(mysql_error());
-
-    $Rs = mysql_fetch_assoc($res);
-    $Month = $Rs['Month'];
-    return $Month;
 }
 
 function convertNumber($number)
@@ -1171,3 +1153,14 @@ function convertDigit($digit)
     }
 }
 
+function getCustomerDues($ID){
+    $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+    $r = mysql_query($q) or die(mysql_error());
+    return (int)mysql_result($r, 0, 0);
+}
+
+function getShopDues($ID){
+    $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+    $r = mysql_query($q) or die(mysql_error());
+    return (int)mysql_result($r, 0, 0);
+}

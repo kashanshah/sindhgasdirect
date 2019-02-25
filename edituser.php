@@ -35,7 +35,7 @@ get_right(array(1, 2));
 				$msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
 			}
 		}
@@ -56,7 +56,7 @@ get_right(array(1, 2));
 						") or die(mysql_error());
 			$msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Admin has been added.
+						User has been updated.
 					</div>';
 			if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
 			{
@@ -72,7 +72,7 @@ get_right(array(1, 2));
 				if($moved2)
 				{			
 				
-					$query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$UserID;
+					$query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$ID;
 					mysql_query($query2) or die(mysql_error());
 					$_SESSION["msg"] = $msg;
 					redirect("adduser.php");
@@ -237,7 +237,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<label class="col-md-3 control-label" for="example-text-input">Image</label>
 						<div class="col-md-6">
 							<input type="file" name="File">
-					  <?php if(isset($Image) && $Image!="") echo '<img style="width:100px;height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
+					  <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
 						</div>
 					</div>
                     <div class="form-group">

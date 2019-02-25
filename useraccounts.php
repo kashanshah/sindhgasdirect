@@ -2,7 +2,7 @@
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 $msg='';
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID=".ROLE_ID_CUSTOEMR."";
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID=".ROLE_ID_CUSTOMER."";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>

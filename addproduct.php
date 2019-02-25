@@ -51,7 +51,7 @@ get_right(array(1, 2));
 				$msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
 			}
 		}
@@ -70,6 +70,7 @@ get_right(array(1, 2));
 						PerformedBy = '".(int)$_SESSION["ID"]."'") or die(mysql_error());
 			$ProductID = mysql_insert_id();
 			$msg='<div class="alert alert-success alert-dismissable">
+					<i class="fa fa-check"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 						Product has been added.
 					</div>';

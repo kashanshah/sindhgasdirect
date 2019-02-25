@@ -56,7 +56,7 @@ get_right(array(1, 2));
 				$msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
 			}
 		}
@@ -87,7 +87,7 @@ get_right(array(1, 2));
 			$UserID = mysql_insert_id();
 			$msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Admin has been added.
+						Admin has been updated.
 					</div>';
 			if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
 			{
@@ -116,7 +116,7 @@ get_right(array(1, 2));
 					$msg='<div class="alert alert-warning alert-dismissable">
 						<i class="fa fa-ban"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<b>Admin has been added but Image can not be uploaded.</b>
+						<b>Admin has been updated but Image can not be uploaded.</b>
 						</div>';
 				}
 			}
@@ -237,7 +237,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<label class="col-md-3 control-label" for="example-text-input">Image</label>
 						<div class="col-md-6">
 							<input type="file" name="File">
-					  <?php if(isset($Image) && $Image!="") echo '<img style="width:100px;height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
+					  <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
 						</div>
 					</div>
                     <div class="form-group">

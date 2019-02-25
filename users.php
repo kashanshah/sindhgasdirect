@@ -21,7 +21,7 @@ get_right(array(1, 2));
 			mysql_query($query);
 			$_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> Admin Deleted!</h4>
+                    <i class="icon fa fa-ban"></i> User Deleted!
                   </div>';
 			redirect($self);
 	}
@@ -154,7 +154,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
                           <?php } ?>
-                        <td>Rs. <?php echo $row["Balance"]; ?></td>
+                        <td>Rs. <?php echo $_SESSION["RoleID"] == ROLE_ID_SHOP ? getShopDues($row["ID"]) : getCustomerDues($row["ID"]); ?></td>
                         <td><?php echo $row["Address"]; ?></td>
                         <td><?php echo $row["Number"]; ?></td>
                         <td><?php echo $row["Remarks"]; ?></td>

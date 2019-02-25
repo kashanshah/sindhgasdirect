@@ -36,7 +36,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
 				</div>';
         }
     }
@@ -88,7 +88,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
                 $msg='<div class="alert alert-warning alert-dismissable">
 						<i class="fa fa-ban"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<b>Salesman has been added but Image can not be uploaded.</b>
+						Salesman has been added but Image can not be uploaded.
 						</div>';
             }
         }
@@ -97,7 +97,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<b>Salesman has been added.</b>
+					Salesman has been added.
 					</div>';
             $_SESSION["msg"] = $msg;
             redirect("addsalesman.php");
@@ -215,7 +215,7 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Image</label>
                                     <div class="col-md-6">
                                         <input type="file" name="File">
-                                        <?php if(isset($Image) && $Image!="") echo '<img style="width:100px;height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
+                                        <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
                                     </div>
                                 </div>
                                 <div class="form-group">

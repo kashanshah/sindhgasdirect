@@ -1,12 +1,13 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_PLANTS));
 
-$msg='';
-$Username = time();			$Password = "";			$Email = "";			$Image="";
-$Name = "";				$Number = "";				$CreditLimit = 1000;
-$Address = "";
+$msg='';				$ID = 0;
+$Username = "";			$Password = "";			$Email = "";			$Image="";
+$Name = "";				$Number = "";
+$Address = "";			$RoleID = ROLE_ID_SHOP;
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
+$ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 
 if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 {
@@ -15,9 +16,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
     else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Name</div>';
-    else if($Username == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Username</div>';
-    else if(checkavailability('users', 'Username', $Username) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Username not available choose another!</div>';
-    else if(checkavailability('users', 'Number', $Number) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Phone number is already registered with a user!</div>';
+    else if($Password == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Password</div>';
     else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
     {
         $filenamearray2=explode(".", $_FILES["File"]['name']);
@@ -43,35 +42,29 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     if($msg=="")
     {
 
-        mysql_query("INSERT into users SET
+        mysql_query("UPDATE users SET
 						Status='".(int)$Status."', DateAdded=NOW(),
-						RoleID='".(int)ROLE_ID_CUSTOMER."',
-						Username='".dbinput($Username)."',
-						ShopID='".(int)$_SESSION["ID"]."',
-						PlantID='".(int)$_SESSION["PlantID"]."',
-						Password = '".generate_refno(rand()).generate_refno(time())."',
+						RoleID='".(int)ROLE_ID_SHOP."',
+						Password='".dbinput($Password)."',
+						PlantID='".(int)$_SESSION["ID"]."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
-						CreditLimit='".(float)$CreditLimit."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
+						WHERE ID=".(int)$ID."
 						") or die(mysql_error());
-        $UserID = mysql_insert_id();
         $msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<i class="fa fa-check"></i>Customer has been added.
+						Shop has been updated.
 					</div>';
         if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
         {
-            if(is_file(DIR_USER_IMAGES . $StoreImage))
-                unlink(DIR_USER_IMAGES . $StoreImage);
-
             ini_set('memory_limit', '-1');
 
             $tempName2 = $_FILES["File"]['tmp_name'];
-            $realName2 = "S".$UserID.".".$ext2;
+            $realName2 = "S".$ID.".".$ext2;
             $StoreImage = $realName2;
             $target2 = DIR_USER_IMAGES . $realName2;
 
@@ -80,17 +73,17 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             if($moved2)
             {
 
-                $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$UserID;
+                $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$ID;
                 mysql_query($query2) or die(mysql_error());
                 $_SESSION["msg"] = $msg;
-                redirect("addcustomer.php");
+                redirect("editshop.php?ID=".$ID);
             }
             else
             {
                 $msg='<div class="alert alert-warning alert-dismissable">
 						<i class="fa fa-ban"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Customer has been added but Image can not be uploaded.
+						<b>Shop has been updated but Image can not be uploaded.</b>
 						</div>';
             }
         }
@@ -99,13 +92,41 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					Customer has been added.
+					<b>Shop has been updated.</b>
 					</div>';
             $_SESSION["msg"] = $msg;
-            redirect("addcustomer.php");
+            redirect("editshop.php?ID=".$ID);
         }
     }
 }
+if(isset($_REQUEST['ID'])) {$ID=$_REQUEST['ID'];}
+else
+{
+    $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<b>Invalide shop ID</b>
+				</div>';
+    redirect("shops.php");
+}
+$sql="SELECT * FROM users where ID=".$ID;
+$resource=mysql_query($sql) or die(mysql_error());
+if(mysql_num_rows($resource) > 0)
+{
+    $row=mysql_fetch_array($resource);
+    foreach($row as $key => $val)
+        $$key = $val;
+}
+else
+{
+    $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<b>Invalide shop ID</b>
+				</div>';
+    redirect("shops.php");
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -117,7 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Customer</title>
+    <title><?php echo SITE_TITLE; ?>- Edit Shop</title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -180,12 +201,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Customer
+                Edit Shop
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="customers.php"><i class="fa fa-dashboard"></i> Customers</a></li>
-                <li class="active">Add Customer</li>
+                <li><a href="shops.php"><i class="fa fa-dashboard"></i> Shops</a></li>
+                <li class="active">Edit Shop</li>
             </ol>
         </section>
 
@@ -194,11 +215,11 @@ desired effect
             <div class="row">
                 <div class="col-xs-12">
                     <!-- /.box -->
-                    <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form id="frmPages" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" class="form-horizontal" method="post" enctype="multipart/form-data">
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="customers.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="shops.php" >Back</a>
                                     <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -221,9 +242,22 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-md-3 control-label" for="example-text-input">Username</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="example-text-input" readonly disabled value="<?php echo $Username;?>" name="Username">
+                                        <p class="help-block">Choose A Unique Username</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="example-text-input">Password</label>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" id="example-text-input" value="<?php echo $Password;?>" name="Password">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-md-3 control-label" for="example-text-input">Name</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="example-text-input" value="<?php echo $Name;?>" placeholder="Enter Name" name="Name" required>
+                                        <input type="text" class="form-control" id="example-text-input" value="<?php echo $Name;?>" placeholder="Enter Name" name="Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -235,19 +269,20 @@ desired effect
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="CreditLimit">Credit Limit</label>
-                                    <div class="col-md-6">
-                                        <input type="number" step="any" class="form-control" id="CreditLimit" value="<?php echo $CreditLimit;?>" placeholder="Enter Credit Limit" name="CreditLimit" required>
+                                        <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="example-text-input">Address</label>
                                     <div class="col-md-6">
                                         <textarea class="form-control" name="Address"><?php echo $Address;?></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="example-text-input">Status</label>
+                                    <div class="col-md-6">
+                                        <label><input type="radio" value="1" name="Status" <?php echo ($Status == "1" ? 'checked=""' : '') ?>> Enabled</label>
+                                        <label><input type="radio" value="0" name="Status" <?php echo ($Status == "0" ? 'checked=""' : '') ?>> Disabled</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
