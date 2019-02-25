@@ -1,5 +1,6 @@
 <?php include("common.php"); ?>
-<?php include("checkadminlogin.php"); 
+<?php include("checkadminlogin.php");
+get_right(array(ROLE_ID_PLANTS));
 
 	$ID = "";
 	$msg = "";
@@ -215,7 +216,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-8">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-									$r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE ExpiryDate > '".date('Y-m-d h:i:s')."'") or die(mysql_error());
+									$r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE Status = 1 AND PlantID = ".(int)$_SESSION["ID"]." AND ExpiryDate > '".date('Y-m-d h:i:s')."'") or die(mysql_error());
 									$n = mysql_num_rows($r);
 									if($n == 0)
 									{
@@ -223,10 +224,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									}
 									else
 									{
-										while($Rs = mysql_fetch_assoc($r)) { 
-											if(getCurrentStatus($Rs["ID"]) == 1){
+										while($Rs = mysql_fetch_assoc($r)) {
+											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_PLANTS){
 										?>
-										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
+										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" data-currentweight="<?php echo getCurrentWeight($Rs["ID"]); ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}
 										}
@@ -481,7 +482,7 @@ $(document).ready(function() {
 		});
 		if(j!=1)
 		{
-			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
+			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
 			i = i + 1;
 			gettotal();
 			calculateWeights();

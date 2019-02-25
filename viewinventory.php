@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(1, 2, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_DRIVER, ROLE_ID_SHOP, ROLE_ID_PLANTS));
 
 $msg = '';
 $sql = "SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";

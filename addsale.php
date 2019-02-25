@@ -110,6 +110,8 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
                 }
             }
         }
+        $GrandTotalGasWeight = 0;
+        $GrandTotalRates = $TotalAmount;
         $query3 = "INSERT INTO sales SET DateAdded = NOW(),
 			ShopID='" . (int)($_SESSION["ID"]) . "',
 			CustomerID='" . (int)($CustomerID) . "',
@@ -145,6 +147,9 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 				";
             mysql_query($query4) or die(mysql_error());
+
+            $GrandTotalGasWeight = $GrandTotalGasWeight + ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
+
             $query2 = "INSERT INTO cylinderstatus SET DateAdded = NOW(),
 				InvoiceID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
@@ -155,6 +160,8 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
             mysql_query($query2) or die(mysql_error());
             $i++;
         }
+
+        mysql_query("UPDATE sales SET GasRate = '".(float)$GrandTotalRates/$GrandTotalGasWeight."' WHERE ID = '".(int)$SaleID."'") or die(mysql_error());
 
         $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

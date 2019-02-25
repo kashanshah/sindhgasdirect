@@ -45,6 +45,9 @@
         border-color: <?php echo $bgColor; ?>;
         border-bottom-color: #f4f4f4;
     }
+    .skin-blue .sidebar-menu > li > a{
+        padding:5px 5px 7px 15px;
+    }
 </style>
 <header class="main-header">
 

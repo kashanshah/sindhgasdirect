@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 2, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANTS));
 
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
@@ -27,9 +27,8 @@ get_right(array(1, 2, 3));
 			redirect($self);
 	}
 
-$sql="SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
+$sql="SELECT * FROM cylinders WHERE ID<>0 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " AND PlantID='".$_SESSION["ID"]."'")." order by ID DESC";
 $resource=mysql_query($sql) or die(mysql_error());
-
 ?>
 <!DOCTYPE html>
 <!--
@@ -117,14 +116,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- /.box -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
               <div class="box">
+                  <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS){?>
                 <div class="box-header">
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                       <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addcylinder.php'" data-original-title="" title="">Add Cylinder</button>
+                       <a style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addcylinder.php" data-original-title="" title="">Add Cylinder</a>
 						<button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()" class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print Bar Codes</button>
 						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                       </div>
                 </div><!-- /.box-header -->
+                  <?php } ?>
                 <div class="box-body table-responsive">
 				<form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
                   <table id="example1" class="table table-bordered table-striped">
@@ -133,6 +134,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                      
                         <th>BarCode</th>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                              <th>Plant</th>
+                          <?php } ?>
                         <th>Short Description</th>
                         <th>Tier Weight (KG)</th>
                         <th>Current Weight (KG)</th>
@@ -146,12 +150,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		<tbody>
 <?php while($row=mysql_fetch_array($resource))
 {
-	if($_SESSION["RoleID"] == ROLE_ID_ADMIN || (getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == 4 && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]))){
 	?>
                       <tr>
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                   
                         <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                              <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
+                          <?php } ?>
                         <td><?php echo $row["ShortDescription"]; ?></td>
                         <td><?php echo $row["TierWeight"]; ?></td>
                         <td><?php echo getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"]); ?></td>
@@ -176,7 +182,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</div>
 						</td>
                       </tr>
-<?php }
+<?php
 }
 	?>
                     </tbody>

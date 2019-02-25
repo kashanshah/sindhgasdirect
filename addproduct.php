@@ -264,7 +264,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="form-group">
 						<label class="col-md-3 control-label" for="example-text-input">Tier Weight(KG)</label>
 						<div class="col-md-6">
-							<input type="number" class="form-control" id="example-text-input" value="<?php echo $TierWeight;?>" placeholder="Enter Tier Weight in KG's" step="0.01"  placeholder="0.00" name="TierWeight">
+							<input type="number" class="form-control" id="example-text-input" value="<?php echo $TierWeight;?>" placeholder="Enter Tier Weight in KG's" step="any"  placeholder="0.00" name="TierWeight">
 						
 						</div>
 					</div>

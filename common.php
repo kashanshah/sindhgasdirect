@@ -786,13 +786,19 @@ function get_subject($SID)
 
 function getCurrentStatus($ID)
 {
-    $res = mysql_query("SELECT cs.*, u.RoleID FROM cylinderstatus cs LEFT JOIN users u ON cs.HandedTo=u.ID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
+    $res = mysql_query("SELECT cs.CylinderID, u.RoleID FROM cylinderstatus cs LEFT JOIN users u ON cs.HandedTo=u.ID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY cs.ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
-        $ret = 1;
+        $ret = -1;
     } else {
-        $Rs = mysql_fetch_assoc($res);
-        $ret = $Rs['RoleID'];
+        $r = mysql_query("SELECT Status FROM cylinders WHERE Status = 1 AND ID = '".$ID."'") or die(mysql_error());
+        if(mysql_num_rows($r) == 0){
+            $ret = -1;
+        }
+        else{
+            $Rs = mysql_fetch_assoc($res);
+            $ret = $Rs['RoleID'];
+        }
     }
     return $ret;
 }
@@ -938,7 +944,9 @@ function dumpArray($RoleID = array())
 
 function getCylinderStatus($RoleID = 0)
 {
-    if ($RoleID == ROLE_ID_ADMIN || $RoleID == 0) {
+    if ($RoleID == -1) {
+        $ret = "Admin Custody (Unfilled)";
+    } else if ($RoleID == ROLE_ID_ADMIN || $RoleID == 0) {
         $ret = "Admin Custody";
     } else if ($RoleID == ROLE_ID_DRIVER) {
         $ret = "Dispatched to driver";
@@ -946,6 +954,8 @@ function getCylinderStatus($RoleID = 0)
         $ret = "Handed over to shop";
     } else if ($RoleID == ROLE_ID_CUSTOMER) {
         $ret = "Lended to customer";
+    } else if ($RoleID == ROLE_ID_PLANTS) {
+        $ret = "Plant Custody";
     } else {
         $ret = "Status not found";
     }

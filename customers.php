@@ -116,6 +116,7 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
+                        <?php if($_SESSION["RoleID"] == ROLE_ID_SHOP || $_SESSION["RoleID"] == ROLE_ID_SALES){?>
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
@@ -123,6 +124,7 @@ desired effect
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                             </div>
                         </div><!-- /.box-header -->
+                        <?php } ?>
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
                                 <table id="example1" class="table table-bordered table-striped">

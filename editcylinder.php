@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
-<?php include("checkadminlogin.php"); 
-get_right(array(1, 2));
+<?php include("checkadminlogin.php");
+get_right(array(ROLE_ID_PLANTS));
 
 	$msg='';
 if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
@@ -35,7 +35,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		") or die(mysql_error());
 		$msg='<div class="alert alert-success alert-dismissable">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				Cylinder has been updated.
+				<i class="fa fa-check"></i>Cylinder has been updated.
 			</div>';
 		$username = SMS_USERNAME;
 		$password = SMS_PASSWORD;
@@ -235,7 +235,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<div class="form-group">
 						<label class="col-md-3 control-label" for="example-text-input">Tier Weight *</label>
 						<div class="col-md-6">
-							<input type="number" step="0.1" class="form-control" id="example-text-input" value="<?php echo $TierWeight;?>" name="TierWeight">
+							<input type="number" step="any" class="form-control" id="example-text-input" value="<?php echo $TierWeight;?>" name="TierWeight">
 						</div>
 					</div>
 
