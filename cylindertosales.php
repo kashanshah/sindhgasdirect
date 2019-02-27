@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANTS));
+get_right(array(ROLE_ID_PLANT));
 
 	$ID = "";
 	$msg = "";
@@ -225,7 +225,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									else
 									{
 										while($Rs = mysql_fetch_assoc($r)) {
-											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_PLANTS){
+											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_PLANT){
 										?>
 										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" data-currentweight="<?php echo getCurrentWeight($Rs["ID"]); ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
@@ -266,7 +266,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<th>Weight</th>
 							<th>Final Weight</th>
 							<th>Gas Weight</th>
-							<th><a class="btn btn-danger dropdown-toggle" href="update_cart_delete.php?ID=all&url=<?php echo $current_url; ?>">Clear All</a></th>
+							<th><a class="btn btn-danger dropdown-toggle" href="cylindertosales.php">Clear All</a></th>
 						  </tr>
 						</thead>
 						<tbody class="cart_table">
@@ -290,11 +290,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<div class="col-md-8">
 								<select class="form-control" required name="HandedTo" id="HandedTo" style="width: 100%;">
 									<?php
-										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = ".ROLE_ID_DRIVER) or die(mysql_error());
+										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = ".ROLE_ID_DRIVER . " AND PlantID= ".(int)$_SESSION["ID"]) or die(mysql_error());
 										$n = mysql_num_rows($r);
 										if($n == 0)
 										{
-											echo '<option value="0">No Salesman Added</option>';
+											echo '<option value="0">No Drivers Added</option>';
 										}
 										else
 										{

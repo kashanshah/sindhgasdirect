@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
@@ -135,9 +135,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
 					   <?php
-						if($_SESSION["RoleID"] == ROLE_ID_SHOP){
+						if($_SESSION["RoleID"] == ROLE_ID_SHOP || $_SESSION["RoleID"] == ROLE_ID_SALES){
 						?>
-                       <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addsale.php'" data-original-title="" title="">Add Sale</button>
+                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addsale.php'" data-original-title="" title="">Add Sale</button>
 						<?php
 						}
 						?>
@@ -188,7 +188,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<?php if($row["CustomerMobile"] != "" ) { ?> <br/><b>Mobile:</b> <?php echo $row["CustomerMobile"]; } ?>
 						</td>
                         <td><?php echo $row["Total"]; ?></td>
-                        <td><?php echo $row["Balance"]; ?></td>
+                        <td>Rs. <?php $Bal = getUserBalance($row["CustomerID"]); echo number_format($Bal, 2); ?>/-</td>
                         <td><?php echo $row["Paid"]; ?></td>
                         <td><?php echo $row["Unpaid"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>

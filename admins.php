@@ -119,7 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="box-header">
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                       <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addadmin.php'" data-original-title="" title="">Add New</button>
+                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addadmin.php'" data-original-title="" title="">Add New</button>
 						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                       </div>
                 </div><!-- /.box-header -->

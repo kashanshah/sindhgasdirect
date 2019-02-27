@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANTS, ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_SALES)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_SALES)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -133,7 +133,7 @@ desired effect
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <th>Username</th>
                                         <th>Name</th>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Shop</th>
                                         <?php } ?>
                                         <th>Address</th>
@@ -150,7 +150,7 @@ desired effect
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>

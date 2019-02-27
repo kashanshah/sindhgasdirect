@@ -72,7 +72,7 @@
             }
             else if ($_SESSION["RoleID"] == ROLE_ID_DRIVER) {
                 ?>
-                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
+                <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?>">
                     <a href="#"><i class="fa fa-cube"></i> <span>Inventory</span> <i
                                 class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
@@ -90,6 +90,8 @@
                 ?>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>"><a href="customers.php"><i class="fa fa-users"></i>Customers</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "salesmans.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsalesman.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editsalesman.php") ? 'active' : ''); ?>"><a href="salesmans.php"><i class="fa fa-user"></i>Salesmans</a></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpurchase.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindershoptodriver.php") ? 'active' : ''); ?>"><a href="viewinventory.php"><i class="fa fa-building"></i>Inventory</a></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?>"><a href="sales.php"><i class="fa fa-cart-arrow-down"></i>Sales</a></li>
 
                 <li class="treeview <?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>">
                     <a href="#"><i class="fa fa-group"></i> <span>Customers</span> <i
@@ -156,7 +158,7 @@
 
                 <?php
             }
-            else if ($_SESSION["RoleID"] == ROLE_ID_PLANTS) {
+            else if ($_SESSION["RoleID"] == ROLE_ID_PLANT) {
                 ?>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylinders.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcylinder.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcylinder.php") ? 'active' : ''); ?>"><a href="cylinders.php"><i class="fa fa-cubes"></i>Cylinders</a></li>
@@ -166,10 +168,12 @@
                 </li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>"><a href="customers.php"><i class="fa fa-users"></i>Customers</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "salesmans.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsalesman.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editsalesman.php") ? 'active' : ''); ?>"><a href="salesmans.php"><i class="fa fa-user"></i>Salesmans</a></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "drivers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "adddriver.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editdriver.php") ? 'active' : ''); ?>"><a href="drivers.php"><i class="fa fa-truck"></i>Drivers</a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?>"><a href="viewinventory.php"><i class="fa fa-cube"></i>Inventory</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindertostore.php") ? 'active' : ''); ?>"><a href="cylindertostore.php"><i class="fa fa-industry"></i>Fill Cylinders</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindertosales.php") ? 'active' : ''); ?>"><a href="cylindertosales.php"><i class="fa fa-truck"></i>Dispatch Cylinders (OUT) </a></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoplant.php") ? 'active' : ''); ?>"><a href="returntoplant.php"><i class="fa fa-truck"></i>Return Cylinders (IN) </a></li>
                 <!--NEW MENU -->
 
 

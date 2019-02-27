@@ -67,10 +67,11 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				Password = "' . generate_refno(rand()) . generate_refno(time()) . '",
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
 				Number = "' . dbinput($Number) . '",
+				Balance=Balance-' . (int)$Balance . ',
 				Email = "' . dbinput($Email) . '",
 				Address = "' . dbinput($Address) . '",
 				Remarks = "' . dbinput($Remarks) . '",
-				Status = "0",
+				Status = "1",
 				PerformedBy = "' . (int)$_SESSION["ID"] . '"
 				' . ($NewOldCustomer == "0" ? ' WHERE ID=' . $CustomerID : ' ');
         mysql_query($query2) or die (mysql_error());
@@ -83,7 +84,6 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 			Note = '" . dbinput($Note) . "'") or die(mysql_error());
         $InvoiceID = mysql_insert_id();
 
-        mysql_query("UPDATE users SET Balance=Balance-'" . (int)$Balance . "' WHERE ID=" . $CustomerID);
 
         if ($NewOldCustomer == 1) {
             if (isset($_FILES["SFile"]) && $_FILES["SFile"]['name'] != "") {
@@ -119,7 +119,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 			Total='" . (float)($TotalAmount) . "',
 			Balance='" . (float)($Balance) . "',
 			Paid='" . (float)$Paid . "',
-			Unpaid='" . (float)($TotalAmount - $Balance - $Paid) . "',
+			Unpaid='" . (float)($TotalAmount - ($Balance * GAS_RATE) - $Paid) . "',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			Note='" . dbinput($Note) . "'
 			";
@@ -130,7 +130,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				PerformedBy = '" . (int)$_SESSION["ID"] . "',
 				SaleID=" . $SaleID . ",
 				Paid='" . (float)$Paid . "',
-				Unpaid='" . (float)($TotalAmount - $Balance - $Paid) . "',
+				Unpaid='" . (float)($TotalAmount - ($Balance * GAS_RATE) - $Paid) . "',
 				Note = '" . dbinput($Note) . "'";
         mysql_query($query4) or die(mysql_error());
         $SaleAmountID = mysql_insert_id();
@@ -366,7 +366,7 @@ desired effect
                                             <th>Gas Weight</th>
                                             <th>Current Full Weight</th>
                                             <th>Current Gas Weight</th>
-                                            <th style="display: none">Gas Rate</th>
+                                            <th>Gas Rate</th>
                                             <th>Price</th>
                                             <th><a class="btn btn-danger dropdown-toggle"
                                                    href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Clear All</a></th>
@@ -403,12 +403,11 @@ desired effect
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label"
-                                                       for="example-text-input">Balance</label>
+                                                       for="example-text-input">Balance KGs</label>
                                                 <div class="col-md-8">
                                                     <input type="number" step="any" class="form-control" placeholder="" readonly=""
                                                            name="Balance" value="<?php echo $Balance; ?>" id="Balance"
                                                            data-balance="0">
-                                                    <p class="help">Account balance: <?php echo $Balance; ?></p>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -463,7 +462,7 @@ desired effect
                                                             data-placeholder="Select The Customer" name="CustomerID"
                                                             style="width: 100%;">
                                                         <?php
-                                                        $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER) or die(mysql_error());
+                                                        $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
                                                         if ($n == 0) {
                                                             echo '<option value="0">No User Added</option>';
@@ -636,17 +635,19 @@ desired effect
 
     function gettotal() {
         var gt = 0;
+        var GAS_RATE = <?php echo GAS_RATE; ?>;
         $('.SalePrice').each(function () {
             gt = gt + parseFloat($(this).val());
         });
+        console.log(gt, GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(gt);
-        if (parseFloat($("#Balance").attr("data-balance")) > parseFloat($("#TotalAmount").val())) {
-            $("#Balance").val($("#TotalAmount").val());
-            $("#Unpaid").val(gt - parseFloat($("#Balance").val()));
+        if ((parseFloat($("#Balance").attr("data-balance")) * GAS_RATE) > parseFloat($("#TotalAmount").val())) {
+            $("#Balance").val($("#TotalAmount").val()/GAS_RATE);
+            $("#Unpaid").val('0');
         } else {
             $("#Balance").val($("#Balance").attr("data-balance"));
-            $("#Unpaid").val(gt - parseFloat($("#Balance").val()));
+            $("#Unpaid").val((gt/GAS_RATE - parseFloat($("#Balance").val()))*GAS_RATE);
         }
         $("#Paid").attr("max", $("#Unpaid").val());
     }
@@ -767,7 +768,7 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td>' + gasWeight.toFixed(2) + 'KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight').toFixed(2) + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td style="display:none;"><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight.toFixed(2) + '</span>KG</td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight.toFixed(2) + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + (parseFloat($("[name='CylinderID'] option:selected").data('price')) / gasWeight).toFixed(2) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + ($("[name='CylinderID'] option:selected").data('price')).toFixed(2) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" class="fa fa-times"></i></a></div></td>');

@@ -20,7 +20,7 @@
         $bgColor = '#FF0000';
         $color = '#FFFFFF';
     }
-    else if($_SESSION["RoleID"] == ROLE_ID_PLANTS){
+    else if($_SESSION["RoleID"] == ROLE_ID_PLANT){
         $bgColor = '#F39C12';
         $color = '#FFFFFF';
     }
@@ -168,7 +168,7 @@
                             <img src="<?php echo($_SESSION["Image"] == "" ? 'dist/img/user2-160x160.jpg' : DIR_USER_IMAGES . $_SESSION["Image"]) ?>"
                                  class="img-circle" alt="User Image">
                             <p>
-                                <span style="color:black; font-weight: bold"><?php echo $_SESSION["Username"]; ?></span>
+                                <span style="color:black; font-weight: bold"><?php echo $_SESSION["Name"]; ?></span>
                                 <small>Added on<br/> <?php echo $_SESSION["DateAdded"]; ?></small>
                             </p>
                         </li>

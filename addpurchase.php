@@ -239,16 +239,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-12">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-									$r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE ExpiryDate > '".date('Y-m-d h:i:s')."'") or die(mysql_error());
+									$r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE ExpiryDate > '".date('Y-m-d h:i:s')."' AND PlantID=".(int)$_SESSION["PlantID"]) or die(mysql_error());
 									$n = mysql_num_rows($r);
 									if($n == 0)
 									{
-										echo '<option value="0">No Cylinder Added</option>';
+										echo '<option value="0">No cylinder disatched from the plant</option>';
 									}
 									else
 									{
 										while($Rs = mysql_fetch_assoc($r)) { 
-											if(getCurrentStatus($Rs["ID"]) == 2){
+											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_DRIVER){
 										?>
 										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" data-weight="<?php echo getCurrentWeight($Rs["ID"]); ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
@@ -315,13 +315,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Payable Amount</label>
 							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Enter the Total Payable Amount" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
+								<input type="number" step="any" class="form-control" placeholder="Enter the Total Payable Amount" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Balance</label>
 							<div class="col-md-8">
-                                <input type="number" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (int)$Balance; ?>" id="Balance" max="<?php echo (int)$Balance; ?>">
+                                <input type="number" step="any" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (int)$Balance; ?>" id="Balance" max="<?php echo (int)$Balance; ?>">
 								<p class="help">Account balance: <?php echo (int)$Balance; ?></p>
 							</div>
 						</div>
@@ -419,10 +419,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		$(".DivTotal .CartGrandTotal").text(gt);
 		$("#TotalAmount").val(gt);
 	}
-	
-// $('#mainForm').submit(function (e) {
-	// e.preventDefault();
-// });
+
+    $('#mainForm').submit(function (e) {
+        if (!$("#myModal").hasClass("in")) {
+            e.preventDefault();
+            $("#myModal").modal('show');
+        }
+    });
 
 $(document).ready(function() {
 	$('#myModal').on('shown.bs.modal', function () {
@@ -484,10 +487,10 @@ $(document).ready(function() {
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CompanyTotalWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '<span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td>'+gasWeight+'KG</td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" step="any" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display:none"><span class="CylinderPrice CylinderPrice'+i+'">' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '</span></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display:none"><input type="number" name="RetailPrice[]" class="RetailPrice RetailPrice'+i+'" required="" value="' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '" /></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display:none"><input type="number" step="any" name="RetailPrice[]" class="RetailPrice RetailPrice'+i+'" required="" value="' + (gasWeight * <?php echo GAS_RATE; ?>).toFixed(2) + '" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');" ><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
 			i = i + 1;

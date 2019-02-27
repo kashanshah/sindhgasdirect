@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANTS));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
@@ -116,11 +116,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- /.box -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
               <div class="box">
-                  <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS){?>
+                  <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){?>
                 <div class="box-header">
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                       <a style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addcylinder.php" data-original-title="" title="">Add Cylinder</a>
+                       <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addcylinder.php" data-original-title="" title="">Add Cylinder</a>
 						<button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()" class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print Bar Codes</button>
 						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                       </div>
@@ -134,7 +134,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                      
                         <th>BarCode</th>
-                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <th>Plant</th>
                           <?php } ?>
                         <th>Short Description</th>
@@ -155,7 +155,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                   
                         <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
-                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                           <?php } ?>
                         <td><?php echo $row["ShortDescription"]; ?></td>

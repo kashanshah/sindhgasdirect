@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -40,7 +40,7 @@ get_right(array(1, 3));
 	$Note = '';
 
 	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.RefNum, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM purchases s LEFT JOIN users u ON u.ID = s.PerformedBy WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
+	$query="SELECT s.ID, u.Name, s.ShopID, s.RefNum, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM purchases s LEFT JOIN users u ON u.ID = s.PerformedBy WHERE s.ID <> 0 AND s.ID = ".(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -172,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="box-header">
                       <div class="btn-group-right">
                           <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT){
                               ?>
                               <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentpurchase.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
                               <?php
@@ -283,7 +283,7 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
                         <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
                         <div class="col-md-12">
-                            <input type="number" class="form-control" placeholder="" value="<?php echo $row["Balance"]; ?>" name="Balance" readonly="">
+                            <input type="number" class="form-control" placeholder="" value="<?php echo $row["Balance"] * GAS_RATE; ?>" name="Balance" readonly="">
                         </div>
                     </div>
                     <?php } ?>

@@ -71,7 +71,7 @@ $resource=mysql_query($sql) or die(mysql_error());
                 <div class="box-header">
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-danger" onClick="location.href='dashboard.php'" >Back</button>
-                       <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='sendmail.php'" data-original-title="" title="">Compose Mail</button>
+                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='sendmail.php'" data-original-title="" title="">Compose Mail</button>
                       </div>
                 </div><!-- /.box-header -->
                 <div class="box-body table-responsive">

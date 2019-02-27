@@ -1,13 +1,13 @@
 <?php
 include("common.php");
-get_right(array(1, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
+
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 	if(isset($_REQUEST["NewPayment"]))
 		$NewPayment=trim($_REQUEST["NewPayment"]);
 	if(isset($_REQUEST["RefNumber"]))
 		$RefNumber=trim($_REQUEST["RefNumber"]);
-
-$query="SELECT ID, RefNum, GasRate, Total, Balance, Note, Paid, Unpaid, DATE_FORMAT(DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases WHERE ID=".$ID;
+$query="SELECT p.ID, p.RefNum, p.GasRate, p.Total, p.Balance, p.Note, p.Paid, p.Unpaid, DATE_FORMAT(p.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases p LEFT JOIN purchase_details pd ON pd.PurchaseID=p.ID WHERE p.ID=".$ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 if($num == 0)
@@ -16,6 +16,7 @@ if($num == 0)
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 		Invalide purchase ID.
 		</div>';
+	exit();
 	redirect("purchases.php");
 }
 $row=mysql_fetch_array($resource);

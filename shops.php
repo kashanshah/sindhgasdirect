@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANTS, ROLE_ID_ADMIN));
+get_right(array(ROLE_ID_PLANT, ROLE_ID_ADMIN));
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
@@ -116,7 +116,7 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
-                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANTS){?>
+                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){?>
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
@@ -136,6 +136,8 @@ desired effect
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
                                         <?php } ?>
+                                        <th>Unpaid</th>
+                                        <th>Gas Balance</th>
                                         <th>Address</th>
                                         <th>Contact Number</th>
                                         <th>Remarks</th>
@@ -153,6 +155,29 @@ desired effect
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
+                                            <td>
+                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo $Bal; ?>/-
+                                                <?php
+                                                if($Bal < 0){
+                                                    $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE p.ShopID = ".$row["ID"]." AND p.Unpaid > 0 ";
+                                                    $osiresource=mysql_query($osisql) or die(mysql_error());
+                                                    ?>
+                                                    <div style="max-height:100px;overflow:scroll;">
+                                                        <?php
+                                                        while($oisrow = mysql_fetch_array($osiresource)){
+                                                            ?>
+                                                            <div>
+                                                                <a href="/viewpurchase.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                    ?>
+                                            </td>
+                                            <td><?php echo + $row["Balance"]; ?>KG Gas</td>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>

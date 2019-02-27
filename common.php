@@ -35,7 +35,7 @@ define("ROLE_ID_DRIVER", 2);
 define("ROLE_ID_SHOP", 3);
 define("ROLE_ID_CUSTOMER", 4);
 define("ROLE_ID_SALES", 5);
-define("ROLE_ID_PLANTS", 6);
+define("ROLE_ID_PLANT", 6);
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
@@ -856,6 +856,19 @@ function getCurrentHandedInvoiceID($ID)
     return $ret;
 }
 
+function getCurrentPurchaseShopID($ID)
+{
+    $res = mysql_query("SELECT p.ShopID AS UID FROM purchases p LEFT JOIN purchase_details pd ON p.ID=pd.PurchaseID WHERE pd.CylinderID = " . (int)$ID . " ORDER BY pd.ID DESC LIMIT 1") or die(mysql_error());
+    $ret = 0;
+    if (mysql_num_rows($res) == 0) {
+        $ret = 1;
+    } else {
+        $Rs = mysql_fetch_assoc($res);
+        $ret = $Rs['UID'];
+    }
+    return $ret;
+}
+
 function getCurrentPurchaseInvoiceID($ID)
 {
     $res = mysql_query("SELECT PurchaseID AS UID FROM purchase_details WHERE CylinderID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
@@ -880,6 +893,31 @@ function getCylinderPurchaseRate($ID)
         $ret = $Rs['UID'];
     }
     return $ret;
+}
+
+function getUserBalance($ID, $AddBalance=true){
+    $TotalUnpaid = 0;
+    if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_SHOP){
+        $q = "SELECT SUM(p.Unpaid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =".(int)$ID;
+        $r = mysql_query($q) or die(mysql_error());
+        $d = mysql_fetch_array($r);
+        $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
+        $TotalUnpaid = -$Unpaid;
+        if($AddBalance){
+            $TotalUnpaid = $TotalUnpaid + ($d["Balance"] * GAS_RATE);
+        }
+    }
+    else if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_CUSTOMER){
+        $q = "SELECT SUM(p.Unpaid) AS Unpaid, u.Balance FROM sales p LEFT JOIN users u ON u.ID=p.CustomerID WHERE p.CustomerID =".(int)$ID;
+        $r = mysql_query($q) or die(mysql_error());
+        $d = mysql_fetch_array($r);
+        $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
+        $TotalUnpaid = -$Unpaid;
+        if($AddBalance){
+            $TotalUnpaid = $TotalUnpaid + ($d["Balance"] * GAS_RATE);
+        }
+    }
+    return $TotalUnpaid;
 }
 
 function getCurrentHandedToRole($ID)
@@ -954,7 +992,7 @@ function getCylinderStatus($RoleID = 0)
         $ret = "Handed over to shop";
     } else if ($RoleID == ROLE_ID_CUSTOMER) {
         $ret = "Lended to customer";
-    } else if ($RoleID == ROLE_ID_PLANTS) {
+    } else if ($RoleID == ROLE_ID_PLANT) {
         $ret = "Plant Custody";
     } else {
         $ret = "Status not found";
@@ -1166,11 +1204,11 @@ function convertDigit($digit)
 function getCustomerDues($ID){
     $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
-    return (int)mysql_result($r, 0, 0);
+    return number_format((int)mysql_result($r, 0, 0), 2);
 }
 
 function getShopDues($ID){
     $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
-    return (int)mysql_result($r, 0, 0);
+    return number_format((int)mysql_result($r, 0, 0), 2);
 }

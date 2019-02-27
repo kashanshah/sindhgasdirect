@@ -1,5 +1,6 @@
 <?php include("common.php"); ?>
-<?php include("checkadminlogin.php"); 
+<?php include("checkadminlogin.php");
+get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 
 	$ID = "";
 	$msg = "";
@@ -13,6 +14,7 @@
 	$OldBarCode = "";
 	$CategoryID="";
 	$CylinderID = 0;
+	$HandedTo = 0;
 	$CylinderName = "";
 	$ShortDescription = "";
 	$Description = "";
@@ -50,116 +52,41 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 	{
 		$$key=$value;
 	}
-	$_COOKIE["PrintSlipsByDefault"] = $Print;
+	setcookie("PrintSlipsByDefault", $Print);
 //	if(!isset($_POST["CusomerID"])) $NewOldCustomer = 0;
 	if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
-	else if(!isset($_POST["TotalAmount"])) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Correct Total Amount</div>';
-	else if(!isset($_POST["Paid"])) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Correct Amount Paying</div>';
-	else if((isset($_POST["CustomerName"]) && $_POST["CustomerName"] == "") && (isset($_POST["CustomerID"]) && ($_POST["CustomerID"] == "" || $_POST["CustomerID"] == "0"))) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select a Customer</div>';
-	else if(!isset($CylinderID) && empty($CylinderID)) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select a product.</div>';
+	else if($_POST["HandedTo"] == "" || $_POST["HandedTo"] == "0") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select a Salesman</div>';
+	else if(!isset($CylinderID) && empty($CylinderID)) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select a cylinder to dispatch.</div>';
 
-	if($msg == "")
-	{
-		$query2 = ($NewOldCustomer == "1" ? 'INSERT INTO ' : 'UPDATE ').' users SET DateModified=NOW(),
-				'.($NewOldCustomer == "1" ? 'Name ="'.($CustomerName == '' ? 'Anonymous' : $CustomerName).'", DateAdded="NOW", ' : '').'
-				NIC = "'.dbinput($NIC).'",
-				Number = "'.dbinput($Number).'",
-				Address = "'.dbinput($Address).'",
-				Email = "'.dbinput($Email).'",
-				Remarks = "'.dbinput($Remarks).'",
-				PerformedBy = "'.(int)$_SESSION["ID"].'"
-				'.($NewOldCustomer == "0" ? ' WHERE ID='.$CustomerID : ' ');
-//				echo $query2; exit();
-		mysql_query($query2) or die (mysql_error());
-		if($NewOldCustomer == 1)
-		{
-			$CID = mysql_insert_id();
-			if(isset($_FILES["SFile"]) && $_FILES["SFile"]['name'] != "")
-			{
-				$tempName2 = $_FILES["SFile"]['tmp_name'];
-				$realName2 = $CID.".".$ext2;
-				$StoreImage = $realName2; 
-				$target2 = DIR_USER_IMAGES . $realName2;
-
-				if(is_file(DIR_USER_IMAGES . $StoreImage))
-					unlink(DIR_USER_IMAGES . $StoreImage);
-			
-				ini_set('memory_limit', '-1');
-				
-				$moved2=move_uploaded_file($tempName2, $target2);
-			
-				if($moved2)
-				{
-					$query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$CID;
-					mysql_query($query2) or die(mysql_error());
-					$_SESSION["msg"]='<div class="alert alert-danger alert-dismissable">
-						<i class="fa fa-ban"></i>
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Only two queries executed. Sale record not added.
-						</div>';
-				}
-			}
-		}
-		else
-		{
-			$CID = $CustomerID;
-		}
-		$_SESSION["msg"]='<div class="alert alert-danger alert-dismissable">
-				<i class="fa fa-ban"></i>
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				Only two queries executed. Sale record not added.
-				</div>';
-	}
 	
 	if($msg == "")
 	{
-		$query3 = "INSERT INTO sales SET DateAdded = NOW(),
-				CustomerID='".(int)$CID."',
-				Total='".(float)($BilledAmount)."',
-				Discount='".(float)$TotalDiscount."',
-				Unpaid='".(float)($BilledAmount - $TotalDiscount - $Paid)."',
-				Paid='".(float)$Paid."',
-				PerformedBy = '".(int)$_SESSION["ID"]."',
-				Note='".dbinput($Note)."'
-				";
-				
-		mysql_query($query3) or die(mysql_error());
-		$SID = mysql_insert_id();
-		$query4 = "INSERT INTO sales_amount SET DateAdded=NOW(),
-				PerformedBy = '".(int)$_SESSION["ID"]."',
-				SaleID=".$SID.",
-				Paid='".(float)$Paid."'";
-		mysql_query($query4) or die(mysql_error());
-		$IID = mysql_insert_id();
-		for($i = 0; $i<count($CylinderID); $i ++)
-		{
-			$te = mysql_query("SELECT RetailPrice FROM cylinders WHERE ID='".(int)$CylinderID[$i]."'") or die(mysql_error());
-			if(mysql_num_rows($te) > 0)
-			{
-				$FinalPrice = mysql_result($te, 0, 0);
-				mysql_query("INSERT INTO sales_details SET DateAdded = NOW(), SaleID='".(int)$SID."',
-					CylinderID='".(int)$CylinderID[$i]."',
-					Price='".$FinalPrice."',
-					Discount='".($CylinderDiscount[$i])."',
-					Quantity='".$CylinderWeight[$i]."',
-					PerformedBy = '".(int)$_SESSION["ID"]."',
-					Total='".$FinalPrice * $CylinderWeight[$i]."'
-					") or die(mysql_error());
-				$query4 = "UPDATE cylinders SET 
-						Stock = (Stock-".(int)$CylinderWeight[$i].")
-						WHERE ID='".(int)$CylinderID[$i]."'";
-				mysql_query($query4) or die(mysql_error());
-			}
+		mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+			PerformedBy = '".(int)$_SESSION["ID"]."',
+			IssuedTo = '".(int)$HandedTo."',
+			Note = '".dbinput($Note)."'") or die(mysql_error());
+		$InvoiceID = mysql_insert_id();
+
+		$i = 0;
+		foreach($CylinderID as $CID){
+			$query2 = "INSERT INTO cylinderstatus SET DateAdded = NOW(),
+				InvoiceID='".(int)$InvoiceID."',
+				CylinderID='".(int)$CID."',
+				HandedTo='".(int)$HandedTo."',
+				Weight='".(float)$CylinderWeight[$i]."',
+				PerformedBy = '".(int)$_SESSION["ID"]."'
+			";
+		mysql_query($query2) or die(mysql_error());
+			$i++;
 		}
-		
 		$msg='<div class="alert alert-success alert-dismissable">
 			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			Sale has been added!
+			Cylinder dispatch inserted!
 			</div>';
 		if($Print == "1")
 		{
-			echo '<script>window.open("printsaleslip.php?ID='.$IID.'", "_blank"); </script>';
+			echo '<script>window.open("printdriverslip.php?ID='.$InvoiceID.'", "_blank"); </script>';
 		}
 	}
 		$_SESSION["msg"] = $msg;
@@ -175,7 +102,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Cylinder To Shop</title>
+    <title><?php echo SITE_TITLE; ?></title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -224,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   |               | sidebar-mini                            |
   |---------------------------------------------------------|
   -->
-  <body class="hold-transition skin-blue sidebar-collapse">
+  <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
       <!-- Main Header -->
@@ -238,13 +165,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Sales Dispatch Cylinder
+            Dispatch Cylinders Back to Drivers
             <small></small>
           </h1>
           <ol class="breadcrumb">
             <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="sales.php"><i class="fa fa-cart-arrow-down"></i> Sales</a></li>
-            <li class="active">Sales Dispatch Cylinder</li>
+            <li><a href="viewinventory.php"><i class="fa fa-circloe-o"></i> Inventory</a></li>
+            <li class="active">Dispatch Cylinders</li>
           </ol>
         </section>
 
@@ -256,8 +183,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="box ">
                 <div class="box-header">
                       <div class="btn-group-right">
-                       <a style="float:right;margin-right:15px;" type="button" href="addsale.php" class="btn btn-group-vertical btn-info">Reset</a>
-                       <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-danger" href="sales.php" >Back</a>
+                       <a style="float:right;margin-right:15px;" type="button" href="cylindershoptodriver.php" class="btn btn-group-vertical btn-info">Reset</a>
+                       <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-danger" href="viewinventory.php" >Back</a>
                        <button style="float:right;margin-right:15px;" type="button" class="checkout-button btn btn-primary btn-lg">
 							Confirm Dispatch
 						</button>
@@ -268,7 +195,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<form id="cart_update" action="cart_update.php" class="form-horizontal" method="post" enctype="multipart/form-data"> -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
               <div class="col-md-6">
-              <div class="box box-default">
+              <div class="box ">
 				<div class="box-header with-border">
 				  <h3 class="box-title">Select Cylinder</h3>
 				  <div class="box-tools pull-right">
@@ -284,7 +211,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</form>
 						</div>
 					</div>
-                    <div class="form-group">
+				 <div class="form-group">
 					<label class="col-md-3 control-label" for="example-text-input">Cylinder</label>
 						<div class="col-md-8">
 							<select name="CylinderID" id="CylinderID" class="form-control">
@@ -293,14 +220,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									$n = mysql_num_rows($r);
 									if($n == 0)
 									{
-										echo '<option value="0">No Cylinder Added</option>';
+										echo '<option value="0">No Cylinder In Inventory</option>';
 									}
 									else
 									{
-										while($Rs = mysql_fetch_assoc($r)) { 
-											if(getCurrentStatus($Rs["ID"]) == 1){
+										while($Rs = mysql_fetch_assoc($r)) {
+											if(getCurrentHandedTo($Rs["ID"]) == $_SESSION["ID"]){
 										?>
-										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
+										<option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" data-currentweight="<?php echo getCurrentWeight($Rs["ID"]); ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}
 										}
@@ -323,10 +250,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				</div>
 			  </div>
 				</div><!-- /.box-body -->
-				<form action="<?php echo $_SERVER["PHP_SELF"]; ?>" class="form-horizontal cart-form" method="post" enctype="multipart/form-data">
+				<form id="mainForm" action="<?php echo $_SERVER["PHP_SELF"]; ?>" class="form-horizontal cart-form" method="post" enctype="multipart/form-data">
               <div class="col-md-6">
               <!-- SPACE FOR CART -->
-              <div class="box box-default">
+              <div class="box ">
 				<div class="box-header with-border">
 				  <h3 class="box-title">Cylinder Information</h3>
 				</div>
@@ -339,7 +266,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<th>Weight</th>
 							<th>Final Weight</th>
 							<th>Gas Weight</th>
-							<th><a class="btn btn-danger dropdown-toggle" href="update_cart_delete.php?ID=all&url=<?php echo $current_url; ?>">Clear All</a></th>
+							<th><a class="btn btn-danger dropdown-toggle" href="cylindershoptodriver.php">Clear All</a></th>
 						  </tr>
 						</thead>
 						<tbody class="cart_table">
@@ -354,33 +281,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			<br/>
-			<input type="submit" name="addsale" value="Save changes" class="btn btn-primary pull-right" />
-			<h4 class="modal-title" id="myModalLabel">Check Out</h4>
+			<h4 class="modal-title" id="myModalLabel">Confirm Dispatch</h4>
 		  </div>
 		<div class="modal-body">
 					<div class="box box-body">
 						<div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Billed Amount</label>
+							<label class="col-md-3 control-label" for="example-text-input">Assign To:</label>
 							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Billed Amount" readonly="" name="BilledAmount" value="<?php echo $BilledAmount; ?>" id="BilledAmount">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Total Discount</label>
-							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Enter the Total Discount Amount" readonly="" value="<?php echo $TotalDiscount; ?>" name="TotalDiscount" id="TotalDiscount">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Payable Amount</label>
-							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Enter the Total Payable Amount" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Amount Paying</label>
-							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Enter the initial amount paying" value="" required="" name="Paid" id="Paid">
+								<select class="form-control" required name="HandedTo" id="HandedTo" style="width: 100%;">
+									<?php
+										$r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = ".ROLE_ID_DRIVER . " AND PlantID= ".(int)$_SESSION["PlantID"]) or die(mysql_error());
+										$n = mysql_num_rows($r);
+										if($n == 0)
+										{
+											echo '<option value="0">No Drivers Added</option>';
+										}
+										else
+										{
+											while($Rs = mysql_fetch_assoc($r)) { ?>
+											<option value="<?php echo $Rs['ID']; ?>" <?php if($HandedTo==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
+											<?php }
+										}
+								?>
+								</select>
 							</div>
 						</div>
 						<div class="form-group">
@@ -389,87 +312,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<textarea class="form-control" name="Note"><?php echo stripcslashes($Note);?></textarea>
 							</div>
 						</div>
-					  <div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Print Slip?</label>
-							<div class="col-md-6">
-							  <input type="radio" name="Print" value="1" <?php echo ($Print == "1" ? 'checked=""' : '') ?>> Yes &nbsp;&nbsp;&nbsp;&nbsp;
-							  <input type="radio" name="Print" value="0" <?php echo ($Print == "0" ? 'checked=""' : '') ?>> No
-							</div>
-					  </div>
-						<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input"></label>
-					<div class="col-md-8">
-						<input type="checkbox" value="1" id="NewOldCustomer" <?php echo ($NewOldCustomer == "1") ? 'checked=""' : '' ;?> name="NewOldCustomer"><label> New Customer</label>
-					</div>
-				</div>
-				<div class="form-group" id="CustomerName">
-					<label class="col-md-3 control-label" for="example-text-input">Name</label>
-					<div class="col-md-8">
-						<input type="text" class="form-control" value="<?php echo $CustomerName;?>" placeholder="Enter Customer Name" name="CustomerName">
-					</div>
-				</div>
-				<div class="form-group" id="CustomerID">
-				<label class="col-md-3 control-label" for="example-text-input">Customer</label>
-					<div class="col-md-8">
-						<select class="form-control select2" data-placeholder="Select The Customer" name="CustomerID" style="width: 100%;">
-							<option value="0"></option>
-							<?php
-								$r = mysql_query("SELECT ID, Name FROM users ") or die(mysql_error());
-								$n = mysql_num_rows($r);
-								if($n == 0)
-								{
-									echo '<option value="0">No User Added</option>';
-								}
-								else
-								{
-									while($Rs = mysql_fetch_assoc($r)) { ?>
-									<option value="<?php echo $Rs['ID']; ?>" <?php if($CustomerID==$Rs['ID']) { echo 'Selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
-									<?php }
-								}
-						?>
-						</select>
-						<div id="SImage"></div>
-					</div>
-				</div>
-				<div class="form-group" id="SFile">
-					<label class="col-md-3 control-label" for="example-text-input">Image</label>
-					<div class="col-md-8">
-						<input type="file" name="SFile">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input">NIC</label>
-					<div class="col-md-8">
-						<input type="text" class="form-control" value="<?php echo $NIC;?>" placeholder="Enter NIC Number" name="NIC" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input">Address</label>
-					<div class="col-md-8">
-						<input type="text" class="form-control" value="<?php echo $Number;?>" placeholder="Enter Address" name="Number">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input">Address</label>
-					<div class="col-md-8">
-						<textarea class="form-control" name="Address"><?php echo $Address;?></textarea>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input">Email</label>
-					<div class="col-md-8">
-						<input type="email" class="form-control" value="<?php echo $Email;?>" placeholder="Enter Email" name="Email">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label" for="example-text-input">Remarks</label>
-					<div class="col-md-8">
-						<textarea class="form-control" name="Remarks"><?php echo stripcslashes($Remarks);?></textarea>
-					</div>
-				</div>
+						  <div class="form-group">
+								<label class="col-md-3 control-label" for="example-text-input">Print Slip?</label>
+								<div class="col-md-6">
+								  <input type="radio" name="Print" value="1" <?php echo ($Print == "1" ? 'checked=""' : '') ?>> Yes &nbsp;&nbsp;&nbsp;&nbsp;
+								  <input type="radio" name="Print" value="0" <?php echo ($Print == "0" ? 'checked=""' : '') ?>> No
+								</div>
+						  </div>
 				<?php if(CAPTCHA_VERIFICATION == 1) { ?>
 				  <div class="col-md-6">
-				  <div class="box box-default">
+				  <div class="box ">
 					<div class="box-header with-border">
 					  <h3 class="box-title">Human Verification</h3>
 					  <div class="box-tools pull-right">
@@ -568,9 +420,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		$("#TotalDiscount").val(gt);
 		
 	}
+	
+$('#mainForm').submit(function (e) {
+    if (!$("#myModal").hasClass("in")) {
+        e.preventDefault();
+        $("#myModal").modal('show');
+    }
+});
+
 $(document).ready(function() {
 	$('#myModal').on('shown.bs.modal', function () {
-		$('#Paid').focus();
+		$('#HandedTo').focus();
 	})  
 	$(document).on('click', '.checkout-button', function()
 	{
@@ -607,6 +467,8 @@ $(document).ready(function() {
 });
 
 	$("#AddItemButton").click(function() {
+		if($("#CylinderID").val() == "" || $("#CylinderID").val() == null)
+			return false;
 		var j=0, q=0;
 		$('.cart_table input[name="CylinderID[]"]').each(function(){
 			if($(this).val() == $("#CylinderID").val())
@@ -620,7 +482,7 @@ $(document).ready(function() {
 		});
 		if(j!=1)
 		{
-			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
+			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
 			i = i + 1;
 			gettotal();
 			calculateWeights();

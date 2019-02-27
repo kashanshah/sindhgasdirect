@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANTS));
+get_right(array(ROLE_ID_PLANT));
 
 $msg='';
 $Username = "";			$Password = "";			$Email = "";			$Image="";
@@ -200,7 +200,7 @@ desired effect
                             <div class="box-header">
                                 <div class="btn-group-right">
                                     <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="shops.php" >Back</a>
-                                    <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
+                                    <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
                         </div>

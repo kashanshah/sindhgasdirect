@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_DRIVER, ROLE_ID_SHOP, ROLE_ID_PLANTS));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_DRIVER, ROLE_ID_SHOP, ROLE_ID_PLANT));
 
 $msg = '';
 $sql = "SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
@@ -101,8 +101,8 @@ desired effect
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info"
                                         onClick="location.href='dashboard.php'">Back
                                 </button>
-                                <?php if($_SESSION["RoleID"] != ROLE_ID_DRIVER){ ?>
-                                <button style="float:right;;margin-right:15px;" type="button"
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                <button style="float:right;margin-right:15px;" type="button"
                                         class="btn btn-group-vertical btn-success"
                                         onClick="location.href='addcylinder.php'" data-original-title="" title="">Add
                                     Cylinder
@@ -114,7 +114,22 @@ desired effect
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()"
                                         class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete
                                 </button>
-                                <?php } ?>
+                                <?php }
+                                else if($_SESSION["RoleID"] == ROLE_ID_SHOP){ ?>
+                                    <a style="float:right;margin-right:15px;" type="button"
+                                       class="btn btn-group-vertical btn-success"
+                                       href="cylindershoptodriver.php" data-original-title="" title="">Return Back To Driver
+                                    </a>
+                                    <a style="float:right;margin-right:15px;" type="button"
+                                            class="btn btn-group-vertical btn-primary"
+                                            href="addpurchase.php" data-original-title="" title="">Recieve Cylinder From Driver
+                                    </a>
+                                    <a style="float:right;margin-right:15px;" type="button"
+                                            class="btn btn-group-vertical btn-success"
+                                            href="returntoshop.php" data-original-title="" title="">Recieve Cylinder From Customer
+                                    </a>
+                                    <?php
+                                }?>
                             </div>
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
@@ -132,7 +147,6 @@ desired effect
                                         <th>Current Gas Weight (KG)</th>
                                         <th>Status</th>
                                         <th>Date Manufacturing</th>
-                                        <th>Date Added</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -157,7 +171,6 @@ desired effect
                                                 <td><?php echo (getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"])) - $row["TierWeight"]; ?></td>
                                                 <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])) . '<br/>' . getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                                                 <td><?php echo $row["ManufacturingDate"]; ?></td>
-                                                <td><?php echo $row["DateAdded"]; ?></td>
 
                                                 <td>
                                                     <div class="btn-group">

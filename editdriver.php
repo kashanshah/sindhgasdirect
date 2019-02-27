@@ -1,12 +1,12 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 $msg='';				$ID = 0;
-$Username = "";			$Password = "";			$Email = "";			$Image="";
-$Name = "";				$Number = "";
-$Address = "";			$RoleID = ROLE_ID_SHOP;
-$Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
+$Username = "";			$Email = "";			$Image="";
+$Name = "";				$Number = "";			$Password = "";
+$Address = "";
+$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 
 if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
@@ -16,7 +16,6 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
     else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Name</div>';
-    else if($Password == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Password</div>';
     else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
     {
         $filenamearray2=explode(".", $_FILES["File"]['name']);
@@ -43,13 +42,11 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("UPDATE users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
-						RoleID='".(int)ROLE_ID_SHOP."',
-						Password='".dbinput($Password)."',
-						PlantID='".(int)$_SESSION["ID"]."',
+						DateAdded=NOW(),
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						Password='".dbinput($Password)."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
@@ -57,7 +54,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						") or die(mysql_error());
         $msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Shop has been updated.
+						Driver has been updated.
 					</div>';
         if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
         {
@@ -76,14 +73,14 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
                 $query2="UPDATE users SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$ID;
                 mysql_query($query2) or die(mysql_error());
                 $_SESSION["msg"] = $msg;
-                redirect("editshop.php?ID=".$ID);
+                redirect("editdriver.php?ID=".$ID);
             }
             else
             {
                 $msg='<div class="alert alert-warning alert-dismissable">
 						<i class="fa fa-ban"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<b>Shop has been updated but Image can not be uploaded.</b>
+						<b>Driver has been updated but Image can not be uploaded.</b>
 						</div>';
             }
         }
@@ -92,10 +89,10 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<b>Shop has been updated.</b>
+					<b>Driver has been updated.</b>
 					</div>';
             $_SESSION["msg"] = $msg;
-            redirect("editshop.php?ID=".$ID);
+            redirect("editdriver.php?ID=".$ID);
         }
     }
 }
@@ -105,9 +102,9 @@ else
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Invalide shop ID</b>
+				<b>Invalide user ID</b>
 				</div>';
-    redirect("shops.php");
+    redirect("users.php");
 }
 $sql="SELECT * FROM users where ID=".$ID;
 $resource=mysql_query($sql) or die(mysql_error());
@@ -122,9 +119,9 @@ else
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Invalide shop ID</b>
+				<b>Invalide user ID</b>
 				</div>';
-    redirect("shops.php");
+    redirect("users.php");
 }
 
 
@@ -138,7 +135,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Edit Shop</title>
+    <title><?php echo SITE_TITLE; ?>- Edit User</title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -201,12 +198,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Edit Shop
+                Edit User
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="shops.php"><i class="fa fa-dashboard"></i> Shops</a></li>
-                <li class="active">Edit Shop</li>
+                <li><a href="users.php"><i class="fa fa-dashboard"></i> Users</a></li>
+                <li class="active">Edit User</li>
             </ol>
         </section>
 
@@ -219,7 +216,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="shops.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="users.php" >Back</a>
                                     <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -249,9 +246,9 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="example-text-input">Password</label>
+                                    <label class="col-md-3 control-label" for="Password">Password</label>
                                     <div class="col-md-6">
-                                        <input type="password" class="form-control" id="example-text-input" value="<?php echo $Password;?>" name="Password">
+                                        <input type="password" class="form-control" id="Password" value="<?php echo $Password;?>" name="Password" required min="3" max="20">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -276,13 +273,6 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Address</label>
                                     <div class="col-md-6">
                                         <textarea class="form-control" name="Address"><?php echo $Address;?></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="example-text-input">Status</label>
-                                    <div class="col-md-6">
-                                        <label><input type="radio" value="1" name="Status" <?php echo ($Status == "1" ? 'checked=""' : '') ?>> Enabled</label>
-                                        <label><input type="radio" value="0" name="Status" <?php echo ($Status == "0" ? 'checked=""' : '') ?>> Disabled</label>
                                     </div>
                                 </div>
                                 <div class="form-group">

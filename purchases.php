@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_PLANT));
 
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
@@ -33,7 +33,8 @@ get_right(array(1, 3));
 			redirect($self);
 		}
 	}
-$sql="SELECT p.ID, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND ShopID = '.(int)$_SESSION["ID"]);
+$sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
+LEFT JOIN users u ON p.ShopID=u.ID WHERE p.ID <> 0 " .($_SESSION["RoleID"] == ROLE_ID_PLANT ? '' : ' AND p.ShopID='.$_SESSION["ID"]);
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -137,7 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					   <?php
 						if($_SESSION["RoleID"] == ROLE_ID_SHOP){
 						?>
-                       <button style="float:right;;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addpurchase.php'" data-original-title="" title="">Add Purchase</button>
+                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addpurchase.php'" data-original-title="" title="">Add Purchase</button>
 						<?php
 						}
 						?>
@@ -175,7 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                         <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
                         <td><?php echo $row["Total"]; ?></td>
-                        <td><?php echo $row["Balance"]; ?></td>
+                        <td><?php echo getUserBalance($row["ShopID"]); ?></td>
                         <td><?php echo $row["Paid"]; ?></td>
                         <td><?php echo $row["Unpaid"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>

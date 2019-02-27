@@ -5,7 +5,7 @@ get_right(array(ROLE_ID_ADMIN));
 $msg='';				$ID = 0;
 $Username = "";			$Password = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";
-$Address = "";			$RoleID = ROLE_ID_PLANTS;
+$Address = "";			$RoleID = ROLE_ID_PLANT;
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 
@@ -44,7 +44,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 
         mysql_query("UPDATE users SET
 						Status='".(int)$Status."', DateAdded=NOW(),
-						RoleID='".(int)ROLE_ID_PLANTS."',
+						RoleID='".(int)ROLE_ID_PLANT."',
 						Password='".dbinput($Password)."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
@@ -219,7 +219,7 @@ desired effect
                             <div class="box-header">
                                 <div class="btn-group-right">
                                     <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="plants.php" >Back</a>
-                                    <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
+                                    <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
                         </div>

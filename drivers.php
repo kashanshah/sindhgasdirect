@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
@@ -11,7 +11,7 @@ if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
         mysql_query($query);
         $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="icon fa fa-ban"></i> Customer(s) Deleted!
+                    <i class="icon fa fa-ban"></i> Driver(s) Deleted!
                   </div>';
     }
 }
@@ -21,12 +21,12 @@ if(isset($_REQUEST['DID']))
     mysql_query($query);
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="icon fa fa-ban"></i> Customer Deleted!
+                    <i class="icon fa fa-ban"></i> Driver Deleted!
                   </div>';
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, u.PlantID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.PlantID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_DRIVER)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -39,7 +39,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Customers Management</title>
+    <title><?php echo SITE_TITLE; ?>- Drivers Management</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -100,12 +100,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Customers Management
-                <small>View All Customers</small>
+                Drivers Management
+                <small>View All Drivers</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Customers</li>
+                <li class="active">Drivers</li>
             </ol>
         </section>
 
@@ -116,14 +116,14 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
-                        <?php if($_SESSION["RoleID"] == ROLE_ID_SHOP || $_SESSION["RoleID"] == ROLE_ID_SALES){?>
-                        <div class="box-header">
-                            <div class="btn-group-right">
-                                <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
-                                <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addcustomer.php" data-original-title="" title="">Add New</a>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
-                            </div>
-                        </div><!-- /.box-header -->
+                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){?>
+                            <div class="box-header">
+                                <div class="btn-group-right">
+                                    <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
+                                    <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="adddriver.php" data-original-title="" title="">Add New</a>
+                                    <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
+                                </div>
+                            </div><!-- /.box-header -->
                         <?php } ?>
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
@@ -131,15 +131,13 @@ desired effect
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                                        <th>Username</th>
                                         <th>Name</th>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                            <th>Shop</th>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <th>Plant</th>
                                         <?php } ?>
                                         <th>Address</th>
                                         <th>Contact Number</th>
-                                        <th>Unpaid</th>
-                                        <th>Gas Balance</th>
-                                        <th>Credit Limit</th>
                                         <th>Remarks</th>
                                         <th></th>
                                     </tr>
@@ -150,39 +148,16 @@ desired effect
                                         ?>
                                         <tr>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                            <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                                <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
-                                            <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo number_format($Bal, 2).'/-'; ?>
-                                                <?php
-                                                if($Bal < 0){
-                                                    $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";
-                                                    $osiresource=mysql_query($osisql) or die(mysql_error());
-                                                    ?>
-                                                    <div style="max-height:100px;overflow:scroll;">
-                                                        <?php
-                                                        while($oisrow = mysql_fetch_array($osiresource)){
-                                                            ?>
-                                                            <div>
-                                                                <a href="/viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
-                                                            </div>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td><?php echo number_format($row["Balance"], 2); ?>KG Gas</td>
-                                            <td>Rs. <?php echo $row["CreditLimit"]; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
                                             <td>
-                                                <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-primary btn-xs" title="Edit" href="editdriver.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>

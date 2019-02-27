@@ -292,7 +292,7 @@ function imports()
                 <div class="box-header">
                       <div class="btn-group-right">
                        <button style="float:right;" type="button" class="btn btn-group-vertical btn-danger" onClick="location.href='dashboard.php'" >Back</button>
-                       <input style="float:right;;margin-right:15px;" type="submit" name="editstd" class="btn btn-group-vertical btn-success" value="Update"></button>
+                       <input style="float:right;margin-right:15px;" type="submit" name="editstd" class="btn btn-group-vertical btn-success" value="Update"></button>
                       </div>
 				</div>
 			  </div>

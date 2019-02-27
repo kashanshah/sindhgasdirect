@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANTS, ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";
@@ -216,7 +216,7 @@ desired effect
                             <div class="box-header">
                                 <div class="btn-group-right">
                                     <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="customers.php" >Back</a>
-                                    <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
+                                    <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
                         </div>

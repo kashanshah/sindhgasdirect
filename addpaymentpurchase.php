@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 2));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -42,7 +42,7 @@ get_right(array(1, 2));
 	$Note = '';
 
 	
-	$query="SELECT p.ID, p.ShopID, p.GasRate, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND ShopID = '.(int)$_SESSION["ID"]) . ' AND p.ID = '.(int)$ID;
+	$query="SELECT p.ID, p.ShopID, p.GasRate, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? '' : ' AND ShopID = '.(int)$_SESSION["ID"]) . ' AND p.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -284,7 +284,7 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
                         <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
                         <div class="col-md-12">
-                            <input type="number" class="form-control" placeholder="Enter the Balance Amount" readonly="" name="Balance" value="<?php echo $row["Balance"]; ?>" id="Balance">
+                            <input type="number" class="form-control" placeholder="Enter the Balance Amount" readonly="" name="Balance" value="<?php echo $row["Balance"] * $row["GasRate"]; ?>" id="Balance">
                         </div>
                     </div>
                     <div class="form-group">

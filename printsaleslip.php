@@ -1,7 +1,7 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
 $ID = $_REQUEST["ID"];
-$query="SELECT sa.SaleID AS InvoiceID, sh.ID AS ShopID, s.Total, s.Balance, sa.Paid AS NewPaid, sa.Unpaid, sa.Paid, sh.Name AS ShopName, c.ID AS CustomerID, c.Name AS CustomerName, date_format(s.DateAdded, '%r %d-%M-%Y') AS DateAdded, date_format(sa.DateAdded, '%r %d-%M-%Y') AS saDateAdded, sa.Note FROM sales_amount sa LEFT JOIN sales s ON s.ID = sa.SaleID LEFT JOIN users sh ON sh.ID = s.ShopID LEFT JOIN users c ON c.ID = s.CustomerID WHERE sa.ID=".$ID;
+$query="SELECT sa.SaleID AS InvoiceID, sh.ID AS ShopID, s.Total, s.Balance, s.GasRate, sa.Paid AS NewPaid, sa.Unpaid, sa.Paid, sh.Name AS ShopName, c.ID AS CustomerID, c.Name AS CustomerName, date_format(s.DateAdded, '%r %d-%M-%Y') AS DateAdded, date_format(sa.DateAdded, '%r %d-%M-%Y') AS saDateAdded, sa.Note FROM sales_amount sa LEFT JOIN sales s ON s.ID = sa.SaleID LEFT JOIN users sh ON sh.ID = s.ShopID LEFT JOIN users c ON c.ID = s.CustomerID WHERE sa.ID=".$ID;
 $resource = mysql_query($query) or die(mysql_error());
 $row=mysql_fetch_array($resource);
 
@@ -88,19 +88,19 @@ th, td { font-size: 8px; }
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Balance</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Balance"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Balance"] * $row["GasRate"], 2); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Payable</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] - $row["Balance"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] -($row["Balance"] * $row["GasRate"]), 2); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="8"  style="text-align: right;">
-								Rupees <?php echo convertNumber($row["Total"] - $row["Balance"]); ?> only
+								Rupees <?php echo convertNumber(number_format($row["Total"] - ($row["Balance"] * $row["GasRate"]), 0)); ?> only
 							</th>
 						  </tr>
 						  <?php
-						  if(($row["Unpaid"] + $row["NewPaid"]) != ($row["Total"] - $row["Balance"]))
+						  if(($row["Unpaid"] + $row["NewPaid"]) != ($row["Total"] - ($row["Balance"] * $row["GasRate"])))
 						  {
 							  ?>
 						  <tr>
@@ -116,7 +116,7 @@ th, td { font-size: 8px; }
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Total Amount Paid</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] - $row["Balance"] - ($row["Paid"] + $row["Unpaid"]) + $row["NewPaid"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] - ($row["Balance"] * $row["GasRate"]) - ($row["Paid"] + $row["Unpaid"]) + $row["NewPaid"], 2); ?></th>
 						  </tr>
 						  <?php
 						  if(($row["Total"] - $row["Paid"]) != 0)
