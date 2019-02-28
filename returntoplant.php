@@ -237,7 +237,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											data-customerid="<?php echo getCurrentPurchaseShopID($Rs["ID"]); ?>"
 											data-invoiceid="<?php echo getCurrentPurchaseInvoiceID($Rs["ID"]); ?>"
 											data-tierweight="<?php echo $Rs["TierWeight"]; ?>"
-											data-weight="<?php echo getCurrentWeight($Rs["ID"]) == 0 ? $Rs["TierWeight"] : getCurrentWeight($Rs["ID"]); ?>" 
+											data-weight="<?php echo getCurrentWeight($Rs["ID"]); ?>"
 											BarCode="<?php echo $Rs["BarCode"]; ?>" 
 											data-gasrate="<?php echo getCylinderPurchaseRate($Rs["ID"]); ?>" 
 											value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>

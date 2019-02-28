@@ -167,8 +167,8 @@ desired effect
                                                 </td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
                                                 <td><?php echo $row["TierWeight"]; ?></td>
-                                                <td><?php echo getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"]); ?></td>
-                                                <td><?php echo (getCurrentWeight($row["ID"]) == 0 ? $row["TierWeight"] : getCurrentWeight($row["ID"])) - $row["TierWeight"]; ?></td>
+                                                <td><?php echo getCurrentWeight($row["ID"]); ?></td>
+                                                <td><?php echo getCurrentWeight($row["ID"]) - $row["TierWeight"]; ?></td>
                                                 <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])) . '<br/>' . getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                                                 <td><?php echo $row["ManufacturingDate"]; ?></td>
 

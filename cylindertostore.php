@@ -212,7 +212,7 @@ desired effect
                                     <div class="col-md-8">
                                         <select name="CylinderID" id="CylinderID" class="form-control">
                                             <?php
-                                            $r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE Status = 0 AND ExpiryDate > '".date('Y-m-d h:i:s')."'") or die(mysql_error());
+                                            $r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE Status = 0 AND ExpiryDate > '".date('Y-m-d h:i:s')."' AND PlantID=".(int)$_SESSION["ID"]) or die(mysql_error());
                                             $n = mysql_num_rows($r);
                                             if($n == 0)
                                             {
@@ -221,6 +221,7 @@ desired effect
                                             else
                                             {
                                                 while($Rs = mysql_fetch_assoc($r)) {
+                                                    echo getCurrentStatus($Rs["ID"]);
                                                     if(getCurrentStatus($Rs["ID"]) == -1){
                                                         ?>
                                                         <option data-tierweight="<?php echo $Rs["TierWeight"]; ?>" data-currentweight="<?php echo getCurrentWeight($Rs["ID"]); ?>" BarCode="<?php echo $Rs["BarCode"]; ?>" value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>

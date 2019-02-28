@@ -156,8 +156,10 @@ function redirect($url)
 function backup_tables($host, $user, $pass, $name, $tables)
 {
     $return = '';
-    $link = mysql_connect($host, $user, $pass);
-    mysql_select_db($name, $link);
+//    $link = mysql_connect($host, $user, $pass);
+    $link = $GLOBALS['dbglobal'];
+//    mysql_select_db($name, $link);
+    mysqli_select_db($GLOBALS['dbglobal'], $name);
 
     //get all of the tables
     if ($tables == '*') {
@@ -184,7 +186,7 @@ function backup_tables($host, $user, $pass, $name, $tables)
                 $return .= 'INSERT INTO ' . $table . ' VALUES(';
                 for ($j = 0; $j < $num_fields; $j++) {
                     $row[$j] = dbinput($row[$j]);
-                    $row[$j] = ereg_replace("\n", "\\n", $row[$j]);
+                    $row[$j] = preg_replace("/\n/", "/\/\n/", $row[$j]);
                     if (isset($row[$j])) {
                         $return .= '"' . $row[$j] . '"';
                     } else {
@@ -935,16 +937,16 @@ function getCurrentHandedToRole($ID)
 
 function getCurrentWeight($ID)
 {
-    $res = mysql_query("SELECT cs.*, u.RoleID FROM cylinderstatus cs LEFT JOIN users u ON cs.HandedTo=u.ID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
+    $res = mysql_query("SELECT CylinderID, Weight FROM cylinderstatus WHERE CylinderID = " . (int)$ID . "  ORDER BY ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
         $res = mysql_fetch_array($res);
-        $ret = getValue('cylinders', 'TierWeight', 'ID', $res["CylinderID"]);
+        $ret = getValue('cylinders', 'TierWeight', 'ID', $ID);
     } else {
         $Rs = mysql_fetch_assoc($res);
         $ret = $Rs['Weight'];
     }
-    return $ret;
+    return (float)$ret;
 }
 
 function getCurrentPurchaseWeight($ID)
@@ -983,7 +985,7 @@ function dumpArray($RoleID = array())
 function getCylinderStatus($RoleID = 0)
 {
     if ($RoleID == -1) {
-        $ret = "Admin Custody (Unfilled)";
+        $ret = "Plant custody (Unfilled)";
     } else if ($RoleID == ROLE_ID_ADMIN || $RoleID == 0) {
         $ret = "Admin Custody";
     } else if ($RoleID == ROLE_ID_DRIVER) {

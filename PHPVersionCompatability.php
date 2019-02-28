@@ -28,6 +28,20 @@ if (!function_exists('mysql_fetch_array')) {
     }
 }
 
+if (!function_exists('mysql_num_fields')) {
+    function mysql_num_fields($query)
+    {
+        return mysqli_num_fields($query);
+    }
+}
+
+if (!function_exists('mysql_fetch_row')) {
+    function mysql_fetch_row($query)
+    {
+        return mysqli_fetch_row($query);
+    }
+}
+
 if (!function_exists('mysql_num_rows')) {
     function mysql_num_rows($query)
     {
