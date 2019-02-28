@@ -78,7 +78,7 @@ if(isset($_POST['backup']) && $_POST['backup']=='Back Up')
 
 if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 {
-	$Email = $_REQUEST["Email"];		$GasRate = $_REQUEST["GasRate"];
+	$Email = $_REQUEST["Email"];		$GasRate = $_REQUEST["GasRate"];		$RetailGasRate = $_REQUEST["RetailGasRate"];
 	$FullName = $_REQUEST["FullName"];						$CompanyName = $_REQUEST["CompanyName"];
 	$SMTPUser = $_REQUEST["SMTPUser"];						$Number = $_REQUEST["Number"];						$Address = $_REQUEST["Address"];			
 	$AlertReceiver = $_REQUEST["AlertReceiver"];							$SMTPHost = $_REQUEST["SMTPHost"];
@@ -93,6 +93,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		else if($SiteTitle == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Site Title</div>';
 		else if($Email == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter an Email Address</div>';
 		else if($GasRate == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter gas rate</div>';
+		else if($RetailGasRate == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter retail gas rate</div>';
 		else if($Address == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Address</div>';
 		else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
 		{
@@ -122,6 +123,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 						DateModified=NOW(),
 						Email='".dbinput($Email)."',
 						GasRate='".(float)$GasRate."',
+						RetailGasRate='".(float)$RetailGasRate."',
 						FullName='".dbinput($FullName)."',
 						CompanyName='".dbinput($CompanyName)."',
 						SMTPUser='".dbinput($SMTPUser)."',
@@ -182,7 +184,7 @@ else
 	$sql="SELECT * FROM configurations";
 	$resource=mysql_query($sql) or die(mysql_error());
 		$row=mysql_fetch_array($resource);
-		$Password = $row["Password"];				$Email = $row["Email"];				$GasRate = $row["GasRate"];
+		$Password = $row["Password"];				$Email = $row["Email"];				$RetailGasRate = $row["RetailGasRate"];	$GasRate = $row["GasRate"];
 		$Logo=$row["Logo"];					$FullName = $row["FullName"];						$CompanyName = $row["CompanyName"];
 		$SMTPUser = $row["SMTPUser"];						$Number = $row["Number"];					$Address = $row["Address"];			
 		$RoleID = 2;							$AlertReceiver = $row["AlertReceiver"];						$SMTPHost = $row["SMTPHost"];
@@ -343,10 +345,16 @@ function imports()
 							<input type="email" class="form-control" id="example-email-input" value="<?php echo $Email ;?>" placeholder="Enter Email" name="Email">
 						</div>
 					</div>
-                    <div class="form-group">
+			                <div class="form-group">
 						<label class="col-md-3 control-label" for="GasRate">Gas Rate per KG</label>
 						<div class="col-md-6">
-							<input type="number" step=".1" class="form-control" id="GasRate" value="<?php echo $GasRate ;?>" placeholder="Enter Gas Rate per KG" name="GasRate">
+							<input type="number" step="any" class="form-control" id="GasRate" value="<?php echo $GasRate ;?>" placeholder="Enter Gas Rate per KG" name="GasRate">
+						</div>
+					</div>
+			                <div class="form-group">
+						<label class="col-md-3 control-label" for="RetailGasRate">Retail Gas Rate per KG</label>
+						<div class="col-md-6">
+							<input type="number" step="any" class="form-control" id="RetailGasRate" value="<?php echo $RetailGasRate ;?>" placeholder="Enter Retail Gas Rate per KG" name="RetailGasRate">
 						</div>
 					</div>
                     <div class="form-group">

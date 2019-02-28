@@ -62,7 +62,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
     if ($msg == "") {
         $query2 = ($NewOldCustomer == "1" ? 'INSERT INTO ' : 'UPDATE ') . ' users SET DateModified=NOW(),
-				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", ' : '') . '
+				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", DateModified=NOW(), ' : '') . '
 				Username = "' . time() . '",
 				Password = "' . generate_refno(rand()) . generate_refno(time()) . '",
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
@@ -78,7 +78,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         if (mysql_insert_id() != 0) {
             $CustomerID = mysql_insert_id();
         }
-        mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+        mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified=NOW(),
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			IssuedTo = '" . (int)$CustomerID . "',
 			Note = '" . dbinput($Note) . "'") or die(mysql_error());
@@ -112,34 +112,38 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         }
         $GrandTotalGasWeight = 0;
         $GrandTotalRates = $TotalAmount;
-        $query3 = "INSERT INTO sales SET DateAdded = NOW(),
+        $GasRate = RETAIL_GAS_RATE;
+        $query3 = "INSERT INTO sales SET DateAdded = NOW(),DateModified=NOW(),
 			ShopID='" . (int)($_SESSION["ID"]) . "',
 			CustomerID='" . (int)($CustomerID) . "',
-			GasRate='" . (float)GAS_RATE . "',
+			GasRate='" . (float)$GasRate . "',
 			Total='" . (float)($TotalAmount) . "',
 			Balance='" . (float)($Balance) . "',
 			Paid='" . (float)$Paid . "',
-			Unpaid='" . (float)($TotalAmount - ($Balance * GAS_RATE) - $Paid) . "',
+			Unpaid='" . (float)($TotalAmount - ($Balance * $GasRate) - $Paid) . "',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			Note='" . dbinput($Note) . "'
 			";
         mysql_query($query3) or die(mysql_error());
         $SaleID = mysql_insert_id();
 
-        $query4 = "INSERT INTO sales_amount SET DateAdded=NOW(),
+        $query4 = "INSERT INTO sales_amount SET DateAdded=NOW(), DateModified=NOW(),
 				PerformedBy = '" . (int)$_SESSION["ID"] . "',
 				SaleID=" . $SaleID . ",
 				Paid='" . (float)$Paid . "',
-				Unpaid='" . (float)($TotalAmount - ($Balance * GAS_RATE) - $Paid) . "',
+				Unpaid='" . (float)($TotalAmount - ($Balance * $GasRate) - $Paid) . "',
 				Note = '" . dbinput($Note) . "'";
         mysql_query($query4) or die(mysql_error());
         $SaleAmountID = mysql_insert_id();
 
         $i = 0;
         foreach ($CylinderID as $CID) {
-            $query4 = "INSERT INTO sale_details SET DateAdded = NOW(),
+            $query4 = "INSERT INTO sale_details SET DateAdded = NOW(), DateModified=NOW(),
 				SaleID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
+				ReturnStatus=0,
+				ReturnWeight=0,
+				ReturnDate='1970-01-01',
 				TierWeight='" . (float)$CylinderWeight[$i] . "',
 				TotalWeight='" . (float)$CurrentCylinderWeight[$i] . "',
 				Price='" . (float)$SalePrice[$i] . "',
@@ -636,18 +640,19 @@ desired effect
     function gettotal() {
         var gt = 0;
         var GAS_RATE = <?php echo GAS_RATE; ?>;
+        var RETAIL_GAS_RATE = <?php echo RETAIL_GAS_RATE; ?>;
         $('.SalePrice').each(function () {
             gt = gt + parseFloat($(this).val());
         });
-        console.log(gt, GAS_RATE);
+        console.log(gt, RETAIL_GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(gt);
-        if ((parseFloat($("#Balance").attr("data-balance")) * GAS_RATE) > parseFloat($("#TotalAmount").val())) {
-            $("#Balance").val($("#TotalAmount").val()/GAS_RATE);
+        if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat($("#TotalAmount").val())) {
+            $("#Balance").val($("#TotalAmount").val()/RETAIL_GAS_RATE);
             $("#Unpaid").val('0');
         } else {
             $("#Balance").val($("#Balance").attr("data-balance"));
-            $("#Unpaid").val((gt/GAS_RATE - parseFloat($("#Balance").val()))*GAS_RATE);
+            $("#Unpaid").val((gt/RETAIL_GAS_RATE - parseFloat($("#Balance").val()))*RETAIL_GAS_RATE);
         }
         $("#Paid").attr("max", $("#Unpaid").val());
     }
@@ -773,6 +778,8 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + ($("[name='CylinderID'] option:selected").data('price')).toFixed(2) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " .CurrentGasRate.CurrentGasRate" + i).val(<?php echo RETAIL_GAS_RATE; ?>);
+            console.log(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " #CylinderGasWeight" + i);
             i = i + 1;
             gettotal();
             calculateWeights();

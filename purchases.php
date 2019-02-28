@@ -159,7 +159,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                         <th>Invoice ID</th>
                         <th>Total Price</th>
-                        <th>Balance</th>
                         <th>Amount Paid</th>
                         <th>Remaining Payment</th>
                         <th>Date Added</th>
@@ -176,7 +175,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                         <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
                         <td><?php echo $row["Total"]; ?></td>
-                        <td><?php echo getUserBalance($row["ShopID"]); ?></td>
                         <td><?php echo $row["Paid"]; ?></td>
                         <td><?php echo $row["Unpaid"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>

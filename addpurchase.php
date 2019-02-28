@@ -57,14 +57,15 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 	
 	if($msg == "")
 	{
-		mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+		mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified=NOW(),
 			PerformedBy = '".(int)$_SESSION["ID"]."',
 			IssuedTo = '".(int)$HandedTo."',
 			Note = '".dbinput($Note)."'") or die(mysql_error());
 		$InvoiceID = mysql_insert_id();
 
-		$query3 = "INSERT INTO purchases SET DateAdded = NOW(),
+		$query3 = "INSERT INTO purchases SET DateAdded = NOW(), DateModified = NOW(),
 				ShopID='".(int)($_SESSION["ID"])."',
+				RefNum='',
 				GasRate='".(float)GAS_RATE."',
 				Total='".(float)($TotalAmount)."',
 				Balance='".(int)($Balance)."',
@@ -80,13 +81,16 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 		$i = 0;
 		foreach($CylinderID as $CID){
 			$Price = GAS_RATE * ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
-			$query4 = "INSERT INTO purchase_details SET DateAdded = NOW(),
+			$query4 = "INSERT INTO purchase_details SET DateAdded = NOW(), DateModified=NOW(),
 				PurchaseID='".(int)$InvoiceID."',
 				CylinderID='".(int)$CID."',
 				TierWeight='".(float)$CylinderWeight[$i]."',
 				CompanyTotalWeight='".(float)$CompanyTotalWeight[$i]."',
 				TotalWeight='".(float)$CurrentCylinderWeight[$i]."',
 				Price='".(float)$Price."',
+				ReturnStatus=0,
+				ReturnWeight=0,
+				ReturnDate=NOW(),
 				RetailPrice='".(float)$RetailPrice[$i]."',
 				GasRate='".(float)(GAS_RATE)."',
 				PerformedBy = '".(int)$_SESSION["ID"]."'

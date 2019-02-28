@@ -60,7 +60,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 
     if($msg == "")
     {
-        mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+        mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
 			PerformedBy = '".(int)$_SESSION["ID"]."',
 			IssuedTo = '".(int)$_SESSION["ID"]."',
 			Note = 'Refilling'") or die(mysql_error());

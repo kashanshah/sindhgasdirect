@@ -54,7 +54,7 @@ th, td { font-size: 8px; }
 							<th>Cylinder Weight (kg)</th>
 							<th>Gas Weight (kg)</th>
 						  </tr>
-	<?php $SQty = 0; $p = 1; $aaa = mysql_query("SELECT c.BarCode, c.TierWeight, cs.Weight FROM cylinderstatus cs LEFT JOIN cylinders c ON cs.CylinderID = c.ID WHERE cs.InvoiceID=".$row["InvoiceID"]) or die('asd'.mysql_error());
+	<?php $SQty = 0; $p = 1; $aaa = mysql_query("SELECT c.BarCode, c.TierWeight, v.Name, cs.Weight FROM cylinderstatus cs LEFT JOIN invoices inv ON inv.ID=cs.InvoiceID LEFT JOIN vehicles v ON v.ID=inv.VehicleID LEFT JOIN cylinders c ON cs.CylinderID = c.ID WHERE cs.InvoiceID=".$row["InvoiceID"]) or die('asd'.mysql_error());
 	while($cart = mysql_fetch_array($aaa))
 	{
 		?>
@@ -68,13 +68,17 @@ th, td { font-size: 8px; }
 	<?php }
 		?>
 						  <tr>
+							<th style="font-weigt: bold;text-align: left;">Vehicle No:</th>
+							<th colspan="5" style="text-align: left;font-weigt: bold" ><?php echo $row["VehicleID"]; ?></th>
+						  </tr>
+						  <tr>
 							<th style="font-weigt: bold;text-align: left;">Note:</th>
 							<th colspan="5" style="text-align: left;font-weigt: bold" ><?php echo $row["Note"]; ?></th>
 						  </tr>
 					  </table>
 <script>
 	setTimeout(function(){
-		window.close();
+		// window.close();
 	}, 1000); 
 </script>
 </body>

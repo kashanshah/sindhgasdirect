@@ -159,7 +159,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Invoice ID</th>
                         <th>Customer Details</th>
                         <th>Total Price</th>
-                        <th>Balance</th>
                         <th>Amount Paid</th>
                         <th>Remaining Payment</th>
                         <th>Date Added</th>
@@ -188,9 +187,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<?php if($row["CustomerMobile"] != "" ) { ?> <br/><b>Mobile:</b> <?php echo $row["CustomerMobile"]; } ?>
 						</td>
                         <td><?php echo $row["Total"]; ?></td>
-                        <td>Rs. <?php $Bal = getUserBalance($row["CustomerID"]); echo number_format($Bal, 2); ?>/-</td>
-                        <td><?php echo $row["Paid"]; ?></td>
-                        <td><?php echo $row["Unpaid"]; ?></td>
+                        <td>Rs. <?php echo $row["Paid"]; ?>/-</td>
+                        <td>Rs. <?php echo $row["Unpaid"]; ?>/-</td>
                         <td><?php echo $row["DateAdded"]; ?></td>
                         <td><?php echo $row["DateModified"]; ?></td>
                         <td>

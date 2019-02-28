@@ -26,7 +26,7 @@ if (!function_exists('mysql_connect')) {
 }
 
 
-$settingResultSet = mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Domain, Address, GasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
+$settingResultSet = mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Domain, Address, GasRate, RetailGasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
 $settingRecordSet = mysql_fetch_assoc($settingResultSet);
 $ENQUIRIES_CATEGORIES = array("General enquiries", "Advertisement enquiries", "Website feedback", "Other comments");
 
@@ -41,6 +41,7 @@ define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
 define("ADDRESS", dboutput($settingRecordSet["Address"]));
 define("GAS_RATE", dboutput($settingRecordSet["GasRate"]));
+define("RETAIL_GAS_RATE", dboutput($settingRecordSet["RetailGasRate"]));
 define("PHONE_NUMBER", dboutput($settingRecordSet["Number"]));
 define("FAX_NUMBER", dboutput($settingRecordSet["FaxNumber"]));
 define("SITE_DOMAIN", dboutput($settingRecordSet["Domain"]));

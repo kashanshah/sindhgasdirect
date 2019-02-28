@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 3));
+get_right(array(1, 6, 3));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -40,7 +40,7 @@ get_right(array(1, 3));
 	$Note = '';
 
 	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
+	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)

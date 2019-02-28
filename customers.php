@@ -168,7 +168,7 @@ desired effect
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>
                                                             <div>
-                                                                <a href="/viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
+                                                                <a href="viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
                                                             </div>
                                                             <?php
                                                         }

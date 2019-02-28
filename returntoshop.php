@@ -225,7 +225,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									else
 									{
 										while($Rs = mysql_fetch_assoc($r)) { 
-											if(getCurrentStatus($Rs["ID"]) == 4 && getCurrentHandedBy($Rs["ID"]) == $_SESSION["ID"]){
+											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_CUSTOMER && getCurrentHandedBy($Rs["ID"]) == $_SESSION["ID"]){
 										?>
 										<option 
 											data-customername="<?php echo getValue('users', 'Name', 'ID', getCurrentHandedTo($Rs["ID"])); ?>" 
