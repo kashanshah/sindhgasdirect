@@ -60,6 +60,8 @@ get_right(array(ROLE_ID_PLANT));
 			$ExpiryDate = date_format($date, 'Y-m-d');
 			mysql_query("INSERT into cylinders SET
 						DateAdded=NOW(),
+						DateModified=NOW(),
+						Status=0,
 						BarCode='".dbinput($BarCode)."',
 						ManufacturingDate='".dbinput($ManufacturingDate)."',
 						ExpiryDate='".dbinput($ExpiryDate)."',

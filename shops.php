@@ -137,6 +137,7 @@ desired effect
                                             <th>Plant</th>
                                         <?php } ?>
                                         <th>Unpaid</th>
+                                        <th>Unpaid Invoices</th>
                                         <th>Gas Balance</th>
                                         <th>Address</th>
                                         <th>Contact Number</th>
@@ -156,7 +157,9 @@ desired effect
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo $Bal; ?>/-
+                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo abs($Bal); ?>/-
+                                            </td>
+                                            <td>
                                                 <?php
                                                 if($Bal < 0){
                                                     $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE p.ShopID = ".$row["ID"]." AND p.Unpaid > 0 ";
@@ -174,6 +177,8 @@ desired effect
                                                         ?>
                                                     </div>
                                                     <?php
+                                                }else{
+                                                    echo 'No unpaid invoice.';
                                                 }
                                                     ?>
                                             </td>

@@ -3,7 +3,7 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_DRIVER, ROLE_ID_SHOP, ROLE_ID_PLANT));
 
 $msg = '';
-$sql = "SELECT * FROM cylinders WHERE ID<>0 order by ID DESC";
+$sql = "SELECT * FROM cylinders WHERE ID<>0 ".($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND PlantID='.$_SESSION["ID"] : ' AND PlantID='.$_SESSION["PlantID"]))." order by ID DESC";
 $resource = mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -102,18 +102,6 @@ desired effect
                                         onClick="location.href='dashboard.php'">Back
                                 </button>
                                 <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
-                                <button style="float:right;margin-right:15px;" type="button"
-                                        class="btn btn-group-vertical btn-success"
-                                        onClick="location.href='addcylinder.php'" data-original-title="" title="">Add
-                                    Cylinder
-                                </button>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="printBarCodes()"
-                                        class="btn btn-group-vertical btn-primary" data-original-title="" title="">Print
-                                    Bar Codes
-                                </button>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()"
-                                        class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete
-                                </button>
                                 <?php }
                                 else if($_SESSION["RoleID"] == ROLE_ID_SHOP){ ?>
                                     <a style="float:right;margin-right:15px;" type="button"
@@ -152,7 +140,7 @@ desired effect
                                     </thead>
                                     <tbody>
                                     <?php while ($row = mysql_fetch_array($resource)) {
-                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_CUSTOMER && getCurrentHandedBy($row["ID"]) == $_SESSION["ID"]) || (getCurrentHandedToRole($row["ID"]) == ROLE_ID_ADMIN && $_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
+                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
                                             ?>
                                             <tr>
                                                 <td style="width:5%"><input type="checkbox"
