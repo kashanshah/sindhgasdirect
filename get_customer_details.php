@@ -20,6 +20,7 @@ include("checkadminlogin.php");
 			"Balance" => $Balance,
 			"Address" => $Address,
 			"Email" => $Email,
+            "CreditLimit" => $CreditLimit,
 			"Remarks" => $Remarks);
 		echo (json_encode($data));
 

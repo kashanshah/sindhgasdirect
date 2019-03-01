@@ -41,7 +41,7 @@ get_right(array(3));
 	$Note = '';
 
 	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
+	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Balance, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -71,7 +71,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 				";
 		mysql_query($query3) or die('a'.mysql_error());
 		
-		$query3 = "INSERT INTO sales_amount SET DateAdded=NOW(),
+		$query3 = "INSERT INTO sales_amount SET DateAdded=NOW(), DateModified=NOW(),
 				PerformedBy = '".(int)$_SESSION["ID"]."',
 				Paid='".(float)$NewPayment."',
 				Unpaid='".(float)($TotalAmount - ($Paid + $NewPayment))."',
@@ -213,7 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Sale ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3><b>Gas Rate: </b><?php echo $row["GasRate"]; ?></h3>
+					<h3><b>Gas Rate: </b><?php $GasRate = $row["GasRate"]; echo $GasRate; ?></h3>
 					<h3><b>Invoices: </b>
 						<select id="invoiceid<?php echo $row["ID"]; ?>">
 							<?php
@@ -239,7 +239,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<th>Price (Rs.)</th>
 							</tr>
 <?php
-$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
+$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 $cou2 = 0;
@@ -292,7 +292,7 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
+                            <input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"] + ($row["Balance"] * $GasRate); ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">

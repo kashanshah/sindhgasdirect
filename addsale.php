@@ -165,7 +165,12 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
             $i++;
         }
 
-        mysql_query("UPDATE sales SET GasRate = '".(float)$GrandTotalRates/$GrandTotalGasWeight."' WHERE ID = '".(int)$SaleID."'") or die(mysql_error());
+        $TempGasRate = (float)$GrandTotalRates/$GrandTotalGasWeight;
+
+        mysql_query("UPDATE sales SET 
+            GasRate = '".$TempGasRate."' 
+            Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "',
+            WHERE ID = '".(int)$SaleID."'") or die(mysql_error());
 
         $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -852,7 +857,6 @@ desired effect
                         $("[name='CustomerName']").val(result.Name);
                         $("[name='Number']").val(result.Number);
                         $("[name='Address']").val(result.Address);
-                        $("[name='Balance']").val(parseFloat(result.Balance));
                         $("[name='Balance']").val(parseFloat(result.Balance));
                         $("[name='Balance']").attr("data-balance", result.Balance);
                         $("[name='Email']").val(result.Email);

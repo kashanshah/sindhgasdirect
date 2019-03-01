@@ -58,7 +58,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 	{
 		$i = 0;
 		foreach($CylinderID as $CID){
-			mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+			mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());

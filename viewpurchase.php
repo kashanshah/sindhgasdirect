@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Purchase ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3><b>Gas Rate: </b><?php echo $row["GasRate"]; ?></h3>
+					<h3><b>Gas Rate: </b><?php $GasRate = $row["GasRate"];echo $GasRate; ?></h3>
 					<h3><b>Invoices: </b>
 <?php $pdff = explode(',', $row["RefNum"]);?>
 						<select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach($pdff as $pdf)
@@ -283,7 +283,7 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
                         <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
                         <div class="col-md-12">
-                            <input type="number" class="form-control" placeholder="" value="<?php echo $row["Balance"] * GAS_RATE; ?>" name="Balance" readonly="">
+                            <input type="number" class="form-control" placeholder="" value="<?php echo $row["Balance"] * $GasRate; ?>" name="Balance" readonly="">
                         </div>
                     </div>
                     <?php } ?>

@@ -40,7 +40,7 @@ get_right(array(1, 6, 3));
 	$Note = '';
 
 	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
+	$query="SELECT s.ID, u.Name, s.ShopID, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID WHERE s.ID <> 0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND s.ShopID = '.(int)$_SESSION["ID"]) . ' AND s.ID = '.(int)$ID;
 	$res = mysql_query($query) or die(mysql_error());
 	$row = mysql_fetch_array($res);
 	foreach($row as $key => $value)
@@ -174,7 +174,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <?php
                           if($_SESSION["RoleID"] == ROLE_ID_SHOP){
                               ?>
-                              <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="/addpaymentsale.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
+                              <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentsale.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
                               <?php
                           }
                           ?>
@@ -273,19 +273,19 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Total Amount</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>" id="TotalAmount">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>" id="TotalAmount">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"] + ($row["Balance"] * $row["GasRate"]); ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">

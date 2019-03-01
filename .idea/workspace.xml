@@ -14,22 +14,98 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/addsale.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="97">
+              <caret line="120" column="20" selection-start-line="120" selection-start-column="12" selection-end-line="120" selection-end-column="20" />
+              <folding>
+                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/get_customer_details.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cylindertosales.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-324">
+              <caret line="62" column="65" selection-start-line="62" selection-start-column="65" selection-end-line="62" selection-end-column="86" />
+              <folding>
+                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cylindershoptodriver.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="96">
+              <caret line="64" column="86" selection-start-line="64" selection-start-column="86" selection-end-line="64" selection-end-column="86" />
+              <folding>
+                <element signature="n#style#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/printdriverslip.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="56" column="87" selection-start-line="56" selection-start-column="87" selection-end-line="56" selection-end-column="87" />
+            <state relative-caret-position="45">
+              <caret line="3" column="71" selection-start-line="3" selection-start-column="71" selection-end-line="3" selection-end-column="71" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/returntoplant.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-9">
+              <caret line="65" column="74" lean-forward="true" selection-start-line="65" selection-start-column="74" selection-end-line="65" selection-end-column="74" />
+              <folding>
+                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/viewpurchase.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="285" column="120" selection-start-line="285" selection-start-column="119" selection-end-line="285" selection-end-column="120" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/addsale.php">
+        <entry file="file://$PROJECT_DIR$/addpurchase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="143" column="31" lean-forward="true" selection-start-line="143" selection-start-column="31" selection-end-line="143" selection-end-column="31" />
+            <state relative-caret-position="96">
+              <caret line="70" column="41" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="41" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/viewsale.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="281" column="182" selection-start-line="281" selection-start-column="157" selection-end-line="281" selection-end-column="182" />
             </state>
           </provider>
         </entry>
@@ -37,78 +113,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/returntoshop.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="228" column="42" lean-forward="true" selection-start-line="228" selection-start-column="42" selection-end-line="228" selection-end-column="42" />
+            <state relative-caret-position="201">
+              <caret line="72" column="51" lean-forward="true" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="51" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addpurchase.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="84" column="44" selection-start-line="84" selection-start-column="44" selection-end-line="84" selection-end-column="44" />
-              <folding>
-                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/purchases.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="177" column="39" selection-start-line="177" selection-start-column="39" selection-end-line="177" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sales.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="109">
-              <caret line="204" column="82" selection-start-line="204" selection-start-column="82" selection-end-line="204" selection-end-column="82" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="28" column="110" selection-start-line="28" selection-start-column="110" selection-end-line="28" selection-end-column="110" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1125">
-              <caret line="75" column="9" selection-start-line="75" selection-start-column="9" selection-end-line="75" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/viewinventory.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2565">
-              <caret line="171" column="125" selection-start-line="171" selection-start-column="125" selection-end-line="171" selection-end-column="125" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PHPVersionCompatability.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="31" column="29" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -117,36 +127,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>$HandedTo</find>
-      <find>handed</find>
-      <find>Final WE</find>
-      <find>erWeight</find>
-      <find>Weight</find>
-      <find>Weight&lt;</find>
-      <find>.append</find>
-      <find>append</find>
-      <find>.DivCartCylinder</find>
-      <find>Tier</find>
-      <find>Tier we</find>
-      <find>tierweight'</find>
-      <find>vehicles</find>
-      <find>dateadded</find>
+      <find>paid</find>
+      <find>amount rema</find>
+      <find>Unpaid</find>
+      <find>sales_amo</find>
+      <find>vehic</find>
+      <find>note</find>
+      <find>cylinderid</find>
+      <find>$cylinderid</find>
+      <find>Vehicle</find>
       <find>.close</find>
-      <find>Note</find>
-      <find>VehicleNo</find>
-      <find>VehicleID</find>
-      <find>DateModified</find>
+      <find>amount to</find>
+      <find>type=&quot;number&quot;</find>
+      <find>get_</find>
+      <find>price to</find>
+      <find>CylinderPrice CylinderPrice</find>
+      <find>KGs</find>
       <find>insert</find>
-      <find>balance</find>
-      <find>gasrate</find>
+      <find>vehicle</find>
+      <find>vehicl</find>
+      <find>v.Na</find>
+      <find>v</find>
+      <find>v.name</find>
+      <find>Vehiclename</find>
+      <find>Balance</find>
+      <find>balance ad</find>
+      <find>balance=</find>
+      <find>$Balance</find>
       <find>GasRate</find>
-      <find>GASRate</find>
-      <find>from cy</find>
-      <find>currentgasrate</find>
-      <find>GAS_RATE</find>
-      <find>RETAILS_GAS_RATE</find>
-      <find>insert in</find>
-      <find>INSERT IN</find>
+      <find>balance</find>
+      <find>Balance=</find>
     </findStrings>
     <replaceStrings>
       <replace>salesman</replace>
@@ -187,9 +197,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/addpaymentsale.php" />
-        <option value="$PROJECT_DIR$/ajax.php" />
-        <option value="$PROJECT_DIR$/login.php" />
         <option value="$PROJECT_DIR$/plants.php" />
         <option value="$PROJECT_DIR$/editshop.php" />
         <option value="$PROJECT_DIR$/edituser.php" />
@@ -217,13 +224,10 @@
         <option value="$PROJECT_DIR$/users.php" />
         <option value="$PROJECT_DIR$/customers.php" />
         <option value="$PROJECT_DIR$/header.php" />
-        <option value="$PROJECT_DIR$/cylindershoptodriver.php" />
         <option value="$PROJECT_DIR$/printsaleslip.php" />
         <option value="$PROJECT_DIR$/shops.php" />
-        <option value="$PROJECT_DIR$/viewpurchase.php" />
         <option value="$PROJECT_DIR$/addpaymentpurchase.php" />
         <option value="$PROJECT_DIR$/purchaseaddinvoice.php" />
-        <option value="$PROJECT_DIR$/returntoplant.php" />
         <option value="$PROJECT_DIR$/viewinventory.php" />
         <option value="$PROJECT_DIR$/cylinders.php" />
         <option value="$PROJECT_DIR$/leftsidebar.php" />
@@ -231,13 +235,19 @@
         <option value="$PROJECT_DIR$/DBConnection.php" />
         <option value="$PROJECT_DIR$/cylindertostore.php" />
         <option value="$PROJECT_DIR$/cylindertosales.php" />
-        <option value="$PROJECT_DIR$/printdriverslip.php" />
-        <option value="$PROJECT_DIR$/addpurchase.php" />
         <option value="$PROJECT_DIR$/purchases.php" />
         <option value="$PROJECT_DIR$/sales.php" />
         <option value="$PROJECT_DIR$/common.php" />
+        <option value="$PROJECT_DIR$/addpaymentsale.php" />
         <option value="$PROJECT_DIR$/returntoshop.php" />
+        <option value="$PROJECT_DIR$/viewsale.php" />
+        <option value="$PROJECT_DIR$/cylindershoptodriver.php" />
         <option value="$PROJECT_DIR$/addsale.php" />
+        <option value="$PROJECT_DIR$/get_customer_details.php" />
+        <option value="$PROJECT_DIR$/returntoplant.php" />
+        <option value="$PROJECT_DIR$/printdriverslip.php" />
+        <option value="$PROJECT_DIR$/viewpurchase.php" />
+        <option value="$PROJECT_DIR$/addpurchase.php" />
       </list>
     </option>
   </component>
@@ -317,7 +327,7 @@
       <workItem from="1551209088248" duration="18329000" />
       <workItem from="1551295906791" duration="7555000" />
       <workItem from="1551389252478" duration="2685000" />
-      <workItem from="1551396162179" duration="1912000" />
+      <workItem from="1551396162179" duration="5765000" />
     </task>
     <task id="LOCAL-00001" summary="Error log error removed&#10;Driver menu added&#10;indenting">
       <created>1551041815514</created>
@@ -379,12 +389,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="77773000" />
+    <option name="totallyTimeSpent" value="81626000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18834797" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18834797" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -397,7 +408,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.36482084" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.57328993" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.38762215" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -499,13 +510,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/viewsale.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" column="44" lean-forward="true" selection-start-line="42" selection-start-column="44" selection-end-line="42" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/salesmans.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
@@ -524,13 +528,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="47" column="53" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/get_customer_details.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -584,26 +581,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cylindershoptodriver.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="73" column="42" lean-forward="true" selection-start-line="73" selection-start-column="42" selection-end-line="73" selection-end-column="42" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/returntoplant.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="73" column="25" selection-start-line="73" selection-start-column="18" selection-end-line="73" selection-end-column="25" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/customers.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2115">
@@ -618,13 +595,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/viewpurchase.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="2" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addpaymentpurchase.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -636,13 +606,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3225">
           <caret line="215" column="15" selection-start-line="215" selection-start-column="15" selection-end-line="215" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addpaymentsale.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="43" column="176" selection-start-line="43" selection-start-column="171" selection-end-line="43" selection-end-column="176" />
         </state>
       </provider>
     </entry>
@@ -695,13 +658,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cylindertosales.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="65" column="21" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1125">
@@ -720,23 +676,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="31" column="29" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/printdriverslip.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="56" column="87" selection-start-line="56" selection-start-column="87" selection-end-line="56" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addpurchase.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="84" column="44" selection-start-line="84" selection-start-column="44" selection-end-line="84" selection-end-column="44" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -761,10 +700,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/addpaymentsale.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="67" column="29" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/returntoshop.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="228" column="42" lean-forward="true" selection-start-line="228" selection-start-column="42" selection-end-line="228" selection-end-column="42" />
+        <state relative-caret-position="201">
+          <caret line="72" column="51" lean-forward="true" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="51" />
           <folding>
             <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
@@ -772,10 +718,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cylindershoptodriver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="64" column="86" selection-start-line="64" selection-start-column="86" selection-end-line="64" selection-end-column="86" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cylindertosales.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-324">
+          <caret line="62" column="65" selection-start-line="62" selection-start-column="65" selection-end-line="62" selection-end-column="86" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get_customer_details.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/printdriverslip.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="71" selection-start-line="3" selection-start-column="71" selection-end-line="3" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/returntoplant.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9">
+          <caret line="65" column="74" lean-forward="true" selection-start-line="65" selection-start-column="74" selection-end-line="65" selection-end-column="74" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/viewsale.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="281" column="182" selection-start-line="281" selection-start-column="157" selection-end-line="281" selection-end-column="182" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/viewpurchase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="285" column="120" selection-start-line="285" selection-start-column="119" selection-end-line="285" selection-end-column="120" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/addsale.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="143" column="31" lean-forward="true" selection-start-line="143" selection-start-column="31" selection-end-line="143" selection-end-column="31" />
+        <state relative-caret-position="97">
+          <caret line="120" column="20" selection-start-line="120" selection-start-column="12" selection-end-line="120" selection-end-column="20" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addpurchase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="70" column="41" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="41" />
           <folding>
             <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
           </folding>

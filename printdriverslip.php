@@ -1,7 +1,7 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
 $ID = $_REQUEST["ID"];
-$query="SELECT s.ID AS InvoiceID, u.Name AS Driver, u.ID AS DriverID, sm.Name AS PerformedBy, date_format(s.DateAdded, '%r %d-%M-%Y') AS DateAdded, s.Note FROM users u LEFT JOIN invoices s ON s.IssuedTo = u.ID LEFT JOIN users sm ON sm.ID = s.PerformedBy WHERE s.ID=".$ID;
+$query="SELECT s.ID AS InvoiceID, u.Name AS Driver, CONCAT(v.Name, ' | ', v.RegistrationNo) AS VehicleName, u.ID AS DriverID, sm.Name AS PerformedBy, date_format(s.DateAdded, '%r %d-%M-%Y') AS DateAdded, s.Note FROM users u LEFT JOIN invoices s ON s.IssuedTo = u.ID LEFT JOIN users sm ON sm.ID = s.PerformedBy LEFT JOIN vehicles v on v.ID=s.VehicleID WHERE s.ID=".$ID;
 $resource = mysql_query($query) or die(mysql_error());
 $row=mysql_fetch_array($resource);
 
@@ -54,7 +54,7 @@ th, td { font-size: 8px; }
 							<th>Cylinder Weight (kg)</th>
 							<th>Gas Weight (kg)</th>
 						  </tr>
-	<?php $SQty = 0; $p = 1; $aaa = mysql_query("SELECT c.BarCode, c.TierWeight, v.Name, cs.Weight FROM cylinderstatus cs LEFT JOIN invoices inv ON inv.ID=cs.InvoiceID LEFT JOIN vehicles v ON v.ID=inv.VehicleID LEFT JOIN cylinders c ON cs.CylinderID = c.ID WHERE cs.InvoiceID=".$row["InvoiceID"]) or die('asd'.mysql_error());
+	<?php $SQty = 0; $p = 1; $aaa = mysql_query("SELECT c.BarCode, c.TierWeight, cs.Weight FROM cylinderstatus cs LEFT JOIN invoices inv ON inv.ID=cs.InvoiceID LEFT JOIN cylinders c ON cs.CylinderID = c.ID WHERE cs.InvoiceID=".$row["InvoiceID"]) or die('asd'.mysql_error());
 	while($cart = mysql_fetch_array($aaa))
 	{
 		?>
@@ -69,7 +69,7 @@ th, td { font-size: 8px; }
 		?>
 						  <tr>
 							<th style="font-weigt: bold;text-align: left;">Vehicle No:</th>
-							<th colspan="5" style="text-align: left;font-weigt: bold" ><?php echo $row["VehicleID"]; ?></th>
+							<th colspan="5" style="text-align: left;font-weigt: bold" ><?php echo $row["VehicleName"]; ?></th>
 						  </tr>
 						  <tr>
 							<th style="font-weigt: bold;text-align: left;">Note:</th>
@@ -78,7 +78,7 @@ th, td { font-size: 8px; }
 					  </table>
 <script>
 	setTimeout(function(){
-		// window.close();
+		window.close();
 	}, 1000); 
 </script>
 </body>

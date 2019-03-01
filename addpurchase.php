@@ -70,7 +70,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				Total='".(float)($TotalAmount)."',
 				Balance='".(int)($Balance)."',
 				Paid='".(float)$Paid."',
-				Unpaid='".(float)($TotalAmount - $Balance - $Paid)."',
+				Unpaid='".(float)($TotalAmount - ($Balance * GAS_RATE) - $Paid)."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',
 				Note='".dbinput($Note)."'
 				";
@@ -325,7 +325,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Balance</label>
 							<div class="col-md-8">
-                                <input type="number" step="any" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (int)$Balance; ?>" id="Balance" max="<?php echo (int)$Balance; ?>">
+                                <input type="number" step="any" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (float)$Balance; ?>" id="Balance" max="<?php echo (float)$Balance; ?>">
 								<p class="help">Account balance: <?php echo (int)$Balance; ?></p>
 							</div>
 						</div>

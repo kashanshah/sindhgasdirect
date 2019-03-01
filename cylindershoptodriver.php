@@ -14,6 +14,7 @@ get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 	$OldBarCode = "";
 	$CategoryID="";
 	$CylinderID = 0;
+	$VehicleID = 0;
 	$HandedTo = 0;
 	$CylinderName = "";
 	$ShortDescription = "";
@@ -61,8 +62,9 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 	
 	if($msg == "")
 	{
-		mysql_query("INSERT INTO invoices SET DateAdded = NOW(),
+		mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
 			PerformedBy = '".(int)$_SESSION["ID"]."',
+			VehicleID = '" . (int)$VehicleID . "',
 			IssuedTo = '".(int)$HandedTo."',
 			Note = '".dbinput($Note)."'") or die(mysql_error());
 		$InvoiceID = mysql_insert_id();
@@ -306,6 +308,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								</select>
 							</div>
 						</div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-text-input">Vehicle
+                                ID:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" required name="VehicleID"
+                                        id="VehicleID" style="width: 100%;">
+                                    <?php
+                                    $r = mysql_query("SELECT ID, RegistrationNo, Name FROM vehicles WHERE PlantID= " . (int)$_SESSION["ID"]) or die(mysql_error());
+                                    $n = mysql_num_rows($r);
+                                    if ($n == 0) {
+                                        echo '<option value="0">No Vehicle Added</option>';
+                                    } else {
+                                        while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                            <option value="<?php echo $Rs['ID']; ?>" <?php if ($VehicleID == $Rs['ID']) {
+                                                echo 'selected=""';
+                                            } ?>><?php echo $Rs['RegistrationNo'].' | '.$Rs['Name']; ?></option>
+                                        <?php }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Note</label>
 							<div class="col-md-8">
@@ -482,7 +506,7 @@ $(document).ready(function() {
 		});
 		if(j!=1)
 		{
-			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
+			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" step="any" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
 			i = i + 1;
 			gettotal();
 			calculateWeights();
