@@ -1,6 +1,6 @@
 <?php
 session_start();
-//error_reporting(0);
+error_reporting(0);
 set_time_limit(0);
 date_default_timezone_set("Asia/Karachi");
 $self = $_SERVER['PHP_SELF'];
@@ -986,17 +986,17 @@ function dumpArray($RoleID = array())
 function getCylinderStatus($RoleID = 0)
 {
     if ($RoleID == -1) {
-        $ret = "Plant custody (Unfilled)";
-    } else if ($RoleID == ROLE_ID_ADMIN || $RoleID == 0) {
-        $ret = "Admin Custody";
+        $ret = "Empty Cylinder";
+    } else if ($RoleID == ROLE_ID_PLANT) {
+        $ret = "Filled at Plant";
+    } else if ($RoleID == 0) {
+        $ret = "Empty at plant";
     } else if ($RoleID == ROLE_ID_DRIVER) {
         $ret = "Dispatched to driver";
     } else if ($RoleID == ROLE_ID_SHOP) {
-        $ret = "Handed over to shop";
+        $ret = "At shop";
     } else if ($RoleID == ROLE_ID_CUSTOMER) {
-        $ret = "Lended to customer";
-    } else if ($RoleID == ROLE_ID_PLANT) {
-        $ret = "Plant Custody";
+        $ret = "Dispatched to customer";
     } else {
         $ret = "Status not found";
     }

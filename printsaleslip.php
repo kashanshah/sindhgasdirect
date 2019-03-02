@@ -87,7 +87,7 @@ th, td { font-size: 8px; }
 							<th colspan="3" style="text-align: center; font-weigt: bold" ><?php echo number_format($row["Total"], 2); ?></th>
 						  </tr>
 						  <tr>
-							<th colspan="5" style="font-weigt: bold;text-align: left;">Balance</th>
+							<th colspan="5" style="font-weigt: bold;text-align: left;">Gas Adjustment</th>
 							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Balance"] * $row["GasRate"], 2); ?></th>
 						  </tr>
 						  <tr>

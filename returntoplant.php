@@ -11,7 +11,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 			// $_SESSION["cart_customer"][$$key]=$value;
 		// }
 	$BarCode = "";
-	$OldBarCode = "";
+	$Balance = 0;
 	$CategoryID="";
 	$CylinderID = array();
 	$CurrentCylinderWeight = array();
@@ -19,7 +19,6 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 	$CylinderName = "";
 	$ShortDescription = "";
 	$Description = "";
-	$Price = 0;
 	$CurrentStock = 0;
 	$Quantity = 1;
 	$PImage="";
@@ -39,7 +38,6 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 // FOR Amount
 	$Paid = 0;
-	$TotalAmount = 0;
 	$Note = "";
 	$CylinderWeight = array();
 		
@@ -62,10 +60,10 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());
-			mysql_query("UPDATE users SET 
+            mysql_query("UPDATE users SET 
 				Balance = Balance+".((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]))."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
-			mysql_query("UPDATE cylinders SET DateModified = NOW(),
+            mysql_query("UPDATE cylinders SET DateModified = NOW(),
 				Status=0 WHERE ID='".(int)$CID."'") or die(mysql_error());
 			if(((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i])) > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
@@ -240,7 +238,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											data-tierweight="<?php echo $Rs["TierWeight"]; ?>"
 											data-weight="<?php echo getCurrentWeight($Rs["ID"]); ?>"
 											BarCode="<?php echo $Rs["BarCode"]; ?>" 
-											data-gasrate="<?php echo getCylinderPurchaseRate($Rs["ID"]); ?>" 
 											value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}
@@ -279,7 +276,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<th>Cylinder Info</th>
 							<th>Tier Weight</th>
 							<th>Full Weight</th>
-							<th>Rate</th>
 							<th>Current Full Weight</th>
 							<th>Current Gas Weight (Balance)</th>
 							<th><a class="btn btn-danger dropdown-toggle" href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Clear All</a></th>
@@ -301,12 +297,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		  </div>
 		<div class="modal-body">
 					<div class="box box-body">
-						<div class="form-group">
-							<label class="col-md-3 control-label" for="example-text-input">Amount to be adjusted</label>
-							<div class="col-md-8">
-								<input type="number" class="form-control" placeholder="Enter the Total Payable Amount" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
-							</div>
-						</div>
+                        <div class="form-group">
+                            <h3 class="col-md-12 control-label" style="text-align: center;margin-top:0;" for="example-text-input">Confirm adding <span id="cylinderCount">0</span> cylinders to stock?</h3>
+                        </div>
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">Note</label>
 							<div class="col-md-8">
@@ -389,27 +382,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var cWeight = parseFloat($(this).val());
 			var cTierWeight = parseFloat($("#CylinderTierWeight"+$(this).data("id")).text());
 			$("#CylinderGasWeight"+$(this).data("id")).text((cWeight - cTierWeight).toFixed(2));
-			gt = gt + (parseInt($(this).val()) * (parseInt($(this).parent().parent().find('.CylinderCartPrice').text())));
 		});
 	}
-	function gettotal()
-	{
-		var gt =0;
-		$('.CylinderPrice').each(function(){
-			gt = gt + parseInt($(this).text());
-		});
-		$(".DivTotal .CartGrandTotal").text(gt);
-		$("#TotalAmount").val(gt);
-	}
-	
-// $('#mainForm').submit(function (e) {
-	// e.preventDefault();
-// });
+    $('#mainForm').submit(function (e) {
+        if (!$("#myModal").hasClass("in")) {
+            e.preventDefault();
+            $("#myModal").modal('show');
+        }
+    });
 
 $(document).ready(function() {
 	$('#myModal').on('shown.bs.modal', function () {
-		$('#HandedTo').focus();
-	})  
+        $("#cylinderCount").text($('[name="CylinderWeight[]"]').length);
+	});
 	$(document).on('click', '.checkout-button', function()
 	{
 		var valid = true;
@@ -429,16 +414,13 @@ $(document).ready(function() {
 		}
 			if(valid == true){
 				$("#myModal").modal();
-				gettotal();
 			}
 	});
 	$(document).on('change', '.CurrentCylinderWeight', function() {
 		var parEl = $(this).closest("tr");
 		var cylWeight = parseFloat(parEl.find(".CylinderTierWeight").text());
 		var newCylWeight = parseFloat(parEl.find(".CurrentCylinderWeight").val());
-		parEl.find(".CylinderPrice").text(((newCylWeight - cylWeight) * parEl.find(".CurrentCylinderGasRate").text()).toFixed(2));
 		parEl.find(".CurrentCylinderGasWeight").text((newCylWeight - cylWeight).toFixed(2));
-		gettotal();
 	});
 });
 
@@ -448,7 +430,6 @@ $(document).ready(function() {
 			if($(this).val() == $("#CylinderID").val())
 			{
 				j = 1;
-				gettotal();
 				calculateWeights();
 			}
 			q = q+1;
@@ -461,13 +442,11 @@ $(document).ready(function() {
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span><br/>Returning from: '+$("[name='CylinderID'] option:selected").data('customername')+'<input type="hidden" name="CustomerID[]" value="'+$("[name='CylinderID'] option:selected").data('customerid')+'" /><input type="hidden" name="InvoiceID[]" value="'+$("[name='CylinderID'] option:selected").data('invoiceid')+'" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td>Rs.<span class="CurrentCylinderGasRate">'+$("[name='CylinderID'] option:selected").data('gasrate')+'</span>/KG<input type="hidden" name="GasRate[]" value="'+$("[name='CylinderID'] option:selected").data('gasrate')+'" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"  onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');"><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
 			i = i + 1;
-			gettotal();
 			calculateWeights();
 		}
 		$("#BarCode").val('');
@@ -477,7 +456,6 @@ $(document).ready(function() {
 	function deletethisrow(a) {
 		console.log(a);
 		$(a).remove();
-		gettotal();
 		calculateWeights();
 	}
       $(function () {
@@ -500,17 +478,11 @@ $(document).ready(function() {
 			  {
 				  $("#CylinderID").val($(this).val());
 					$("#Quantity").val('1');
-					var a = $("#Quantity").val() * $("#Price").val();
-					$("#TotalAmount").val(a);
 					$("#AddItemButton").click();
 			  }
 			});
 			return false;
 		});
-		// $("[name='CylinderID']").change(function () {
-			// var a = $("#Quantity").val() * $("#Price").val();
-			// $("#TotalAmount").val(a);
-		// });
 	});
 		
 	$(document).load(function() { $("#BarCode").focus(); });

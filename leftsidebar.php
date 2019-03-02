@@ -39,6 +39,8 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "config.php") ? 'active' : ''); ?>">
                     <a href="config.php"><i class="fa fa-gear"></i> <span>Configurations</span></a>
                 </li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
 
 
                 <!--NEW MENU -->
@@ -69,6 +71,8 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpurchase.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindershoptodriver.php") ? 'active' : ''); ?>"><a href="viewinventory.php"><i class="fa fa-building"></i>Inventory</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?>"><a href="sales.php"><i class="fa fa-cart-arrow-down"></i>Sales</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "purchases.php") ? 'active' : ''); ?>"><a href="purchases.php"><i class="fa fa-cart-arrow-down"></i>Purchases</a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
                 <!--NEW MENU -->
 
 
@@ -105,6 +109,8 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?>"><a href="viewinventory.php"><i class="fa fa-cube"></i>Inventory</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindertosales.php") ? 'active' : ''); ?>"><a href="cylindertosales.php"><i class="fa fa-truck"></i>Dispatch Cylinders (OUT) </a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoplant.php") ? 'active' : ''); ?>"><a href="returntoplant.php"><i class="fa fa-truck"></i>Return Cylinders (IN) </a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
                 <!--NEW MENU -->
 
 

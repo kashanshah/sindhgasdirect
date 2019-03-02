@@ -317,12 +317,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		<div class="modal-body">
 					<div class="box box-body">
 						<div class="form-group">
+							<h3 class="col-md-12 control-label" style="text-align: center;margin-top:0;" for="example-text-input">Confirm adding <span id="cylinderCount">0</span> cylinders to stock?</h3>
+						</div>
+						<div class="form-group hidden">
 							<label class="col-md-3 control-label" for="example-text-input">Payable Amount</label>
 							<div class="col-md-8">
 								<input type="number" step="any" class="form-control" placeholder="Enter the Total Payable Amount" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group hidden">
 							<label class="col-md-3 control-label" for="example-text-input">Balance</label>
 							<div class="col-md-8">
                                 <input type="number" step="any" class="form-control" placeholder="" readonly="" name="Balance" value="<?php echo (float)$Balance; ?>" id="Balance" max="<?php echo (float)$Balance; ?>">
@@ -433,8 +436,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 $(document).ready(function() {
 	$('#myModal').on('shown.bs.modal', function () {
+        $("#cylinderCount").text($('[name="CylinderWeight[]"]').length);
 		$('#HandedTo').focus();
-	})  
+	});
 	$(document).on('click', '.checkout-button', function()
 	{
 		var valid = true;

@@ -203,7 +203,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <?php $pdff = explode(',', $row["RefNum"]);?>
 						<select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach($pdff as $pdf)
 							{ ?>
-							<option value="<?php echo DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf; ?>.pdf"><?php echo "pinv".$row["ID"]."-".$pdf; ?></option>
+							<option value="<?php echo DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf; ?>.pdf"><?php echo "Invoice # ".$row["ID"]; ?></option>
 							<?php
 							} ?>
 							</select>

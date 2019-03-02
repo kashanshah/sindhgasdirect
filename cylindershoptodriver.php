@@ -79,6 +79,11 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				PerformedBy = '".(int)$_SESSION["ID"]."'
 			";
 		mysql_query($query2) or die(mysql_error());
+        mysql_query("UPDATE purchase_details SET 
+            ReturnDate = NOW(),
+            ReturnStatus = 1,
+            ReturnWeight='".(int)$CurrentCylinderWeight[$i]."'
+            WHERE PurchaseID = '".(int)$InvoiceID."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
 			$i++;
 		}
 		$msg='<div class="alert alert-success alert-dismissable">
@@ -315,7 +320,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <select class="form-control" required name="VehicleID"
                                         id="VehicleID" style="width: 100%;">
                                     <?php
-                                    $r = mysql_query("SELECT ID, RegistrationNo, Name FROM vehicles WHERE PlantID= " . (int)$_SESSION["ID"]) or die(mysql_error());
+                                    $r = mysql_query("SELECT ID, RegistrationNo, Name FROM vehicles WHERE PlantID= " . (int)$_SESSION["PlantID"]) or die(mysql_error());
                                     $n = mysql_num_rows($r);
                                     if ($n == 0) {
                                         echo '<option value="0">No Vehicle Added</option>';

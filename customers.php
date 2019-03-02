@@ -157,7 +157,7 @@ desired effect
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo number_format($Bal, 2).'/-'; ?>
+                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo number_format(abs($Bal), 2).'/-'; ?>
                                                 <?php
                                                 if($Bal < 0){
                                                     $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";

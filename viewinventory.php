@@ -147,12 +147,7 @@ desired effect
                                                                             value="<?php echo $row["ID"]; ?>"
                                                                             name="ids[]" class="no-margin chkIds"></td>
 
-                                                <td>
-                                                    <center><img
-                                                                src="<?php echo 'barcode.php?text=' . $row["BarCode"]; ?>"
-                                                                height="50"
-                                                                width="150"><br/><?php echo $row["BarCode"]; ?></center>
-                                                </td>
+                                                <td><?php echo $row["BarCode"]; ?></td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
                                                 <td><?php echo $row["TierWeight"]; ?></td>
                                                 <td><?php echo getCurrentWeight($row["ID"]); ?></td>

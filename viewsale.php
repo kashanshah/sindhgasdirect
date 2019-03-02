@@ -277,9 +277,15 @@ while($data = mysql_fetch_array($resource)){
 						</div>
 					</div>
                     <div class="form-group">
+						<label class="col-md-12" for="example-text-input">Amount Adjustment</label>
+						<div class="col-md-12">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo ($row["Balance"] * $row["GasRate"]); ?>" name="Paid" readonly="">
+						</div>
+					</div>
+                    <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
-							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"] + ($row["Balance"] * $row["GasRate"]); ?>" name="Paid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">

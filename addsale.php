@@ -168,8 +168,8 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $TempGasRate = (float)$GrandTotalRates/$GrandTotalGasWeight;
 
         mysql_query("UPDATE sales SET 
-            GasRate = '".$TempGasRate."' 
-            Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "',
+            GasRate = '".$TempGasRate."',
+            Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
             WHERE ID = '".(int)$SaleID."'") or die(mysql_error());
 
         $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
@@ -326,7 +326,7 @@ desired effect
                                                         ?>
                                                         <option data-tierweight="<?php echo $Rs["TierWeight"]; ?>"
                                                                 data-weight="<?php echo getCurrentPurchaseWeight($Rs["ID"]); ?>"
-                                                                data-price="<?php echo getRetailPrice($Rs["ID"]); ?>"
+                                                                data-price="<?php echo RETAIL_GAS_RATE * (getCurrentPurchaseWeight($Rs["ID"]) - $Rs["TierWeight"]); ?>"
                                                                 BarCode="<?php echo $Rs["BarCode"]; ?>"
                                                                 value="<?php echo $Rs['ID']; ?>" <?php if ($CylinderID == $Rs['ID']) {
                                                             echo 'selected=""';
@@ -467,17 +467,18 @@ desired effect
                                                 <label class="col-md-3 control-label"
                                                        for="example-text-input">Customer</label>
                                                 <div class="col-md-8">
-                                                    <select class="form-control"
-                                                            data-placeholder="Select The Customer" name="CustomerID"
-                                                            style="width: 100%;">
+                                                    <select class="form-control" name="CustomerID" style="width: 100%;">
                                                         <?php
-                                                        $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
+                                                        $r = mysql_query("SELECT ID, Name, CreditLimit FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
                                                         if ($n == 0) {
                                                             echo '<option value="0">No User Added</option>';
                                                         } else {
                                                             while ($Rs = mysql_fetch_assoc($r)) { ?>
-                                                                <option value="<?php echo $Rs['ID']; ?>" <?php if ($CustomerID == $Rs['ID']) {
+                                                                <option
+                                                                        data-currentbalance="<?php echo getUserBalance($Rs["ID"]); ?>"
+                                                                        data-creditlimit="<?php echo $Rs["CreditLimit"]; ?>"
+                                                                        value="<?php echo $Rs['ID']; ?>" <?php if ($CustomerID == $Rs['ID']) {
                                                                     echo 'Selected=""';
                                                                 } ?>><?php echo $Rs['Name']; ?></option>
                                                             <?php }
@@ -690,8 +691,12 @@ desired effect
                         }
                     });
                 } else {
-                    console.log("asd");
-                    $('#mainForm').trigger('submit', {'submit': true});
+                    if(false && $('[name="CustomerID"] option:selected').data("creditlimit")){
+
+                    }
+                    else{
+                        $('#mainForm').trigger('submit', {'submit': true});
+                    }
                 }
             } else {
 //                $(e.currentTarget).trigger('submit', {'submit': true});
