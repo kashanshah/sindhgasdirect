@@ -472,7 +472,7 @@ desired effect
                                                         $r = mysql_query("SELECT ID, Name, CreditLimit FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
                                                         if ($n == 0) {
-                                                            echo '<option value="0">No User Added</option>';
+                                                            echo '<option value="0">No Customer Added</option>';
                                                         } else {
                                                             while ($Rs = mysql_fetch_assoc($r)) { ?>
                                                                 <option
@@ -691,11 +691,17 @@ desired effect
                         }
                     });
                 } else {
-                    if(false && $('[name="CustomerID"] option:selected').data("creditlimit")){
-
+                    var fCreditLimit = parseFloat($('[name="CustomerID"] option:selected').data("creditlimit")) || 0;
+                    var fCurrentBalance = parseFloat($('[name="CustomerID"] option:selected').data("currentbalance")) || 0;
+                    var fCurrentPayable = parseFloat($('#Unpaid').val()) || 0;
+                    var fCurrentPaying = parseFloat($('#Paid').val()) || 0;
+                    var duesAfterThisInvoice = ((fCurrentBalance - fCurrentPayable) + fCurrentPaying + fCreditLimit);
+                    if(duesAfterThisInvoice >= 0 || fCurrentPaying == fCurrentPayable){
+                       $('#mainForm').trigger('submit', {'submit': true});
                     }
                     else{
-                        $('#mainForm').trigger('submit', {'submit': true});
+                        e.preventDefault();
+                        alert("Credit limit is crossed. Pay atleast " + (fCurrentPayable - fCreditLimit - fCurrentBalance) )
                     }
                 }
             } else {
