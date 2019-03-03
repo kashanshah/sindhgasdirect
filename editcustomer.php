@@ -5,7 +5,7 @@ get_right(array(ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";
-$Address = "";
+$Address = "";          $CreditLimit = 0;
 $Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 
@@ -46,6 +46,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						CreditLimit='".(float)$CreditLimit."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
@@ -253,6 +254,12 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="example-text-input">Credit Limit</label>
+                                    <div class="col-md-6">
+                                        <input type="number" step="any" class="form-control" id="example-text-input" value="<?php echo $CreditLimit;?>" placeholder="Enter Credit Limit" name="CreditLimit" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
