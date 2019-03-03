@@ -132,9 +132,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <thead>
                       <tr>
                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-                     
                         <th>BarCode</th>
-                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <th>Plant</th>
                           <?php } ?>
                         <th>Short Description</th>
@@ -155,7 +154,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                   
                         <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
-                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                           <?php } ?>
                         <td><?php echo $row["ShortDescription"]; ?></td>
