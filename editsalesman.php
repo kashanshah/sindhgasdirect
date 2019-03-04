@@ -2,7 +2,7 @@
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 
-$msg='';				$ID = 0;
+$msg='';				$ID = 0;				$SendSMS = 1;
 $Username = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";			$Password = "";
 $Address = "";
@@ -46,6 +46,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						SendSMS='".(int)$SendSMS."',
 						Password='".dbinput($Password)."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
@@ -104,7 +105,7 @@ else
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("salesmans.php");
 }
 $sql="SELECT * FROM users where ID=".$ID;
 $resource=mysql_query($sql) or die(mysql_error());
@@ -121,7 +122,7 @@ else
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("salesmans.php");
 }
 
 
@@ -202,7 +203,7 @@ desired effect
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="users.php"><i class="fa fa-dashboard"></i> Users</a></li>
+                <li><a href="salesmans.php"><i class="fa fa-dashboard"></i> Salesmans</a></li>
                 <li class="active">Edit User</li>
             </ol>
         </section>
@@ -216,7 +217,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="users.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="salesmans.php" >Back</a>
                                     <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -267,6 +268,13 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
                                 <div class="form-group">

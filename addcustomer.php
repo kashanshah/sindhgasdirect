@@ -4,7 +4,7 @@ get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';
 $Username = time();			$Password = "";			$Email = "";			$Image="";
-$Name = "";				$Number = "";				$CreditLimit = 1000;
+$Name = "";				$Number = "";				$SendSMS = 1;				$CreditLimit = 1000;
 $Address = "";
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 
@@ -53,6 +53,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						SendSMS='".(int)$SendSMS."',
 						CreditLimit='".(float)$CreditLimit."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
@@ -236,6 +237,13 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
                                 <div class="form-group">

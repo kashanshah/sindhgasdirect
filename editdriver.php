@@ -104,7 +104,7 @@ else
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("drivers.php");
 }
 $sql="SELECT * FROM users where ID=".$ID;
 $resource=mysql_query($sql) or die(mysql_error());
@@ -121,7 +121,7 @@ else
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-    redirect("users.php");
+    redirect("drivers.php");
 }
 
 
@@ -202,8 +202,8 @@ desired effect
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="users.php"><i class="fa fa-dashboard"></i> Users</a></li>
-                <li class="active">Edit User</li>
+                <li><a href="drivers.php"><i class="fa fa-dashboard"></i> Drivers</a></li>
+                <li class="active">Edit Driver</li>
             </ol>
         </section>
 
@@ -216,7 +216,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="users.php" >Back</a>
+                                    <a style="float:right;" type="button" class="btn btn-group-vertical btn-danger" href="drivers.php" >Back</a>
                                     <input style="float:right;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>

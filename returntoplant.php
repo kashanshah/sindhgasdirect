@@ -172,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </h1>
           <ol class="breadcrumb">
             <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="cylinders.php"><i class="fa fa-circloe-o"></i> Cylinders Management</a></li>
+            <li><a href="cylinders.php"><i class="fa fa-circle-o"></i> Cylinders Management</a></li>
             <li class="active">Cylinder Return</li>
           </ol>
         </section>
@@ -454,7 +454,6 @@ $(document).ready(function() {
 		return false;
 	});
 	function deletethisrow(a) {
-		console.log(a);
 		$(a).remove();
 		calculateWeights();
 	}

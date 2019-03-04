@@ -77,22 +77,11 @@ get_right(array(ROLE_ID_PLANT));
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 					Cylinder has been added.
 				</div>';
-			$username = SMS_USERNAME;
-			$password = SMS_PASSWORD;
-			$to = ALERT_RECEIVER;
-		$from = 'SindhGasDIR';
+			sendSMS(ALERT_RECEIVER, 'Cylinder - New Cylinder with Barcode '.$BarCode.', Manufacturing Date '.$ManufacturingDate.', Expiry Date '.$ExpiryDate.' having T.W '.$TierWeight.'  has been added at '.date('h:i:sA d-m-Y'));
 			$message = 'Cylinder - New Cylinder with Barcode '.$BarCode.', Manufacturing Date '.$ManufacturingDate.', Expiry Date '.$ExpiryDate.' having T.W '.$TierWeight.'  has been added at '.date('h:i:sA d-m-Y');
 			$url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
 			"&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
 			//Curl Start
-
-			$ch = curl_init();
-			$timeout = 30;
-			curl_setopt ($ch,CURLOPT_URL, $url) ;
-			curl_setopt ($ch,CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
-			$response = curl_exec($ch) ;
-			curl_close($ch) ; 
 
 			$_SESSION["msg"] = $msg;
 			redirect("addcylinder.php");

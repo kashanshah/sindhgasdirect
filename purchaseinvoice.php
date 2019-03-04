@@ -2,7 +2,7 @@
 include("common.php");
 get_right(array(1, 3));
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
-$query="SELECT ID, RefNum, GasRate, Total, Balance, Note, Paid, Unpaid, DATE_FORMAT(DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases WHERE ID=".$ID;
+$query="SELECT ID, RefNum, GasRate, Total, GasRate, Balance, Note, Paid, Unpaid, DATE_FORMAT(DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases WHERE ID=".$ID;
 // echo $query;
 // exit();
 $resource=mysql_query($query);
@@ -157,7 +157,7 @@ $receive .= '
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Balance: </h2></td>
-						<td ><h2 align="right">'.number_format($row["Balance"], 2).'/-</h2></td>
+						<td ><h2 align="right">'.number_format($row["Balance"] * $row["GasRate"], 2).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Amount Paid: </h2></td>

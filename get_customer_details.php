@@ -18,6 +18,7 @@ include("checkadminlogin.php");
 			"Name" => $Name,
 			"Number" => $Number,
 			"Balance" => $Balance,
+			"SendSMS" => (int)$SendSMS,
 			"Address" => $Address,
 			"Email" => $Email,
             "CreditLimit" => $CreditLimit,

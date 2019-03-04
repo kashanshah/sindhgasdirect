@@ -169,7 +169,7 @@ desired effect
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="cylinders.php"><i class="fa fa-circloe-o"></i> Cylinders Management</a></li>
+                <li><a href="cylinders.php"><i class="fa fa-circle-o"></i> Cylinders Management</a></li>
                 <li class="active">Dispatch Cylinders</li>
             </ol>
         </section>

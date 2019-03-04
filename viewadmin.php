@@ -12,7 +12,7 @@ get_right(array(1, 2));
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-		redirect("users.php");
+		redirect("salesmans.php");
 	}
 	$sql="SELECT * FROM users where ID=".$ID;
 	$resource=mysql_query($sql) or die(mysql_error());
@@ -27,7 +27,7 @@ get_right(array(1, 2));
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<b>Invalide user ID</b>
 				</div>';
-		redirect("users.php");
+		redirect("salesmans.php");
 	}
 
 	if(isset($_REQUEST['DID']))
@@ -38,7 +38,7 @@ get_right(array(1, 2));
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h4><i class="icon fa fa-ban"></i> Admin Deleted!</h4>
                   </div>';
-			redirect("users.php");
+			redirect("salesmans.php");
 	}
 	
 ?>
@@ -119,7 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </h1>
           <ol class="breadcrumb">
             <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="users.php"><i class="fa fa-user"></i> users</a></li>
+            <li><a href="admins.php"><i class="fa fa-user"></i> users</a></li>
             <li class="active">View Admin</li>
           </ol>
         </section>
@@ -133,7 +133,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="box ">
                 <div class="box-header">
                       <div class="btn-group-right">
-                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='users.php'" >Back</button>
+                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='admins.php'" >Back</button>
                        <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-warning" onClick="location.href='editadmin.php?ID=<?php echo $ID; ?>'" >Edit</button>
                        <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-danger" onClick="doSingleDelete(<?php echo $ID; ?>)" >Delete</button>
                        <button style="float:right;margin-right:15px;" type="button" class="btn btn-default " onClick="window.print()" ><i class="fa fa-print"></i> Print</button>

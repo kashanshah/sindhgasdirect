@@ -1215,3 +1215,21 @@ function getShopDues($ID){
     $r = mysql_query($q) or die(mysql_error());
     return number_format((int)mysql_result($r, 0, 0), 2);
 }
+
+function sendSMS($to = '', $message){
+    $username = SMS_USERNAME;
+    $password = SMS_PASSWORD;
+    $to = ALERT_RECEIVER;
+    $from = 'SindhGasDIR';
+    $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
+        "&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
+    //Curl Start
+
+    $ch = curl_init();
+    $timeout = 30;
+    curl_setopt ($ch,CURLOPT_URL, $url) ;
+    curl_setopt ($ch,CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
+    $response = curl_exec($ch) ;
+    curl_close($ch) ;
+}

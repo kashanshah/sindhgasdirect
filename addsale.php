@@ -31,6 +31,7 @@ $CustomerName = "Anonymous";
 $CustomerID = 0;
 $SImage = "user.jpg";
 $Number = "";
+$SendSMS = 1;
 $Address = "";
 $Remarks = "";
 $Email = "";
@@ -61,17 +62,21 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
     else if (!isset($CylinderID) && empty($CylinderID)) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please select a cylinder to sale.</div>';
 
     if ($msg == "") {
-        $query2 = ($NewOldCustomer == "1" ? 'INSERT INTO ' : 'UPDATE ') . ' users SET DateModified=NOW(),
+        $query2 = ($NewOldCustomer == "1" ? 'INSERT INTO ' : 'UPDATE ') . ' users SET 
 				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", DateModified=NOW(), ' : '') . '
 				Username = "' . time() . '",
 				Password = "' . generate_refno(rand()) . generate_refno(time()) . '",
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
 				Number = "' . dbinput($Number) . '",
+				SendSMS = "' . (int)$SendSMS . '",
 				Balance=Balance-' . (int)$Balance . ',
 				Email = "' . dbinput($Email) . '",
 				Address = "' . dbinput($Address) . '",
 				Remarks = "' . dbinput($Remarks) . '",
 				Status = "1",
+                ShopID="'.(int)$_SESSION["ID"].'",
+                PlantID="'.(int)$_SESSION["PlantID"].'",
+                CreditLimit="'.(float)$Paid.'",
 				PerformedBy = "' . (int)$_SESSION["ID"] . '"
 				' . ($NewOldCustomer == "0" ? ' WHERE ID=' . $CustomerID : ' ');
         mysql_query($query2) or die (mysql_error());
@@ -264,7 +269,7 @@ desired effect
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="cylinders.php"><i class="fa fa-circloe-o"></i> Cylinders Management</a></li>
+                <li><a href="sales.php"><i class="fa fa-cart-arrow-down"></i> Sales</a></li>
                 <li class="active">Sale Cylinders</li>
             </ol>
         </section>
@@ -435,7 +440,7 @@ desired effect
                                                 <div class="col-md-8">
                                                     <input type="number" step="any" class="form-control"
                                                            placeholder="Enter the Amount Paying" name="Paid"
-                                                           value="<?php echo $Paid; ?>" id="Paid">
+                                                           value="<?php echo $Paid; ?>" id="Paid" min="0" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -474,6 +479,7 @@ desired effect
                                                         if ($n == 0) {
                                                             echo '<option value="0">No Customer Added</option>';
                                                         } else {
+                                                            echo '<option value="">Please select a customer</option>';
                                                             while ($Rs = mysql_fetch_assoc($r)) { ?>
                                                                 <option
                                                                         data-currentbalance="<?php echo getUserBalance($Rs["ID"]); ?>"
@@ -501,8 +507,25 @@ desired effect
                                                 <div class="col-md-8">
                                                     <input type="text" id="number" class="form-control"
                                                            value="<?php echo $Number; ?>" placeholder="Enter Number"
-                                                           name="Number">
+                                                           name="Number" required>
                                                     <label id="phonemsg"></label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label"
+                                                       for="example-text-input">Alert</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="number" class="form-control"
+                                                           value="<?php echo $SendSMS; ?>" placeholder="Enter Number"
+                                                           name="Number" required>
+                                                    <label id="phonemsg"></label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                                <div class="col-md-6">
+                                                    <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
+                                                    <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -650,7 +673,7 @@ desired effect
         $('.SalePrice').each(function () {
             gt = gt + parseFloat($(this).val());
         });
-        console.log(gt, RETAIL_GAS_RATE);
+        //console.log(gt, RETAIL_GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(gt);
         if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat($("#TotalAmount").val())) {
@@ -696,12 +719,17 @@ desired effect
                     var fCurrentPayable = parseFloat($('#Unpaid').val()) || 0;
                     var fCurrentPaying = parseFloat($('#Paid').val()) || 0;
                     var duesAfterThisInvoice = ((fCurrentBalance - fCurrentPayable) + fCurrentPaying + fCreditLimit);
-                    if(duesAfterThisInvoice >= 0 || fCurrentPaying == fCurrentPayable){
+                    // console.log("fCreditLimit", fCreditLimit);
+                    // console.log("fCurrentBalance", fCurrentBalance);
+                    // console.log("fCurrentPayable", fCurrentPayable);
+                    // console.log("fCurrentPaying", fCurrentPaying);
+                    // console.log("duesAfterThisInvoice", duesAfterThisInvoice);
+                    if(duesAfterThisInvoice >= 0){
                        $('#mainForm').trigger('submit', {'submit': true});
                     }
                     else{
                         e.preventDefault();
-                        alert("Credit limit is crossed. Pay atleast " + (fCurrentPayable - fCreditLimit - fCurrentBalance) )
+                        alert("Credit limit of Rs. " + fCreditLimit + " is crossed. Please clear your previous dues to continue" );
                     }
                 }
             } else {
@@ -795,7 +823,6 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " .CurrentGasRate.CurrentGasRate" + i).val(<?php echo RETAIL_GAS_RATE; ?>);
-            console.log(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " #CylinderGasWeight" + i);
             i = i + 1;
             gettotal();
             calculateWeights();
@@ -867,6 +894,8 @@ desired effect
                         var result = JSON.parse(data);
                         $("[name='CustomerName']").val(result.Name);
                         $("[name='Number']").val(result.Number);
+                        $("[name='SendSMS']").prop('checked', false);
+                        $("[name='SendSMS'][value='"+result.SendSMS+"']").prop('checked', true);
                         $("[name='Address']").val(result.Address);
                         $("[name='Balance']").val(parseFloat(result.Balance));
                         $("[name='Balance']").attr("data-balance", result.Balance);

@@ -177,7 +177,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </h1>
           <ol class="breadcrumb">
             <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="viewinventory.php"><i class="fa fa-circloe-o"></i> Inventory</a></li>
+            <li><a href="viewinventory.php"><i class="fa fa-circle-o"></i> Inventory</a></li>
             <li class="active">Dispatch Cylinders</li>
           </ol>
         </section>

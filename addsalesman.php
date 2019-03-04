@@ -4,7 +4,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 
 $msg='';
 $Username = time();			$Password = "";			$Email = "";			$Image="";
-$Name = "";				$Number = "";
+$Name = "";				$Number = "";				$SendSMS = 1;
 $Address = "";
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 
@@ -47,11 +47,13 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Status='".(int)$Status."', DateAdded=NOW(),
 						RoleID='".(int)ROLE_ID_SALES."',
 						ShopID='".($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $ShopID)."',
+						PlantID='".(int)$_SESSION["PlantID"]."',
 						Username = '".dbinput($Username)."',
 						Password = '".dbinput($Password)."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						SendSMS='".(int)$SendSMS."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
@@ -247,6 +249,13 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
                                 <div class="form-group">

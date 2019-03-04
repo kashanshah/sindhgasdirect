@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID = ".(int)ROLE_ID_PLANT;
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.SendSMS, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID = ".(int)ROLE_ID_PLANT;
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -133,6 +133,7 @@ desired effect
                                         <th>Name</th>
                                         <th>Address</th>
                                         <th>Contact Number</th>
+                                        <th>Alerts</th>
                                         <th>Remarks</th>
                                         <th></th>
                                     </tr>
@@ -147,6 +148,7 @@ desired effect
                                             <td><?php echo $row["Name"]; ?></td>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
+                                            <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editplant.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
