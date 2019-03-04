@@ -168,9 +168,14 @@ desired effect
                                                     ?>
                                                     <div style="max-height:100px;overflow:scroll;">
                                                         <?php
+                                                        if(mysql_num_rows($osiresource) > 0){
+                                                        ?>
+                                                        <a onClick='slideToggle("#invoices<?php echo $row["ID"]; ?>")'>View Invoices</a>
+                                                        <?php
+                                                        }
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>
-                                                            <div>
+                                                            <div id="invoices<?php echo $row["ID"]; ?>" style="display:none;">
                                                                 <a href="viewpurchase.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
                                                             </div>
                                                             <?php

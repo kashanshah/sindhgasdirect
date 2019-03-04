@@ -3,7 +3,7 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 $msg='';
-$sql="SELECT cs.ID, cs.DateAdded, c.BarCode, cs.Savings, s.Name AS Shop, p.Name AS Plant FROM cylinder_savings cs LEFT JOIN users s ON s.ID=cs.ShopID LEFT JOIN users p ON p.ID=s.PlantID LEFT JOIN cylinders c ON c.ID=cs.CylinderID WHERE cs.ID<>0 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND s.PlantID='".$_SESSION["PlantID"]."'" : ' AND cs.ShopID="'.(int)$_SESSION["ID"].'" '))." order by ID DESC";
+$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.BarCode, cs.Savings, s.Name AS Shop, p.Name AS Plant FROM cylinder_savings cs LEFT JOIN users s ON s.ID=cs.UserID LEFT JOIN users p ON p.ID=s.PlantID LEFT JOIN cylinders c ON c.ID=cs.CylinderID WHERE cs.ID<>0 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND p.PlantID='".$_SESSION["ID"]."'" : ' AND cs.UserID="'.(int)$_SESSION["ID"].'" '))." order by ID DESC";
 $resource=mysql_query($sql) or die(mysql_error());
 ?>
 <!DOCTYPE html>
@@ -98,7 +98,7 @@ desired effect
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-                                        <th>Barcode</th>
+                                        <th>Cylinder ID</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
                                             <th>Shop</th>
@@ -107,6 +107,7 @@ desired effect
                                             <th>Shop</th>
                                         <?php } ?>
                                         <th>Gas Saved</th>
+                                        <th>Invoice #</th>
                                         <th>Date</th>
                                     </tr>
                                     </thead>
@@ -129,6 +130,7 @@ desired effect
                                                 <td><?php echo $row["Shop"]; ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Savings"]; ?> KG</td>
+                                            <td><?php echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                         </tr>
                                         <?php

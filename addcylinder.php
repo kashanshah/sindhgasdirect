@@ -8,6 +8,7 @@ get_right(array(ROLE_ID_PLANT));
 	$Description = "";
 	$ShortDescription = "";
 	$TierWeight = "";
+	$Commercial = 0;
 	$Image="";
 	$ManufacturingDate=date('Y-m-d');
 	$ExpiryDate="";
@@ -22,6 +23,7 @@ get_right(array(ROLE_ID_PLANT));
 		if(isset($_POST['Description']))				$Description = trim($_POST['Description']);
 		if(isset($_POST['ShortDescription']))			$ShortDescription = trim($_POST['ShortDescription']);
 		if(isset($_POST['TierWeight']))				$TierWeight = trim($_POST['TierWeight']);
+		if(isset($_POST['Commercial']))				$Commercial = trim($_POST['Commercial']);
 		if(isset($_POST['Image']))						$Image = trim($_POST['Image']);
 		
 		if(isset($_POST['ManufacturingDate']))						$ManufacturingDate = trim($_POST['ManufacturingDate']);
@@ -68,6 +70,7 @@ get_right(array(ROLE_ID_PLANT));
 						Description='".dbinput($Description)."',
 						ShortDescription='".dbinput($ShortDescription)."',
 						TierWeight='".(float)$TierWeight."',
+						Commercial='".(int)$Commercial."',
 						PlantID='".(int)$_SESSION["ID"]."',
 						PerformedBy = '".(int)$_SESSION["ID"]."'") or die(mysql_error());
 						
@@ -225,6 +228,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						
 						</div>
 					</div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
+                        <div class="col-md-6">
+                            <input type="radio" value="1" name="Commercial" <?php echo ($Commercial== "1" ? 'checked=""' : '') ?>> Yes
+                            <input type="radio" value="0" name="Commercial" <?php echo ($Commercial == "0" ? 'checked=""' : '') ?>> No
+                        </div>
+                    </div>
                     <div class="form-group">
 						<label class="col-md-3 control-label" for="ShortDescription">Short Description</label>
 						<div class="col-md-6">

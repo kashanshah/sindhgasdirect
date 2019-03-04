@@ -82,8 +82,8 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
         mysql_query("UPDATE purchase_details SET 
             ReturnDate = NOW(),
             ReturnStatus = 1,
-            ReturnWeight='".(int)$CurrentCylinderWeight[$i]."'
-            WHERE PurchaseID = '".(int)$InvoiceID."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
+            ReturnWeight='".(float)$CylinderWeight[$i]."'
+            WHERE PurchaseID = '".getCurrentPurchaseInvoiceID($CID)."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
 			$i++;
 		}
 		$msg='<div class="alert alert-success alert-dismissable">

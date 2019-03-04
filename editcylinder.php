@@ -7,6 +7,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 {
 	$BarCode = $_REQUEST["BarCode"];
 	$NewBarCode = $_REQUEST["NewBarCode"];
+    $Commercial = $_REQUEST["Commercial"];
 	$ManufacturingDate = $_REQUEST["ManufacturingDate"];
 	$Description = $_REQUEST["Description"];
 	$ShortDescription = $_REQUEST["ShortDescription"];
@@ -28,6 +29,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 			ManufacturingDate='".dbinput($ManufacturingDate)."',
 			ExpiryDate='".dbinput($ExpiryDate)."',
 			Description='".dbinput($Description)."',
+			Commercial='".(int)$Commercial."',
 			ShortDescription='".dbinput($ShortDescription)."',
 			TierWeight='".(float)$TierWeight."',
 			PerformedBy = '".(int)$_SESSION["ID"]."'
@@ -81,6 +83,7 @@ else
 		$Description = $row["Description"];
 		$ShortDescription = $row["ShortDescription"];
 		$TierWeight = $row["TierWeight"];
+		$Commercial = $row["Commercial"];
 		$ManufacturingDate = $row["ManufacturingDate"];
 		$ExpiryDate = $row["ExpiryDate"];
 	}
@@ -238,6 +241,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<input type="number" step="any" class="form-control" id="example-text-input" value="<?php echo $TierWeight;?>" name="TierWeight">
 						</div>
 					</div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
+                        <div class="col-md-6">
+                            <input type="radio" value="1" name="Commercial" <?php echo ($Commercial== "1" ? 'checked=""' : '') ?>> Yes
+                            <input type="radio" value="0" name="Commercial" <?php echo ($Commercial == "0" ? 'checked=""' : '') ?>> No
+                        </div>
+                    </div>
 
                     <div class="form-group">
 						<label class="col-md-3 control-label" for="example-text-input">Short Description</label>

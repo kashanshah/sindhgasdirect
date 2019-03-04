@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.SendSMS, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.SecurityDeposite, u.Balance, u.SendSMS, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -141,6 +141,7 @@ desired effect
                                         <th>Unpaid</th>
                                         <th>Gas Balance</th>
                                         <th>Credit Limit</th>
+                                        <th>Security Deposite</th>
                                         <th>Remarks</th>
                                         <th></th>
                                     </tr>
@@ -165,11 +166,16 @@ desired effect
                                                     $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";
                                                     $osiresource=mysql_query($osisql) or die(mysql_error());
                                                     ?>
-                                                    <div style="max-height:100px;overflow:scroll;">
+                                                    <div  style="max-height:100px;overflow:scroll;">
                                                         <?php
+                                                        if(mysql_num_rows($osiresource) > 0){
+                                                            ?>
+                                                            <a onClick='slideToggle("#invoices<?php echo $row["ID"]; ?>")'>View Invoices</a>
+                                                            <?php
+                                                        }
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>
-                                                            <div>
+                                                            <div id="invoices<?php echo $row["ID"]; ?>" style="display: none;">
                                                                 <a href="viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
                                                             </div>
                                                             <?php
@@ -182,6 +188,7 @@ desired effect
                                             </td>
                                             <td><?php echo number_format($row["Balance"], 2); ?>KG Gas</td>
                                             <td>Rs. <?php echo $row["CreditLimit"]; ?></td>
+                                            <td>Rs. <?php echo $row["SecurityDeposite"]; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>

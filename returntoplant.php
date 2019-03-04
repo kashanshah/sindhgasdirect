@@ -65,11 +65,13 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
             mysql_query("UPDATE cylinders SET DateModified = NOW(),
 				Status=0 WHERE ID='".(int)$CID."'") or die(mysql_error());
-			if(((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i])) > 0){
+            $tmpSaving = (float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]);
+            if((float)$tmpSaving > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
                   CylinderID='".(int)$CID."',
-                  ShopID='".(int)$CustomerID[$i]."',
-                  Savings = '".((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]))."',
+                  UserID='".(int)$CustomerID[$i]."',
+                  Savings = '".(float)$tmpSaving."',
+                  PurchaseID = '".getCurrentPurchaseInvoiceID($CID)."',
                   DateAdded = NOW(),
                   DateModified = NOW(),
                   PerformedBy='".$_SESSION["ID"]."'") or die(mysql_error());
