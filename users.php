@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 2));
+get_right(array(ROLE_ID_ADMIN));
 	$msg='';
 	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 	{
@@ -26,7 +26,7 @@ get_right(array(1, 2));
 			redirect($self);
 	}
 
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.RoleID = ".(int)ROLE_ID_ADMIN." OR u.RoleID=".(int)ROLE_ID_USER." ";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>

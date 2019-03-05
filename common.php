@@ -36,6 +36,7 @@ define("ROLE_ID_SHOP", 3);
 define("ROLE_ID_CUSTOMER", 4);
 define("ROLE_ID_SALES", 5);
 define("ROLE_ID_PLANT", 6);
+define("ROLE_ID_USER", 7);
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));

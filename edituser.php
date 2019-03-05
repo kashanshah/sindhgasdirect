@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
-<?php include("checkadminlogin.php"); 
-get_right(array(1, 2));
+<?php include("checkadminlogin.php");
+get_right(array(ROLE_ID_ADMIN));
 
 	$msg='';				$ID = 0;
 	$Username = "";			$Password = "";			$Email = "";			$Image="";
@@ -244,13 +244,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<label class="col-md-3 control-label" for="example-text-input">Role</label>
 						<div class="col-md-6">
 							<select class="form-control" name="RoleID">
-								<?php
-									$r = mysql_query("SELECT ID, Name FROM roles") or die(mysql_error());
-									$n = mysql_num_rows($r);
-									while($Rs = mysql_fetch_assoc($r)) { ?>
-									<option value="<?php echo $Rs['ID']; ?>" <?php if($RoleID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
-									<?php }
-								?>
+                                <option value="<?php echo ROLE_ID_ADMIN; ?>" <?php if($RoleID==ROLE_ID_ADMIN) { echo 'selected=""'; } ?>>Admin</option>
+                                <option value="<?php echo ROLE_ID_USER; ?>" <?php if($RoleID==ROLE_ID_USER) { echo 'selected=""'; } ?>>User</option>
 							</select>
 						</div>
 					</div>
