@@ -44,7 +44,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("INSERT into users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
+						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)ROLE_ID_SALES."',
 						ShopID='".($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $ShopID)."',
 						PlantID='".(int)$_SESSION["PlantID"]."',

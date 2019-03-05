@@ -60,7 +60,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
 
     if ($msg == "") {
-        mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
+        mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			IssuedTo = '" . (int)$HandedTo . "',
 			VehicleID = '" . (int)$VehicleID . "',
@@ -68,8 +68,9 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $InvoiceID = mysql_insert_id();
 
         $i = 0;
+        $totaltmpSaving = 0;
         foreach ($CylinderID as $CID) {
-            $query2 = "INSERT INTO cylinderstatus SET DateAdded = NOW(),
+            $query2 = "INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='" . (int)$InvoiceID . "',
 				CylinderID='" . (int)$CID . "',
 				HandedTo='" . (int)$HandedTo . "',
@@ -77,8 +78,15 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 			";
             mysql_query($query2) or die(mysql_error());
+            $totaltmpSaving = $totaltmpSaving + $CylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID);
             $i++;
         }
+        $CylinderCount = $i;
+
+        sendUserSMS($HandedTo, 'Dispatch - '.$CylinderCount . ' cylinder(s) with total weight: '.$totaltmpSaving.'KG has been assigned to you to dispatch. Vehicle: '.getValue('vehicles', 'Name', 'ID', $VehicleID).' (' .getValue('vehicles', 'RegistrationNo', 'ID', $VehicleID).') at '.date('h:iA d-m-Y'));
+
+        sendUserSMS($_SESSION["ID"], 'Dispatch - '.$CylinderCount . ' cylinder(s) with total weight: '.$totaltmpSaving.'KG has been dispatched through '.getValue('users', 'Name', 'ID', $HandedTo).' via vehicle '.getValue('vehicles', 'Name', 'ID', $VehicleID).' (' .getValue('vehicles', 'RegistrationNo', 'ID', $VehicleID).') at '.date('h:iA d-m-Y'));
+
         $msg = '<div class="alert alert-success alert-dismissable">
 			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

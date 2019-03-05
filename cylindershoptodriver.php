@@ -62,7 +62,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 	
 	if($msg == "")
 	{
-		mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
+		mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
 			PerformedBy = '".(int)$_SESSION["ID"]."',
 			VehicleID = '" . (int)$VehicleID . "',
 			IssuedTo = '".(int)$HandedTo."',
@@ -71,7 +71,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 
 		$i = 0;
 		foreach($CylinderID as $CID){
-			$query2 = "INSERT INTO cylinderstatus SET DateAdded = NOW(),
+			$query2 = "INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID."',
 				CylinderID='".(int)$CID."',
 				HandedTo='".(int)$HandedTo."',
@@ -80,7 +80,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 			";
 		mysql_query($query2) or die(mysql_error());
         mysql_query("UPDATE purchase_details SET 
-            ReturnDate = NOW(),
+            ReturnDate = '".DATE_TIME_NOW."',
             ReturnStatus = 1,
             ReturnWeight='".(float)$CylinderWeight[$i]."'
             WHERE PurchaseID = '".getCurrentPurchaseInvoiceID($CID)."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());

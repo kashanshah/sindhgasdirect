@@ -45,7 +45,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("INSERT into users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
+						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".ROLE_ID_SHOP."',
 						ShopID='0',
 						PlantID='".(int)$_SESSION["ID"]."',
@@ -60,6 +60,9 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Remarks='".dbinput($Remarks)."'
 						") or die(mysql_error());
         $UserID = mysql_insert_id();
+
+        $smssent = sendUserSMS($_SESSION["Number"], 'Shop - A new shop has been added at Plant:  '.$_SESSION["ID"].'. Name: '.$Name.', Number: '.$Number.' at '.date('h:iA d-m-Y'));
+
         $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

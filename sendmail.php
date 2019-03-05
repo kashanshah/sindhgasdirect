@@ -31,7 +31,7 @@ if(isset($_POST["mail"]) && $_POST["mail"] == "quickmail")
 		$mail = @mail($to,$subject,$message,$headers);
 		if($mail)
 		{ 
-			mysql_query("INSERT INTO mails SET DateAdded=NOW(),
+			mysql_query("INSERT INTO mails SET DateAdded='".DATE_TIME_NOW."',
 			SentFrom = '".$from."',
 			SentTo = '".$to."',
 			Subject = '".$subject."',

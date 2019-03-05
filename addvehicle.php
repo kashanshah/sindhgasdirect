@@ -25,8 +25,8 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     if($msg=="")
     {
         mysql_query("INSERT into vehicles SET
-						DateAdded=NOW(),
-						DateModified=NOW(),
+						DateAdded='".DATE_TIME_NOW."',
+						DateModified='".DATE_TIME_NOW."',
 						Name='".dbinput($Name)."',
 						Details='".dbinput($Details)."',
 						RegistrationNo='".dbinput($RegistrationNo)."',

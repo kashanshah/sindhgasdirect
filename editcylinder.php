@@ -24,7 +24,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		$date = date_add($ExpiryDate, date_interval_create_from_date_string('5 years'));
 		$ExpiryDate = date_format($date, 'Y-m-d');
 		mysql_query("UPDATE cylinders SET
-			DateModified=NOW(),
+			DateModified='".DATE_TIME_NOW."',
 			BarCode='".dbinput($NewBarCode)."',
 			ManufacturingDate='".dbinput($ManufacturingDate)."',
 			ExpiryDate='".dbinput($ExpiryDate)."',
@@ -43,7 +43,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		$password = SMS_PASSWORD;
 		$to = ALERT_RECEIVER;
 		$from = COMPANY_NAME;
-		$message = 'Cylinder - Cylinder '.$BarCode.' has been edited at '.date('h:i:sA d-m-Y').'. New '.($BarCode != $NewBarCode ? 'barcode is '. $NewBarCode .','  : '').' Manufacturing Date '.$ManufacturingDate.', Expiry Date '.$ExpiryDate.', T.W '.$TierWeight;
+		$message = 'Cylinder - Cylinder '.$BarCode.' has been edited at '.date('h:iA d-m-Y').'. New '.($BarCode != $NewBarCode ? 'barcode is '. $NewBarCode .','  : '').' Manufacturing Date '.$ManufacturingDate.', Expiry Date '.$ExpiryDate.', T.W '.$TierWeight;
 		$url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
 		"&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
 		//Curl Start

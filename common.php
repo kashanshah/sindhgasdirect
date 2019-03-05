@@ -26,7 +26,7 @@ if (!function_exists('mysql_connect')) {
 }
 
 
-$settingResultSet = mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, Domain, Address, GasRate, RetailGasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
+$settingResultSet = mysql_query("SELECT FullName,Logo,CompanyName, SiteTitle, DropboxEmail, Domain, Address, GasRate, RetailGasRate, Email, AlertReceiver, SMTPHost, SMTPUser, SMTPPassword, BarCodeLength, Number, FaxNumber, SMSUsername, SMSPassword, CaptchaVerification FROM configurations ") or die(mysql_error());
 $settingRecordSet = mysql_fetch_assoc($settingResultSet);
 $ENQUIRIES_CATEGORIES = array("General enquiries", "Advertisement enquiries", "Website feedback", "Other comments");
 
@@ -38,6 +38,7 @@ define("ROLE_ID_SALES", 5);
 define("ROLE_ID_PLANT", 6);
 define("ROLE_ID_USER", 7);
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
+define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
 define("ADDRESS", dboutput($settingRecordSet["Address"]));
@@ -1217,10 +1218,10 @@ function getShopDues($ID){
     return number_format((int)mysql_result($r, 0, 0), 2);
 }
 
-function sendSMS($to = '', $message){
+function sendSMS($to = '', $message, $check = false){
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;
-    $to = ALERT_RECEIVER;
+    $to = $to;
     $from = 'SindhGasDIR';
     $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
         "&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
@@ -1233,4 +1234,31 @@ function sendSMS($to = '', $message){
     curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
     $response = curl_exec($ch) ;
     curl_close($ch) ;
+}
+
+function sendUserSMS($to = 0, $message = '', $check = true){
+    $response = '';
+    $username = SMS_USERNAME;
+    $password = SMS_PASSWORD;
+    $to = mysql_query("SELECT ID, Number, SendSMS FROM users WHERE ID = " . $to) or die(mysql_error());
+    if(mysql_num_rows($to) == 1){
+        $r = mysql_fetch_array($to);
+        $send = true;
+        if($check){
+            $send = $r["SendSMS"];
+        }
+        if($send){
+            $from = 'SindhGasDIR';
+            $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
+                "&mobile=" .$r["Number"]. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
+            $ch = curl_init();
+            $timeout = 30;
+            curl_setopt ($ch,CURLOPT_URL, $url) ;
+            curl_setopt ($ch,CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
+            $response = curl_exec($ch) ;
+            curl_close($ch) ;
+        }
+    }
+    //return $response;
 }

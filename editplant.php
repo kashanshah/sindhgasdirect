@@ -43,7 +43,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("UPDATE users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
+						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)ROLE_ID_PLANT."',
 						Password='".dbinput($Password)."',
 						Email='".dbinput($Email)."',

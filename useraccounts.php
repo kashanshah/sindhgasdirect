@@ -124,7 +124,7 @@ desired effect
                                                     $osisql="SELECT p.ID, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";
                                                     $osiresource=mysql_query($osisql) or die(mysql_error());
                                                     ?>
-                                                    <div style="max-height:100px;overflow:scroll;">
+                                                    <div style="max-height:100px;overflow:auto;">
                                                         <?php
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>

@@ -43,7 +43,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		}
 		if($msg=="")
 		{
-			mysql_query("UPDATE admins SET DateModified= NOW(),
+			mysql_query("UPDATE admins SET DateModified= '".DATE_TIME_NOW."',
 						RoleID='".(int)$RoleID."',
 						Password='".dbinput($Password)."',
 						Email='".dbinput($Email)."',
@@ -58,7 +58,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 						BirthPlace='".dbinput($BirthPlace)."',
 						Gender='".(int)$Gender."',
 						Religion='".dbinput($Religion)."',
-						AdmissionDate=NOW(),
+						AdmissionDate='".DATE_TIME_NOW."',
 						Remarks='".dbinput($Remark)."'
 						WHERE ID=".(int)$ID."
 						") or die(mysql_error());

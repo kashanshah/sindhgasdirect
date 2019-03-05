@@ -63,7 +63,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 	
 	if($msg == "")
 	{
-		$query3 = "UPDATE sales SET DateModified = NOW(),
+		$query3 = "UPDATE sales SET DateModified = '".DATE_TIME_NOW."',
 				Paid=PAID+".(float)$NewPayment.",
 				Unpaid=Unpaid-".(float)($NewPayment).",
 				Note='".dbinput($Note)."'
@@ -71,7 +71,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 				";
 		mysql_query($query3) or die('a'.mysql_error());
 		
-		$query3 = "INSERT INTO sales_amount SET DateAdded=NOW(), DateModified=NOW(),
+		$query3 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',
 				Paid='".(float)$NewPayment."',
 				Unpaid='".(float)($TotalAmount - ($Paid + $NewPayment))."',

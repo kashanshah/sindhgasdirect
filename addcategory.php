@@ -19,7 +19,7 @@ get_right(array(1, 2));
 		if($msg=="")
 		{
 			mysql_query("INSERT into categories SET
-						DateAdded=NOW(),
+						DateAdded='".DATE_TIME_NOW."',
 						Name='".dbinput($Name)."',
 						Description='".dbinput($Description)."'
 						") or die(mysql_error());

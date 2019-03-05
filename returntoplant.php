@@ -55,28 +55,30 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 	if($msg == "")
 	{
 		$i = 0;
+		$totaltmpSaving = 0;
 		foreach($CylinderID as $CID){
-			mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified=NOW(),
+			mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());
             mysql_query("UPDATE users SET 
 				Balance = Balance+".((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]))."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
-            mysql_query("UPDATE cylinders SET DateModified = NOW(),
+            mysql_query("UPDATE cylinders SET DateModified = '".DATE_TIME_NOW."',
 				Status=0 WHERE ID='".(int)$CID."'") or die(mysql_error());
             $tmpSaving = (float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]);
+            $totaltmpSaving = $totaltmpSaving + $tmpSaving;
             if((float)$tmpSaving > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
                   CylinderID='".(int)$CID."',
                   UserID='".(int)$CustomerID[$i]."',
                   Savings = '".(float)$tmpSaving."',
                   PurchaseID = '".getCurrentPurchaseInvoiceID($CID)."',
-                  DateAdded = NOW(),
-                  DateModified = NOW(),
+                  DateAdded = '".DATE_TIME_NOW."',
+                  DateModified = '".DATE_TIME_NOW."',
                   PerformedBy='".$_SESSION["ID"]."'") or die(mysql_error());
             }
-			mysql_query("INSERT INTO cylinderstatus SET DateAdded = NOW(),
+			mysql_query("INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID[$i]."',
 				CylinderID='".(int)$CID."',
 				HandedTo='".(int)$_SESSION["ID"]."',
@@ -85,8 +87,13 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 			") or die(mysql_error());
 			$i++;
 		}
-		
-		$_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
+
+        $CylinderCount = $i;
+        sendUserSMS($DriverID[$i-1], 'Return - '.$CylinderCount . ' cylinder(s) has been delivered to plant: '.$_SESSION["Name"].' with total return gas of '.$totaltmpSaving.'KG at '.date('h:iA d-m-Y'));
+        sendUserSMS($_SESSION["ID"], 'Return - ' . getValue('users', 'Name', 'ID', $DriverID[$i-1]) .' has delivered ' . $CylinderCount .' cylinder(s) at '.$_SESSION["Name"].' with total return gas of '.$totaltmpSaving.'KG at '.date('h:iA d-m-Y'));
+
+
+        $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
 			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 			Cylinder return has been added!
@@ -234,6 +241,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_DRIVER){
 										?>
 										<option 
+											data-driverid="<?php echo getCurrentHandedTo($Rs["ID"]); ?>"
+											data-drivername="<?php echo getValue('users', 'Name', 'ID', getCurrentHandedTo($Rs["ID"])); ?>"
 											data-customername="<?php echo getValue('users', 'Name', 'ID', getCurrentPurchaseShopID($Rs["ID"])); ?>"
 											data-customerid="<?php echo getCurrentPurchaseShopID($Rs["ID"]); ?>"
 											data-invoiceid="<?php echo getCurrentPurchaseInvoiceID($Rs["ID"]); ?>"
@@ -441,7 +450,7 @@ $(document).ready(function() {
 			var gasWeight = parseFloat($("[name='CylinderID'] option:selected").data('weight')) - parseFloat($("[name='CylinderID'] option:selected").data('tierweight'));
 			$(".cart_table").append('<tr class="DivCartCylinder'+$("[name='CylinderID']").val()+'">');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span><br/>Returning from: '+$("[name='CylinderID'] option:selected").data('customername')+'<input type="hidden" name="CustomerID[]" value="'+$("[name='CylinderID'] option:selected").data('customerid')+'" /><input type="hidden" name="InvoiceID[]" value="'+$("[name='CylinderID'] option:selected").data('invoiceid')+'" /></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span><br/>Returning from: '+$("[name='CylinderID'] option:selected").data('customername')+'<br/>Driver: '+$("[name='CylinderID'] option:selected").data('drivername')+'<input type="hidden" name="CustomerID[]" value="'+$("[name='CylinderID'] option:selected").data('customerid')+'" /><input type="hidden" name="DriverID[]" value="'+$("[name='CylinderID'] option:selected").data('driverid')+'" /><input type="hidden" name="InvoiceID[]" value="'+$("[name='CylinderID'] option:selected").data('invoiceid')+'" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');

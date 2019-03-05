@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</select>
 							<div class="overSelect"></div>
 						</div>
-						<div id="checkboxes" style="height:250px; overflow:scroll;">
+						<div id="checkboxes" style="height:250px; overflow:auto;">
 							<label><input <?php echo (in_array("Name", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Name" /> Customer Name</label>
 							<label><input <?php echo (in_array("Total", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Total" /> Total</label>
 							<label><input <?php echo (in_array("Discount", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Discount" /> Discount</label>

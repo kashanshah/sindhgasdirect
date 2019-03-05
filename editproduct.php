@@ -46,8 +46,8 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 	{
 		$Cat = implode(",", $Categories);
 		mysql_query("UPDATE products SET
-					DateModified=NOW(),
-					DateAdded=NOW(),
+					DateModified='".DATE_TIME_NOW."',
+					DateAdded='".DATE_TIME_NOW."',
 					CategoryID='".dbinput($Cat)."',
 					ShortDescription='".dbinput($ShortDescription)."',
 					Description='".dbinput($Description)."',

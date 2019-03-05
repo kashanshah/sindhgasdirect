@@ -63,7 +63,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
     if ($msg == "") {
         $query2 = ($NewOldCustomer == "1" ? 'INSERT INTO ' : 'UPDATE ') . ' users SET 
-				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", DateModified=NOW(), ' : '') . '
+				' . ($NewOldCustomer == "1" ? 'Name ="' . ($CustomerName == '' ? 'Anonymous' : $CustomerName) . '", DateAdded="NOW", DateModified="'.DATE_TIME_NOW.'", ' : '') . '
 				Username = "' . time() . '",
 				Password = "' . generate_refno(rand()) . generate_refno(time()) . '",
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
@@ -82,7 +82,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         if (mysql_insert_id() != 0) {
             $CustomerID = mysql_insert_id();
         }
-        mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified=NOW(),
+        mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			IssuedTo = '" . (int)$CustomerID . "',
 			Note = '" . dbinput($Note) . "'") or die(mysql_error());
@@ -118,7 +118,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $GrandTotalRates = $TotalAmount;
         $GasRate = RETAIL_GAS_RATE;
         $Unpaid = ($TotalAmount - ($Balance * $GasRate) - $Paid);
-        $query3 = "INSERT INTO sales SET DateAdded = NOW(),DateModified=NOW(),
+        $query3 = "INSERT INTO sales SET DateAdded = '".DATE_TIME_NOW."',DateModified='".DATE_TIME_NOW."',
 			ShopID='" . (int)($_SESSION["ID"]) . "',
 			CustomerID='" . (int)($CustomerID) . "',
 			GasRate='" . (float)$GasRate . "',
@@ -132,7 +132,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         mysql_query($query3) or die('b'.mysql_error());
         $SaleID = mysql_insert_id();
 
-        $query4 = "INSERT INTO sales_amount SET DateAdded=NOW(), DateModified=NOW(),
+        $query4 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "',
 				SaleID=" . $SaleID . ",
 				Paid='" . (float)$Paid . "',
@@ -143,7 +143,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
         $i = 0;
         foreach ($CylinderID as $CID) {
-            $query4 = "INSERT INTO sale_details SET DateAdded = NOW(), DateModified=NOW(),
+            $query4 = "INSERT INTO sale_details SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				SaleID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
 				ReturnStatus=0,
@@ -159,7 +159,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
             $GrandTotalGasWeight = $GrandTotalGasWeight + ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
 
-            $query2 = "INSERT INTO cylinderstatus SET DateAdded = NOW(),
+            $query2 = "INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
 				HandedTo='" . (int)$CustomerID . "',
@@ -169,13 +169,17 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
             mysql_query($query2) or die('d'.mysql_error());
             $i++;
         }
-
+        $CylinderCount = $i;
         $TempGasRate = (float)$GrandTotalRates/$GrandTotalGasWeight;
 
         mysql_query("UPDATE sales SET 
             GasRate = '".$TempGasRate."',
             Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
             WHERE ID = '".(int)$SaleID."'") or die('e'.mysql_error());
+
+        sendUserSMS($CustomerID, 'Dear '. getValue('users', 'Name', 'ID', $CustomerID).', \n' .$CylinderCount . ' cylinder(s) have been delivered to you with total weight: '.$GrandTotalGasWeight.'KG. \nTotal Payable Amount: '.$TotalAmount.'. \nAmount Paid: '.$Paid.'. \nBalance Amount: '.($TotalAmount - ($Balance * $GasRate) - $Paid).' at '.date('h:iA d-m-Y'));
+
+        sendUserSMS($_SESSION["ID"], 'Sale - ' .$CylinderCount . ' cylinder(s) have been sold to '.getValue('users', 'Name', 'ID', $CustomerID).' with total weight: '.$GrandTotalGasWeight.'KG. \nTotal Payable Amount: '.$TotalAmount.'. \nAmount Paid: '.$Paid.'. \nBalance Amount: '.($TotalAmount - ($Balance * $GasRate) - $Paid).' at '.date('h:iA d-m-Y'));
 
         $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -724,7 +728,7 @@ desired effect
                     }
                     else{
                         e.preventDefault();
-                        alert("Credit limit of Rs. " + fCreditLimit + " is crossed. Please clear your previous dues to continue" );
+                        alert("Credit limit of Rs. " + fCreditLimit + " is crossed. Please pay atleast" + duesAfterThisInvoice);
                     }
                 }
             } else {

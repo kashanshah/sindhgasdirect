@@ -45,7 +45,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("INSERT into users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
+						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".ROLE_ID_PLANT."',
 						ShopID='0',
 						Username='".dbinput($Username)."',

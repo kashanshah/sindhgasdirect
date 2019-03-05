@@ -120,7 +120,7 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
 		if($msg=="")
 		{
 			mysql_query("UPDATE configurations SET
-						DateModified=NOW(),
+						DateModified='".DATE_TIME_NOW."',
 						Email='".dbinput($Email)."',
 						GasRate='".(float)$GasRate."',
 						RetailGasRate='".(float)$RetailGasRate."',

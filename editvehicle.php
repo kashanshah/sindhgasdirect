@@ -25,7 +25,7 @@ if (isset($_POST['editstd']) && $_POST['editstd'] == 'Save') {
 
     if ($msg == "") {
         mysql_query("UPDATE vehicles SET
-						DateModified=NOW(),
+						DateModified='".DATE_TIME_NOW."',
 						Name='" . dbinput($Name) . "',
 						Details='" . dbinput($Details) . "',
 						RegistrationNo='" . dbinput($RegistrationNo) . "',

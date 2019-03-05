@@ -45,7 +45,7 @@ get_right(array(ROLE_ID_ADMIN));
 		{
 			
 			mysql_query("INSERT into users SET
-						Status='".(int)$Status."', DateAdded=NOW(),
+						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)$RoleID."',
 						ShopID='".(int)$ShopID."',
 						Username='".dbinput($Username)."',

@@ -61,7 +61,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 	
 	if($msg == "")
 	{
-		$query3 = "UPDATE sales SET DateModified = NOW(),
+		$query3 = "UPDATE sales SET DateModified = '".DATE_TIME_NOW."',
 				Note='".dbinput($Note)."'
 				WHERE ID=".$ID."
 				";

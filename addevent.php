@@ -25,7 +25,7 @@ get_right(array(1, 2));
 		if($msg=="")
 		{
 			mysql_query("INSERT into events SET
-						DateAdded=NOW(),
+						DateAdded='".DATE_TIME_NOW."',
 						Title='".$Title."',
 						StartDate='".$StartDate."',
 						EndDate='".$EndDate."',

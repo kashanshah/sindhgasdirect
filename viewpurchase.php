@@ -61,7 +61,7 @@ if(isset($_POST['addpurchase']) && $_POST['addpurchase']=='Save')
 	
 	if($msg == "")
 	{
-		$query3 = "UPDATE purchases SET DateModified = NOW(),
+		$query3 = "UPDATE purchases SET DateModified = '".DATE_TIME_NOW."',
 				Note='".dbinput($Note)."'
 				WHERE ID=".$ID."
 				";
@@ -172,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="box-header">
                       <div class="btn-group-right">
                           <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_PLANT){
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_SHOP){
                               ?>
                               <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentpurchase.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
                               <?php

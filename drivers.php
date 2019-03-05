@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, u.PlantID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.PlantID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_DRIVER)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, u.PlantID, r.Name AS Role, u.Address, u.Number, u.SendSMS, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.PlantID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_DRIVER)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -138,6 +138,7 @@ desired effect
                                         <?php } ?>
                                         <th>Address</th>
                                         <th>Contact Number</th>
+                                        <th>Alerts</th>
                                         <th>Remarks</th>
                                         <th></th>
                                     </tr>
@@ -150,11 +151,12 @@ desired effect
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
+                                            <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editdriver.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>

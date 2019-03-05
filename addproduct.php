@@ -59,7 +59,7 @@ get_right(array(1, 2));
 		{
 			$CategoryID = implode(",", $Categories);
 			mysql_query("INSERT into products SET
-						DateAdded=NOW(),
+						DateAdded='".DATE_TIME_NOW."',
 						CategoryID='".$CategoryID."',
 						BarCode='".$BarCode."',
 				
@@ -78,7 +78,7 @@ get_right(array(1, 2));
 $password = '11138';
 $to = '923219292414';
 $from = 'SindhGasDIR';
-$message = 'Cylinder - New Cylinder with Barcode '.$BarCode.' and Manufacturing Date '.$ManufacturingDate.' having T.W '.$TierWeight.'  has been added today at '.date('h:i:sA d-m-Y');
+$message = 'Cylinder - New Cylinder with Barcode '.$BarCode.' and Manufacturing Date '.$ManufacturingDate.' having T.W '.$TierWeight.'  has been added today at '.date('h:iA d-m-Y');
 $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
 "&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
 //Curl Start

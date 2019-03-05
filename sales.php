@@ -3,35 +3,14 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg = '';
-if (isset($_REQUEST['ids']) && is_array($_REQUEST['ids'])) {
-    if ($_SESSION["RoleID"] == ROLE_ID_ADMIN) {
-        foreach ($_REQUEST['ids'] as $CID) {
-            //echo $CID;exit();
-            mysql_query("DELETE FROM sales WHERE ID = " . $CID . "");
-            mysql_query("DELETE FROM sale_details WHERE SaleID = " . $CID . "");
-            mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = " . $CID . "");
-            $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<h4><i class="icon fa fa-ban"></i> Sale(s) Deleted!</h4>
-					  </div>';
-        }
-    }
-}
 if (isset($_REQUEST['DID'])) {
     if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
-
-        mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified=NOW(),
-			PerformedBy = '" . (int)$CustomerID . "',
-			IssuedTo = '" . (int)$_SESSION["ID"] . "',
-			Note = 'Deleting invoice'") or die(mysql_error());
-        $InvoiceID = mysql_insert_id();
 
         mysql_query("UPDATE users SET Balance=Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sales WHERE ID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sales_amount WHERE SaleID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sale_details WHERE SaleID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = " . $_REQUEST['DID'] . "");
-        mysql_query($query);
         $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <i class="icon fa fa-ban"></i> Sale Deleted!
@@ -158,16 +137,6 @@ desired effect
                                             class="btn btn-group-vertical btn-success"
                                             onClick="location.href='addsale.php'" data-original-title="" title="">Add
                                         Sale
-                                    </button>
-                                    <?php
-                                }
-                                ?>
-                                <?php
-                                if ($_SESSION["RoleID"] == ROLE_ID_ADMIN) {
-                                    ?>
-                                    <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()"
-                                            class="btn btn-group-vertical btn-danger" data-original-title="" title="">
-                                        Delete
                                     </button>
                                     <?php
                                 }

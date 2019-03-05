@@ -5,7 +5,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";			$Password = "";
-$Address = "";
+$Address = "";          $SendSMS = 1;
 $Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 
@@ -42,10 +42,11 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     {
 
         mysql_query("UPDATE users SET
-						DateAdded=NOW(),
+						DateAdded='".DATE_TIME_NOW."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
+						SendSMS='".(int)$SendSMS."',
 						Password='".dbinput($Password)."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
@@ -267,6 +268,13 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
                                 <div class="form-group">

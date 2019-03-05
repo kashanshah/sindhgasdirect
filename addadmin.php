@@ -64,7 +64,7 @@ get_right(array(1, 2));
 		{
 			
 			mysql_query("INSERT into admins SET
-						Status=1, DateAdded=NOW(),
+						Status=1, DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)$RoleID."',
 						UserName='".dbinput($UserName)."',
 						Password='".dbinput($Password)."',
@@ -81,7 +81,7 @@ get_right(array(1, 2));
 						Gender='".(int)$Gender."',
 						Religion='".dbinput($Religion)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
-						AdmissionDate=NOW(),
+						AdmissionDate='".DATE_TIME_NOW."',
 						Remarks='".dbinput($Remarks)."'
 						") or die(mysql_error());
 			$UserID = mysql_insert_id();

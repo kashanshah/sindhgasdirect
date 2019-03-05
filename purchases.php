@@ -3,36 +3,27 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_PLANT));
 
 	$msg='';
-	if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
-	{
-		if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
-			foreach($_REQUEST['ids'] as $CID)	
-			{
-				//echo $CID;exit();
-				mysql_query("DELETE FROM purchases WHERE ID = ".$CID."");
-				mysql_query("DELETE FROM purchase_details WHERE PurchaseID = ".$CID."");
-				mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = ".$CID."");
-				$_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<h4><i class="icon fa fa-ban"></i> Purchase(s) Deleted!</h4>
-					  </div>';
-			}
-		}
-	}
-	if(isset($_REQUEST['DID']))
-	{
-		if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
-			mysql_query("DELETE FROM purchases WHERE ID = ".$_REQUEST['DID']."");
-			mysql_query("DELETE FROM purchase_details WHERE PurchaseID = ".$_REQUEST['DID']."");
-			mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = ".$_REQUEST['DID']."");
-			mysql_query($query);
-			$_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+if(isset($_REQUEST['DID']))
+{
+    if($_SESSION["RoleID"] == ROLE_ID_SHOP){
+        mysql_query("UPDATE users SET Balance=Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "") or die('a'.mysql_error());
+        mysql_query("DELETE FROM purchases WHERE ID = " . $_REQUEST['DID'] . "") or die('b'.mysql_error());
+        mysql_query("DELETE FROM purchase_details WHERE PurchaseID = " . $_REQUEST['DID'] . "") or die('c'.mysql_error());
+        mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = " . $_REQUEST['DID'] . "") or die('d'.mysql_error());
+        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <i class="icon fa fa-ban"></i> Purchase Deleted!
                   </div>';
-			redirect($self);
-		}
-	}
+        redirect($self);
+    }else{
+        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+			<i class="fa fa-ban"></i>
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<b>You donot have right to perform this action.</b>
+			</div>';
+        redirect("purchases.php");
+    }
+}
 $sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
 LEFT JOIN users u ON p.ShopID=u.ID WHERE p.ID <> 0 " .($_SESSION["RoleID"] == ROLE_ID_PLANT ? '' : ' AND p.ShopID='.$_SESSION["ID"]);
 $resource=mysql_query($sql) or die(mysql_error());
@@ -142,13 +133,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<?php
 						}
 						?>
-					   <?php
-						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
-						?>
-						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
-						<?php
-						}
-						?>
                       </div>
                 </div><!-- /.box-header -->
                 <div class="box-body table-responsive">
@@ -156,14 +140,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                        <th style="display:none;"><input type="checkbox" class="no-margin checkUncheckAll"></th>
                         <th>Invoice ID</th>
                         <th>Total Price</th>
                         <th>Amount Paid</th>
                         <th>Remaining Payment</th>
                         <th>Date Added</th>
                         <th>Date Modified</th>
-                        <th>Invoices</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -172,32 +155,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
 {
 	?>
                       <tr>
-                        <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                        <td style="display:none;width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                         <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
                         <td><?php echo $row["Total"]; ?></td>
                         <td><?php echo $row["Paid"]; ?></td>
                         <td><?php echo $row["Unpaid"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
                         <td><?php echo $row["DateModified"]; ?></td>
-<?php $pdff = explode(',', $row["RefNum"]);?>
-                        <td>
-						<select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach($pdff as $pdf)
-							{ ?>
-							<option value="<?php echo DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf; ?>.pdf"><?php echo "pinv".$row["ID"]."-".$pdf; ?></option>
-							<?php
-							} ?>
-							</select>
-							<input type="button" value="View Invoice" style="align:right" onClick="read(<?php echo $row["ID"]; ?>)"/>
-						</td>
                         <td class="text-center">
-							<a class="btn btn-primary btn-sm" href="viewpurchase.php?ID=<?php echo $row["ID"]; ?>">View Details</a>
+							<a class="btn btn-primary btn-xs" href="viewpurchase.php?ID=<?php echo $row["ID"]; ?>">View</a>
 					   <?php
 						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
 						?>
-							  <?php echo ($row["Unpaid"] > 0 ? '<a class="btn btn-warning" href="addpaymentpurchase.php?ID='.$row["ID"].'">Add Payment</a>' : ''); ?>
+							  <?php echo ($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-xs" href="addpaymentpurchase.php?ID='.$row["ID"].'">Add Payment</a>' : ''); ?>
 					   <?php
 						}
-						?>
+                       if($_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                           ?>
+                           <?php
+                           $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.PurchaseID=" . (int)$row["ID"] . " AND pd.ReturnStatus=1";
+                           $inn1numres = mysql_query($inn1query) or die(mysql_error());
+                           $inn1numrow = mysql_num_rows($inn1numres);
+                           if ($inn1numrow == 0 && false) {
+                               ?>
+                               <a class="btn btn-danger btn-xs"
+                                  href="purchases.php?DID=<?php echo $row["ID"]; ?>&Balance=<?php echo $row["Balance"]; ?>&InvoiceID=<?php echo getCurrentHandedInvoiceID($row["CylinderID"]); ?>">Delete
+                                  </a>
+                               <?php
+                           }
+                       }
+                           ?>
+                           <?php
+                           if ($_SESSION["RoleID"] == ROLE_ID_SHOP || $_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                               ?>
+                               <?php echo($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-xs" href="addpaymentpurchase.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
+                               <?php
+                           }
+                            ?>
 						</td>
                       </tr>
 <?php }

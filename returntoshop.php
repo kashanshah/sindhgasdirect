@@ -57,20 +57,21 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 	if($msg == "")
 	{
 		$i = 0;
+        $totaltmpSaving=0;
 		foreach($CylinderID as $CID){
-			mysql_query("INSERT INTO invoices SET DateAdded = NOW(), DateModified = NOW(),
+			mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());
 			mysql_query("UPDATE sale_details SET 
-				ReturnDate = NOW(),
+				ReturnDate = '".DATE_TIME_NOW."',
 				ReturnStatus = 1,
 				ReturnWeight='".(int)$CurrentCylinderWeight[$i]."'
 				WHERE SaleID = '".(int)$InvoiceID[$i]."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
 			mysql_query("UPDATE users SET 
 				Balance = Balance+".((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i])."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
-			mysql_query("INSERT INTO cylinderstatus SET DateAdded = NOW(),
+			mysql_query("INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID[$i]."',
 				CylinderID='".(int)$CID."',
 				HandedTo='".(int)$_SESSION["ID"]."',
@@ -78,19 +79,25 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				PerformedBy = '".(int)$CustomerID[$i]."'
 			") or die(mysql_error());
             $tmpSaving = (int)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID);
+            $totaltmpSaving = $totaltmpSaving + $tmpSaving;
             if((float)$tmpSaving > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
                   CylinderID='".(int)$CID."',
                   UserID='".(int)$CustomerID[$i]."',
                   Savings = '".(float)$tmpSaving."',
                   SaleID = '".$InvoiceID[$i]."',
-                  DateAdded = NOW(),
-                  DateModified = NOW(),
+                  DateAdded = '".DATE_TIME_NOW."',
+                  DateModified = '".DATE_TIME_NOW."',
                   PerformedBy='".$_SESSION["ID"]."'") or die(mysql_error());
             }
 			$i++;
 		}
-		
+        $CylinderCount=$i;
+
+        sendUserSMS($CustomerID[$i-1], 'Dear '. getValue('users', 'Name', 'ID', $CustomerID[$i-1]).', \n' .$CylinderCount . ' cylinder(s) have been returned to '.$_SESSION["Name"].' at '.date('h:iA d-m-Y'));
+
+        sendUserSMS($_SESSION["ID"], 'Returned - ' .$CylinderCount . ' cylinder(s) have been returned from '.getValue('users', 'Name', 'ID', $CustomerID[$i-1]).' with total weight: '.$totaltmpSaving.'KG at '.date('h:iA d-m-Y'));
+
 		$_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
 			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

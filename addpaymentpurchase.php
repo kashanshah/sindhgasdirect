@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -64,7 +64,7 @@ if(isset($_POST['addpurchase']) && $_POST['addpurchase']=='Save')
 	
 	if($msg == "")
 	{
-		$query3 = "UPDATE purchases SET DateModified = NOW(),
+		$query3 = "UPDATE purchases SET DateModified = '".DATE_TIME_NOW."',
 				Paid=PAID+".(float)$NewPayment.",
 				Unpaid=Unpaid-".(float)($NewPayment).",
 				Note='".dbinput($Note)."'
