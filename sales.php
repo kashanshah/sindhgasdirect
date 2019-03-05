@@ -239,10 +239,10 @@ desired effect
                                                 <a class="btn btn-primary btn-sm"
                                                    href="viewsale.php?ID=<?php echo $row["ID"]; ?>">View Details</a>
                                                 <?php
-                                                $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=" . (int)$row["ID"]." AND pd.ReturnStatus=0";
+                                                $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=" . (int)$row["ID"]." AND pd.ReturnStatus=1";
                                                 $inn1numres = mysql_query($inn1query) or die(mysql_error());
                                                 $inn1numrow = mysql_num_rows($inn1numres);
-                                                if ($inn1numrow > 0) {
+                                                if ($inn1numrow == 0) {
                                                     ?>
                                                     <a class="btn btn-danger btn-sm"
                                                        href="sales.php?DID=<?php echo $row["ID"]; ?>&Balance=<?php echo $row["Balance"]; ?>">Delete Invoice</a>

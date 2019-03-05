@@ -901,7 +901,7 @@ function getCylinderPurchaseRate($ID)
 function getUserBalance($ID, $AddBalance=true){
     $TotalUnpaid = 0;
     if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_SHOP){
-        $q = "SELECT SUM(p.Unpaid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =".(int)$ID;
+        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =".(int)$ID;
         $r = mysql_query($q) or die(mysql_error());
         $d = mysql_fetch_array($r);
         $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
@@ -911,7 +911,7 @@ function getUserBalance($ID, $AddBalance=true){
         }
     }
     else if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_CUSTOMER){
-        $q = "SELECT SUM(p.Unpaid) AS Unpaid, u.Balance FROM sales p LEFT JOIN users u ON u.ID=p.CustomerID WHERE p.CustomerID =".(int)$ID;
+        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM sales p LEFT JOIN users u ON u.ID=p.CustomerID WHERE p.CustomerID =".(int)$ID;
         $r = mysql_query($q) or die(mysql_error());
         $d = mysql_fetch_array($r);
         $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
@@ -1205,13 +1205,13 @@ function convertDigit($digit)
 }
 
 function getCustomerDues($ID){
-    $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
     return number_format((int)mysql_result($r, 0, 0), 2);
 }
 
 function getShopDues($ID){
-    $q = "SELECT SUM(Unpaid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
     return number_format((int)mysql_result($r, 0, 0), 2);
 }

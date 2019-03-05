@@ -3,7 +3,20 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 $msg='';
-$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.BarCode, cs.Savings, s.Name AS Shop, p.Name AS Plant FROM cylinder_savings cs LEFT JOIN users s ON s.ID=cs.UserID LEFT JOIN users p ON p.ID=s.PlantID LEFT JOIN cylinders c ON c.ID=cs.CylinderID WHERE cs.ID<>0 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND p.PlantID='".$_SESSION["ID"]."'" : ' AND cs.UserID="'.(int)$_SESSION["ID"].'" '))." order by ID DESC";
+$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User FROM 
+cylinder_savings cs LEFT JOIN 
+users p ON p.ID=cs.UserID LEFT JOIN 
+cylinders c ON c.ID=cs.CylinderID LEFT JOIN 
+roles r ON r.ID=p.RoleID 
+WHERE cs.ID<>0 
+".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' cs.SaleID = 0' :
+        ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND cs.SaleID = 0 AND p.PlantID='".$_SESSION["ID"]."'" :
+            ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND cs.PurchaseID = 0 AND p.ShopID='".$_SESSION["ID"]."'" :
+                ' AND cs.UserID="'.(int)$_SESSION["ID"].'" '
+            )
+        )
+    )
+    ." order by ID DESC";
 $resource=mysql_query($sql) or die(mysql_error());
 ?>
 <!DOCTYPE html>
@@ -102,10 +115,8 @@ desired effect
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
                                             <th>Shop</th>
-                                        <?php }
-                                        else if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
-                                            <th>Shop</th>
                                         <?php } ?>
+                                        <th>Saved By</th>
                                         <th>Gas Saved</th>
                                         <th>Invoice #</th>
                                         <th>Date</th>
@@ -125,10 +136,8 @@ desired effect
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo $row["Plant"]; ?></td>
                                                 <td><?php echo $row["Shop"]; ?></td>
-                                            <?php }
-                                            else if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
-                                                <td><?php echo $row["Shop"]; ?></td>
                                             <?php } ?>
+                                            <td><?php echo $row["UserRole"]. ': ' . $row["User"]; ?></td>
                                             <td><?php echo $row["Savings"]; ?> KG</td>
                                             <td><?php echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>

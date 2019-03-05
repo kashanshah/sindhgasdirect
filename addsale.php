@@ -76,7 +76,6 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				Status = "1",
                 ShopID="'.(int)$_SESSION["ID"].'",
                 PlantID="'.(int)$_SESSION["PlantID"].'",
-                CreditLimit="'.(float)$Paid.'",
 				PerformedBy = "' . (int)$_SESSION["ID"] . '"
 				' . ($NewOldCustomer == "0" ? ' WHERE ID=' . $CustomerID : ' ');
         mysql_query($query2) or die (mysql_error());
@@ -118,6 +117,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $GrandTotalGasWeight = 0;
         $GrandTotalRates = $TotalAmount;
         $GasRate = RETAIL_GAS_RATE;
+        $Unpaid = ($TotalAmount - ($Balance * $GasRate) - $Paid);
         $query3 = "INSERT INTO sales SET DateAdded = NOW(),DateModified=NOW(),
 			ShopID='" . (int)($_SESSION["ID"]) . "',
 			CustomerID='" . (int)($CustomerID) . "',
@@ -125,11 +125,11 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 			Total='" . (float)($TotalAmount) . "',
 			Balance='" . (float)($Balance) . "',
 			Paid='" . (float)$Paid . "',
-			Unpaid='" . (float)($TotalAmount - ($Balance * $GasRate) - $Paid) . "',
+			Unpaid='" . ((float)$Unpaid < 0 ? 0 : $Unpaid) . "',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			Note='" . dbinput($Note) . "'
 			";
-        mysql_query($query3) or die(mysql_error());
+        mysql_query($query3) or die('b'.mysql_error());
         $SaleID = mysql_insert_id();
 
         $query4 = "INSERT INTO sales_amount SET DateAdded=NOW(), DateModified=NOW(),
@@ -138,7 +138,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				Paid='" . (float)$Paid . "',
 				Unpaid='" . (float)($TotalAmount - ($Balance * $GasRate) - $Paid) . "',
 				Note = '" . dbinput($Note) . "'";
-        mysql_query($query4) or die(mysql_error());
+        mysql_query($query4) or die('a'.mysql_error());
         $SaleAmountID = mysql_insert_id();
 
         $i = 0;
@@ -155,7 +155,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				GasRate='" . (float)($SalePrice[$i] / ($CurrentCylinderWeight[$i] - $CylinderWeight[$i])) . "',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 				";
-            mysql_query($query4) or die(mysql_error());
+            mysql_query($query4) or die('c'.mysql_error());
 
             $GrandTotalGasWeight = $GrandTotalGasWeight + ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
 
@@ -166,7 +166,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				Weight='" . (float)$CurrentCylinderWeight[$i] . "',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 			";
-            mysql_query($query2) or die(mysql_error());
+            mysql_query($query2) or die('d'.mysql_error());
             $i++;
         }
 
@@ -175,7 +175,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         mysql_query("UPDATE sales SET 
             GasRate = '".$TempGasRate."',
             Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
-            WHERE ID = '".(int)$SaleID."'") or die(mysql_error());
+            WHERE ID = '".(int)$SaleID."'") or die('e'.mysql_error());
 
         $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -512,17 +512,7 @@ desired effect
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label"
-                                                       for="example-text-input">Alert</label>
-                                                <div class="col-md-8">
-                                                    <input type="text" id="number" class="form-control"
-                                                           value="<?php echo $SendSMS; ?>" placeholder="Enter Number"
-                                                           name="Number" required>
-                                                    <label id="phonemsg"></label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label" for="SendSMS">Send SMS?</label>
+                                                <label class="col-md-3 control-label" for="SendSMS">Alert?</label>
                                                 <div class="col-md-6">
                                                     <input type="radio" value="1" name="SendSMS" <?php echo ($SendSMS == "1" ? 'checked=""' : '') ?>> Yes
                                                     <input type="radio" value="0" name="SendSMS" <?php echo ($SendSMS == "0" ? 'checked=""' : '') ?>> No
@@ -668,11 +658,16 @@ desired effect
 
     function gettotal() {
         var gt = 0;
-        var GAS_RATE = <?php echo GAS_RATE; ?>;
-        var RETAIL_GAS_RATE = <?php echo RETAIL_GAS_RATE; ?>;
+        var gtweight = 0;
         $('.SalePrice').each(function () {
             gt = gt + parseFloat($(this).val());
         });
+        $('.CurrentCylinderGasWeight').each(function () {
+            gtweight = gtweight + parseFloat($(this).text());
+        });
+        var GAS_RATE = <?php echo GAS_RATE; ?>;
+        var RETAIL_GAS_RATE = <?php echo RETAIL_GAS_RATE; ?>;
+        var RETAIL_GAS_RATE = gt/gtweight;
         //console.log(gt, RETAIL_GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(gt);
