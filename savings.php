@@ -9,7 +9,7 @@ users p ON p.ID=cs.UserID LEFT JOIN
 cylinders c ON c.ID=cs.CylinderID LEFT JOIN 
 roles r ON r.ID=p.RoleID 
 WHERE cs.ID<>0 
-".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' cs.SaleID = 0' :
+".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' AND cs.SaleID = 0' :
         ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND cs.SaleID = 0 AND p.PlantID='".$_SESSION["ID"]."'" :
             ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND cs.PurchaseID = 0 AND p.ShopID='".$_SESSION["ID"]."'" :
                 ' AND cs.UserID="'.(int)$_SESSION["ID"].'" '
