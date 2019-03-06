@@ -73,7 +73,7 @@ if(isset($_POST['dbimport']) && $_POST['dbimport']=='dbimport')
 
 if(isset($_POST['backup']) && $_POST['backup']=='Back Up')
 {
-	backup_tables(DB_HOST,DB_USERNAME,DB_PASSWORD,DB_NAME,'*');
+	backup_tables();
 }
 
 if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
@@ -438,7 +438,18 @@ function imports()
 					</div>
 				  </form>
 					<div class="form-group">
-						<label class="col-md-3 control-label" for="example-text-input">Backup Your Database</label>
+						<label class="col-md-3 control-label" for="example-text-input">Email Database Backup</label>
+						<div class="col-md-4">
+                            <input type="email" class="form-control emailbackupemail" placeholder="Enter Email" value="<?php echo $Email; ?>">
+                            <label class="emailbackupresponse" style="display: none;"></label>
+						</div>
+						<div class="col-md-2">
+                            <input type="button" class="form-control btn btn-primary emailbackupbutton"  value="Email Data" name="backup">
+                            <i class="fa fa-spinner fa-spin emailbackupspinner" style="display: none;"></i>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="example-text-input">Download Database Backup</label>
 						<div class="col-md-6">
 							<form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST">
 								<input type="hidden" value="dbbackup" name="dbbackup">
@@ -501,9 +512,28 @@ function imports()
       $(function () {
         //Initialize Select2 Elements
         $(".select2").select2();
-
-        //iCheck for checkbox and radio inputs
-		});
+        $(".emailbackupbutton").click(function(){
+            $(".emailbackupbutton").hide();
+            $(".emailbackupresponse").text('');
+            $(".emailbackupresponse").hide();
+            $(".emailbackupspinner").show();
+            $(".emailbackupemail").attr("readonly", true);
+            $.ajax({
+                url: 'emaildbbackup.php',
+                type:'POST',
+                data:{email:$(".emailbackupemail").val()},
+                success:function(response){
+                    var data = JSON.parse(response);
+                    $(".emailbackupbutton").show();
+                    $(".emailbackupresponse").text(data.message);
+                    $(".emailbackupresponse").css("color", (data.code == 0 ? "green" : "red"));
+                    $(".emailbackupresponse").show();
+                    $(".emailbackupspinner").hide();
+                    $(".emailbackupemail").removeAttr("readonly");
+                }
+            })
+        });
+      });
     </script>
 </body>
 </html>
