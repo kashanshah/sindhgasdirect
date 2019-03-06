@@ -15,7 +15,7 @@ th, td { font-size: 8px; }
 </style>
 					<table id="example1" class="bordered" width="100%">
 						<tr>
-							<td colspan="5"><p style="font-size: 10px"><?php echo date('d-m-Y h:m:s A'); ?></p></td>
+							<td colspan="5"><p style="font-size: 10px"><?php echo date('d-m-Y h:i:s A'); ?></p></td>
 						</tr>
 						<tr>
 							<th colspan="5">

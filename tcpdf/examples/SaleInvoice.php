@@ -37,7 +37,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->SetFont('helvetica', 'I', 8);
 		// Page number
-		$this->Cell(0, 10, 'Issued on '.date("d-m-Y h:m:s"). '                                                                                                                                                       
+		$this->Cell(0, 10, 'Issued on '.date("d-m-Y h:i:s"). '                                                                                                                                                       
 		Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
 	}
 }
