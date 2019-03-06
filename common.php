@@ -166,7 +166,6 @@ function redirect($url)
 function backup_tables($filename = "")
 {
     $tables = '*';
-    $filename = ($filename == "" ? "dbbackup_" . date('DMY') . (date('G') + 3) . date('ia') : $filename);
     $return = '';
     //get all of the tables
     if ($tables == '*') {
@@ -210,7 +209,8 @@ function backup_tables($filename = "")
     }
 
     //save file
-    if ($filename == "EMAILBACKUP") {
+    if ($filename != "") {
+        $filename = ($filename == "" ? "dbbackup_" . date('DMY') . (date('G') + 3) . date('ia') : $filename);
         $handle = fopen($filename.'.sql', 'w+');
         fwrite($handle, $return);
         fclose($handle);
@@ -1291,7 +1291,8 @@ function emaildbbackup($to)
 //			$mail->addBCC('bcc@example.com');
 
         //Attachments
-        $attPath = backup_tables('EMAILBACKUP');
+        $filename = 'emailbackups/EMAILBACKUP'.time();
+        $attPath = backup_tables($filename);
 
         $mail->addAttachment($attPath);         // Add attachments
 //			$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name

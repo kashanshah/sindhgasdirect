@@ -530,6 +530,14 @@ function imports()
                     $(".emailbackupresponse").show();
                     $(".emailbackupspinner").hide();
                     $(".emailbackupemail").removeAttr("readonly");
+                },
+                error:function(data){
+                    $(".emailbackupbutton").show();
+                    $(".emailbackupresponse").text(data.message);
+                    $(".emailbackupresponse").css("color", (data.code == 0 ? "green" : "red"));
+                    $(".emailbackupresponse").show();
+                    $(".emailbackupspinner").hide();
+                    $(".emailbackupemail").removeAttr("readonly");
                 }
             })
         });
