@@ -4,10 +4,17 @@ error_reporting(0);
 set_time_limit(0);
 date_default_timezone_set("Asia/Karachi");
 $self = $_SERVER['PHP_SELF'];
-
 $Theme = 0;
 include("PHPVersionCompatability.php");
 include("DBConnection.php");
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+include "phpmailer/PHPMailer.php";
+include "phpmailer/Exception.php";
+include "phpmailer/SMTP.php";
 
 global $dbh;
 $path = explode("/", $_SERVER["PHP_SELF"]);
@@ -156,14 +163,11 @@ function redirect($url)
     exit();
 }
 
-function backup_tables($host, $user, $pass, $name, $tables)
+function backup_tables($filename = "")
 {
+    $tables = '*';
+    $filename = ($filename == "" ? "dbbackup_" . date('DMY') . (date('G') + 3) . date('ia') : $filename);
     $return = '';
-//    $link = mysql_connect($host, $user, $pass);
-    $link = $GLOBALS['dbglobal'];
-//    mysql_select_db($name, $link);
-    mysqli_select_db($GLOBALS['dbglobal'], $name);
-
     //get all of the tables
     if ($tables == '*') {
         $tables = array();
@@ -206,20 +210,22 @@ function backup_tables($host, $user, $pass, $name, $tables)
     }
 
     //save file
-//	$handle = fopen('db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql','w+');
-//	fwrite($handle,$return);
-//	fclose($handle);
-
+    if ($filename == "EMAILBACKUP") {
+        $handle = fopen($filename.'.sql', 'w+');
+        fwrite($handle, $return);
+        fclose($handle);
+        return $filename.'.sql';
+    } else {
 //	header('Pragma: anytextexeptno-cache', true);
 //	header("Pragma: public");
 //	header("Expires: 0");
 //	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 //	header("Cache-Control: private", false);
-    header("Content-Type: text/plain");
-    header("Content-Disposition: attachment; filename=\"dbbackup_" . date('DMY') . (date('G') + 3) . date('ia') . ".sql\"");
-    echo $return;
-    exit();
-
+        header("Content-Type: text/plain");
+        header("Content-Disposition: attachment; filename=\"" . $filename . ".sql\"");
+        echo $return;
+        exit();
+    }
 }
 
 function random_color_part()
@@ -1262,3 +1268,51 @@ function sendUserSMS($to = 0, $message = '', $check = true){
     }
     //return $response;
 }
+
+function emaildbbackup($to)
+{
+    $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+    try {
+        //Server settings
+//        $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = SMTP_HOST;  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = SMTP_USER;                 // SMTP username
+        $mail->Password = SMTP_PASSWORD;                           // SMTP password
+        //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 26;                                    // TCP port to connect to
+
+        //Recipients
+        $mail->setFrom(SMTP_USER, SITE_TITLE);
+        $mail->addAddress($to);     // Add a recipient
+        $mail->addReplyTo(EMAIL_ADDRESS);
+//			$mail->addCC('cc@example.com');
+//			$mail->addBCC('bcc@example.com');
+
+        //Attachments
+        $attPath = backup_tables('EMAILBACKUP');
+
+        $mail->addAttachment($attPath);         // Add attachments
+//			$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+        //Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = SITE_TITLE. ' | DB Backup';
+        $mail->Body = 'Attached is the db backup of ' . SITE_TITLE . ' taken on '. date('d-m-Y H:i:s');
+        $mail->AltBody = 'Attached is the db backup of ' . SITE_TITLE . ' taken on '. date('d-m-Y H:i:s');
+
+        $mail->send();
+        echo json_encode(array(
+            "message"=>"Message has been sent",
+            "code"=>0
+        ));
+    } catch (Exception $e) {
+        echo json_encode(array(
+            "message"=>$mail->ErrorInfo,
+            "code"=>-1
+        ));
+    }
+}
+	
+
