@@ -60,6 +60,8 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Remarks='".dbinput($Remarks)."'
 						") or die(mysql_error());
         $UserID = mysql_insert_id();
+        mysql_query("UPDATE users SET ShopID='".(int)$UserID."' WHERE ID = '".(int)$UserID."'") or die(mysql_error());
+
 
         $smssent = sendUserSMS($_SESSION["Number"], 'Shop - A new shop has been added at Plant:  '.$_SESSION["ID"].'. Name: '.$Name.', Number: '.$Number.' at '.date('h:iA d-m-Y'));
 

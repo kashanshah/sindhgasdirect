@@ -445,6 +445,7 @@ desired effect
                                                     <input type="number" step="any" class="form-control"
                                                            placeholder="Enter the Amount Paying" name="Paid"
                                                            value="<?php echo $Paid; ?>" id="Paid" min="0" />
+                                                    <span id="CreditLimitExceedMsg" class="text text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -686,6 +687,7 @@ desired effect
     }
 
     $('#mainForm').on('submit', function (e, options = {'submit': false}) {
+        $("#CreditLimitExceedMsg").slideUp();
         if (!$("#myModal").hasClass("in")) {
             e.preventDefault();
             $("#myModal").modal('show');
@@ -728,7 +730,8 @@ desired effect
                     }
                     else{
                         e.preventDefault();
-                        alert("Credit limit of Rs. " + fCreditLimit + " is crossed. Please pay atleast" + duesAfterThisInvoice);
+                        $("#CreditLimitExceedMsg").slideDown().text("Credit limit of Rs. " + fCreditLimit + " is crossed. Please pay atleast" + duesAfterThisInvoice);
+                        $("#Paid").focus();
                     }
                 }
             } else {

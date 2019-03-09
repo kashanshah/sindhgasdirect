@@ -216,7 +216,7 @@ desired effect
                                             $n = mysql_num_rows($r);
                                             if($n == 0)
                                             {
-                                                echo '<option value="0">No Cylinder Added</option>';
+//                                                echo '<option value="0">No Cylinder Added</option>';
                                             }
                                             else
                                             {

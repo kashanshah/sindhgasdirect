@@ -59,6 +59,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Remarks='".dbinput($Remarks)."'
 						") or die(mysql_error());
         $UserID = mysql_insert_id();
+        mysql_query("UPDATE users SET PlantID='".(int)$UserID."' WHERE ID = '".(int)$UserID."'") or die(mysql_error());
         $msg='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 						Plant has been added.
