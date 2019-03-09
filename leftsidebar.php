@@ -42,8 +42,8 @@
                 </li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
-
-
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <!--NEW MENU -->
 
 
@@ -74,9 +74,9 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "purchases.php") ? 'active' : ''); ?>"><a href="purchases.php"><i class="fa fa-cart-arrow-down"></i>Purchases</a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <!--NEW MENU -->
-
-
                 <?php
             }
             else if ($_SESSION["RoleID"] == ROLE_ID_SALES) {
@@ -114,6 +114,8 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoplant.php") ? 'active' : ''); ?>"><a href="returntoplant.php"><i class="fa fa-truck"></i>Return Cylinders (IN) </a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpaymentmethod.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editpaymentmethod.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <!--NEW MENU -->
 
 
