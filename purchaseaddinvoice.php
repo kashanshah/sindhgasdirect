@@ -118,7 +118,7 @@ $receive = '
 					</tr>
 					<tr>
 						<td ><h3>Gas Rate: </h3></td>
-						<td ><h3>'.number_format($row["GasRate"], 2). '/-</h3></td>
+						<td ><h3>'.financials($row["GasRate"]). '/-</h3></td>
 						<td ><h3>Store Name:</h3></td>
 						<td ><h3>'.$_SESSION["Name"].'</h3></td>
 	</tr>
@@ -156,27 +156,27 @@ $receive .= '
 <table border="1" cellspacing="3" cellpadding="4">
 	<tr>
 						<td colspan="3"><h2>Total Price: </h2></td>
-						<td ><h2 align="right">'.number_format($row["Total"], 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Total"]).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Balance: </h2></td>
-						<td ><h2 align="right">'.number_format($row["Balance"], 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Balance"]).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Amount Paid Before: </h2></td>
-						<td ><h2 align="right">'.number_format(($row["Paid"]-$NewPayment), 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials(($row["Paid"]-$NewPayment)).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>New Payment: </h2></td>
-						<td ><h2 align="right">'.number_format($NewPayment, 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials($NewPayment).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Total Amount Paid: </h2></td>
-						<td ><h2 align="right">'.number_format($row["Paid"], 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Paid"]).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Remaining Payment: </h2></td>
-						<td ><h2 align="right">'.number_format($row["Unpaid"], 2).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Unpaid"]).'/-</h2></td>
 	</tr>'.($row["Note"] != "" ? '
 	<tr>
 						<td colspan="4"><h2>Notes </h2></td>

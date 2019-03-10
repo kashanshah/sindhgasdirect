@@ -8,26 +8,35 @@ if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
     foreach($_REQUEST['ids'] as $CID)
     {
         //echo $CID;exit();
-        $query = "DELETE FROM paymentmethods WHERE ID = ".$CID."";
-        mysql_query($query);
+        $query = "UPDATE users SET Credit=Credit-".getValue('payments', 'Amount', 'ID', $CID)." WHERE ID = ".getValue('payments', 'UserID', 'ID', $CID)."";
+        mysql_query($query) or die(mysql_error());
+        $query = "DELETE FROM payments WHERE ID = ".(int)$CID."";
+        mysql_query($query) or die(mysql_error());
         $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> Payment Method(s) Deleted!</h4>
+                    <h4><i class="icon fa fa-ban"></i> Payment deleted and user credit adjusted!</h4>
                   </div>';
     }
 }
 if(isset($_REQUEST['DID']))
 {
-    $query = "DELETE FROM paymentmethods WHERE ID = ".$_REQUEST['DID']."";
+    $CID = $_REQUEST['DID'];
+    //echo $CID;exit();
+    $query = "UPDATE users SET Credit=Credit-".getValue('payments', 'Amount', 'ID', $CID)." WHERE ID = ".getValue('payments', 'UserID', 'ID', $CID)."";
+    mysql_query($query) or die(mysql_error());
+    $query = "DELETE FROM payments WHERE ID = ".(int)$_REQUEST['DID']."";
     mysql_query($query);
     $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> Payment Method Deleted!</h4>
+                    <h4><i class="icon fa fa-ban"></i> Payment deleted and user credit adjusted!</h4>
                   </div>';
     redirect($self);
 }
 
-$sql="SELECT ID, Name, Details, Status, PlantID, DateAdded, DateModified FROM paymentmethods WHERE ID<>0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND PlantID='".(int)$_SESSION["ID"]."'" : " AND PlantID = '".(int)$_SESSION["PlantID"]."'") );
+$sql="SELECT p.ID, p.Amount, p.Details, p.MethodID, p.UserID, p.DateAdded, p.DateModified FROM 
+payments p 
+LEFT JOIN users u ON u.ID=p.UserID
+WHERE p.ID<>0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND u.PlantID='".(int)$_SESSION["ID"]."'" : " AND p.UserID = '".(int)$_SESSION["ID"]."'") );
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -40,7 +49,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Payment Methods</title>
+    <title><?php echo SITE_TITLE; ?>- Payments</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -101,12 +110,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Payment Methods
-                <small>View Payment Methods</small>
+                Payments
+                <small>View Payments</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Payment Methods</li>
+                <li class="active">Payments</li>
             </ol>
         </section>
 
@@ -121,8 +130,10 @@ desired effect
                             <div class="btn-group-right">
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
                                 <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                    <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addpaymentmethod.php'" data-original-title="" title="">Add New</button>
                                     <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
+                                <?php } ?>
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_SHOP) { ?>
+                                    <a style="float:right;margin-right:15px;" class="btn btn-group-vertical btn-success" href="addpayment.php" data-original-title="" title="">Add Payment To Account</a>
                                 <?php } ?>
                             </div>
                         </div><!-- /.box-header -->
@@ -134,17 +145,15 @@ desired effect
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                             <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
-                                        <th>Name</th>
+                                        <th>Amount</th>
                                         <th>Details</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
                                         <?php } ?>
-                                        <th>Status</th>
+                                        <th>Payment Method</th>
                                         <th>Date Added</th>
                                         <th>Date Modified</th>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                            <th></th>
-                                        <?php } ?>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -155,22 +164,22 @@ desired effect
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                                 <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <?php } ?>
-                                            <td><?php echo $row["Name"]; ?></td>
+                                            <td><?php echo $row["Amount"]; ?></td>
                                             <td><?php echo nl2br($row["Details"]); ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                                <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["UserID"]); ?></td>
                                             <?php } ?>
-                                            <td><?php echo $row["Status"] ? '<span class="badge bg-green">Enabled</span>' : '<span class="badge bg-red">Disabled</span>'; ?></td>
+                                            <td><?php echo getValue('paymentmethods', 'Name', 'ID', $row["MethodID"]); ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                             <td><?php echo $row["DateModified"]; ?></td>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a class="btn btn-xs btn-warning" href="editpaymentmethod.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
+                                                        <a class="btn btn-xs btn-primary" href="viewpayment.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
+                                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                                         <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                                        <?php } ?>
                                                     </div>
                                                 </td>
-                                            <?php } ?>
                                         </tr>
                                     <?php }
                                     ?>

@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.SendSMS, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_SALES)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.LastActivity, u.Remarks, u.SendSMS, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_SALES)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -140,6 +140,7 @@ desired effect
                                         <th>Contact Number</th>
                                         <th>Alerts</th>
                                         <th>Remarks</th>
+                                        <th>Last Activity At</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -158,6 +159,7 @@ desired effect
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
+                                            <td><?php echo $row["LastActivity"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editsalesman.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>

@@ -1,39 +1,100 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT));
+get_right(array(ROLE_ID_SHOP));
 
 $msg='';
 $ID = "";
-$Name = "";
+$Amount = 0;
 $Details = "";
-$Status = 1;
+$MethodID = 0;
 $DateAdded = "";
 $DateModified = "";
 
-if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
-{
-    if(isset($_POST['Name'])) 						$Name = trim($_POST['Name']);
-    if(isset($_POST['Details'])) 					$Details = trim($_POST['Details']);
-    if(isset($_POST['Status'])) 					$Status = trim($_POST['Status']);
+if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
+    foreach ($_REQUEST as $key=>$val)
+        $$key = $val;
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
-    else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter The Payment Method Name</div>';
+    else if($Amount == 0 || $Amount == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter the amount paid.</div>';
+    else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
+    {
+        $filenamearray2=explode(".", $_FILES["File"]['name']);
+        $ext2=End($filenamearray2);
+
+        if(!in_array($ext2, $_IMAGE_ALLOWED_TYPES))
+        {
+            $msg='<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				Only '.implode(", ", $_IMAGE_ALLOWED_TYPES) . ' Images can be uploaded.
+				</div>';
+        }
+        else if($_FILES["File"]['size'] > (MAX_IMAGE_SIZE*1024))
+        {
+            $msg='<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
+				</div>';
+        }
+    }
     if($msg=="")
     {
-        mysql_query("INSERT into paymentmethods SET
+        mysql_query("INSERT into payments SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
-						Name='".dbinput($Name)."',
+						MethodID='".(int)$MethodID."',
+						UserID='".(int)$_SESSION["ID"]."',
+						Amount='".(float)$Amount."',
 						Details='".dbinput($Details)."',
-						PlantID='".(int)$_SESSION["ID"]."',
-						Status='".(int)$Status."'
+						PerformedBy='".(int)$_SESSION["ID"]."'
 						") or die(mysql_error());
+        $PaymentID = mysql_insert_id();
+        mysql_query("UPDATE users SET
+						DateModified='".DATE_TIME_NOW."',
+						Credit=Credit+".(float)$Amount."
+						WHERE ID=".(int)$_SESSION["ID"]."
+						") or die(mysql_error());
+
 
         $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<i class="fa fa-check"></i>Payment Method has been Added.
+						<i class="fa fa-check"></i>Payment has been added.
 					</div>';
-        redirect("paymentmethods.php");
+
+        if(isset($_FILES["File"]) && $_FILES["File"]['name'] != ""){
+            ini_set('memory_limit', '-1');
+
+            $tempName2 = $_FILES["File"]['tmp_name'];
+            $realName2 = "S".$PaymentID.".".$ext2;
+            $StoreImage = $realName2;
+            $target2 = DIR_PAYMENT_IMAGES . $realName2;
+            $moved2=move_uploaded_file($tempName2, $target2);
+            if($moved2)
+            {
+
+                $query2="UPDATE payments SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$PaymentID;
+                mysql_query($query2) or die(mysql_error());
+                redirect("payments.php");
+            }
+            else
+            {
+                $_SESSION["msg"]='<div class="alert alert-warning alert-dismissable">
+						<i class="fa fa-ban"></i>
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						Payment has been added but Image could not be uploaded.
+						</div>';
+                redirect("payments.php");
+            }
+        }
+        else
+        {
+            $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						<i class="fa fa-check"></i>Payment has been added.
+					</div>';
+            redirect("payments.php");
+        }
     }
 }
 
@@ -48,7 +109,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Payment Method</title>
+    <title><?php echo SITE_TITLE; ?>- Add Payment</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -112,13 +173,13 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Payment Method
+                Add Payment
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="paymentmethods.php"><i class="fa fa-money"></i> Payment Methods</a></li>
-                <li class="active">Add Payment Method</li>
+                <li><a href="payments.php"><i class="fa fa-dollar"></i> Payments</a></li>
+                <li class="active">Add Payment</li>
             </ol>
         </section>
 
@@ -131,7 +192,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <button style="float:right;" type="button" class="btn btn-group-vertical btn-danger" onClick="location.href='paymentmethods.php'" >Back</button>
+                                    <a style="float:right;" class="btn btn-group-vertical btn-danger" href="payments.php" >Back</a>
                                     <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -140,38 +201,44 @@ desired effect
                         <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                         <div class="box box-default">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Payment Method</h3>
                                 <div class="box-tools pull-right">
                                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 </div>
                             </div>
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="paymentmethodple-text-input">Name</label>
+                                    <label class="col-md-3 control-label" for="example-text-input">Image</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="paymentmethodple-text-input" value="<?php echo $Name;?>" placeholder="Enter Name" name="Name">
+                                        <input type="file" name="File">
+                                        <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_PAYMENT_IMAGES.$Image.'" />'; ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="Amount">Amount</label>
+                                    <div class="col-md-6">
+                                        <input type="number" step="any" class="form-control" id="Amount" value="<?php echo $Amount;?>" placeholder="Enter Amount" name="Amount">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="paymentmethodple-text-input">MethodID</label>
+                                    <div class="col-md-6">
+                                        <select name="MethodID" id="MethodID" class="form-control">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name, Details FROM paymentmethods WHERE Status = 1") or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if ($CylinderID == $Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="paymentmethodple-text-input">Details</label>
                                     <div class="col-md-6">
                                         <textarea name="Details" class="form-control" ><?php echo $Details;?></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="paymentmethodple-text-input">Status</label>
-                                    <div class="col-md-6">
-                                    <div class="radio">
-                                        <label>
-                                            <input name="Status" id="Status" value="1" <?php echo $Status == 1 ? 'checked=""' : ''; ?> type="radio">
-                                            Enabled
-                                        </label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <label>
-                                            <input name="Status" id="Status" value="0" <?php echo $Status == 0 ? 'checked=""' : ''; ?> type="radio">
-                                            Disabled
-                                        </label>
-                                    </div>
                                     </div>
                                 </div>
                                 <?php if(CAPTCHA_VERIFICATION == 1) { ?>
@@ -228,11 +295,8 @@ desired effect
     $(function () {
         //Initialize Select2 Elements
         $(".select2").select2();
-
-        //iCheck for checkbox and radio inputs
-        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-            checkboxClass: 'icheckbox_minimal-blue',
-            radioClass: 'iradio_minimal-blue'
+        $("#frmPages").submit(function(){
+            return confirm("Are you sure to add Rs. "+$("#Amount").val() + " through " + $("#MethodID option:selected").text() + ". \nThis can not be undo.");
         });
     });
 </script>

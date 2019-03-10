@@ -67,11 +67,11 @@ th, td { font-size: 8px; }
 						  <tr>
 							<td style="width:5%"><?php echo $p; $p++; ?></td>
 							<td colspan="2" style="text-align: center"><div style="text-align:center;display:inline-block;"><img src="barcode.php?text=<?php echo $cart["BarCode"]; ?>" /><br/><?php echo $cart["BarCode"]; ?></div></td>
-							<td style="text-align: center"><?php echo number_format($cart["TierWeight"], 2); ?></td>
-							<td style="text-align: center"><?php echo number_format($cart["TotalWeight"], 2); ?></td>
-							<td style="text-align: center"><?php echo number_format(($cart["TotalWeight"] - $cart["TierWeight"]), 2); ?></td>
-							<td style="text-align: center"><?php echo number_format(($cart["GasRate"]), 2); ?></td>
-							<td style="text-align: center"><?php echo number_format(($cart["Price"]), 2); ?></td>
+							<td style="text-align: center"><?php echo financials($cart["TierWeight"]); ?></td>
+							<td style="text-align: center"><?php echo financials($cart["TotalWeight"]); ?></td>
+							<td style="text-align: center"><?php echo financials(($cart["TotalWeight"] - $cart["TierWeight"])); ?></td>
+							<td style="text-align: center"><?php echo financials($cart["GasRate"]); ?></td>
+							<td style="text-align: center"><?php echo financials(($cart["Price"])); ?></td>
 						  </tr>
 	<?php }
 		if($row["Note"] != "") { ?>
@@ -84,19 +84,19 @@ th, td { font-size: 8px; }
 							<th colspan="2" style="font-weigt: bold;text-align: left;"><b>Total</b></th>
 							<th style="text-align: left; font-weigt: bold" ><?php echo $TotalWeight; ?> KG</th>
 							<th colspan="2" style="font-weigt: bold;text-align: left;"><b>Amount</b></th>
-							<th colspan="3" style="text-align: center; font-weigt: bold" ><?php echo number_format($row["Total"], 2); ?></th>
+							<th colspan="3" style="text-align: center; font-weigt: bold" ><?php echo financials($row["Total"]); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Gas Adjustment</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Balance"] * $row["GasRate"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Balance"] * $row["GasRate"]); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Payable</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] -($row["Balance"] * $row["GasRate"]), 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Total"] -($row["Balance"] * $row["GasRate"])); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="8"  style="text-align: right;">
-								Rupees <?php echo convertNumber(number_format($row["Total"] - ($row["Balance"] * $row["GasRate"]), 0)); ?> only
+								Rupees <?php echo convertNumber(financials($row["Total"] - ($row["Balance"] * $row["GasRate"]), 0)); ?> only
 							</th>
 						  </tr>
 						  <?php
@@ -105,18 +105,18 @@ th, td { font-size: 8px; }
 							  ?>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Paid Before</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format(($row["Total"] - $row["Balance"]) - ($row["Paid"] + $row["Unpaid"]), 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials(($row["Total"] - $row["Balance"]) - ($row["Paid"] + $row["Unpaid"])); ?></th>
 						  </tr>
 						  <?php
 						  }
 						  ?>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Paying</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["NewPaid"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["NewPaid"]); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Total Amount Paid</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] - ($row["Balance"] * $row["GasRate"]) - ($row["Paid"] + $row["Unpaid"]) + $row["NewPaid"], 2); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Total"] - ($row["Balance"] * $row["GasRate"]) - ($row["Paid"] + $row["Unpaid"]) + $row["NewPaid"]); ?></th>
 						  </tr>
 						  <?php
 						  if(($row["Total"] - $row["Paid"]) != 0)
@@ -124,7 +124,7 @@ th, td { font-size: 8px; }
 							  ?>
 						  <tr>
 							<th colspan="5" style="text-align: left;">Amount Remaining</th>
-							<th colspan="3" style="text-align: center" ><?php echo number_format($row["Unpaid"], 2); ?></th>
+							<th colspan="3" style="text-align: center" ><?php echo financials($row["Unpaid"]); ?></th>
 						  </tr>
 						  <?php
 						  }

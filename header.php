@@ -169,7 +169,7 @@
                                  class="img-circle" alt="User Image">
                             <p>
                                 <span style="color:black; font-weight: bold"><?php echo $_SESSION["Name"]; ?></span>
-                                <small>Added on<br/> <?php echo $_SESSION["DateAdded"]; ?></small>
+                                <small>Last Login at:<br/> <?php echo $_SESSION["LastLogin"]; ?></small>
                             </p>
                         </li>
 

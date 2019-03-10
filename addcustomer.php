@@ -28,7 +28,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
             $msg='<div class="alert alert-danger alert-dismissable">
 				<i class="fa fa-ban"></i>
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<b>Only '.implode(", ", $_IMAGE_ALLOWED_TYPES) . ' Images can be uploaded.
+				Only '.implode(", ", $_IMAGE_ALLOWED_TYPES) . ' Images can be uploaded.
 				</div>';
         }
         else if($_FILES["File"]['size'] > (MAX_IMAGE_SIZE*1024))
@@ -67,9 +67,6 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 					</div>';
         if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
         {
-            if(is_file(DIR_USER_IMAGES . $StoreImage))
-                unlink(DIR_USER_IMAGES . $StoreImage);
-
             ini_set('memory_limit', '-1');
 
             $tempName2 = $_FILES["File"]['tmp_name'];

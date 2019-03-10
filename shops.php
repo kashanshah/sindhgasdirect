@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Remarks, u.SendSMS, u.PlantID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID = ".(int)ROLE_ID_SHOP;
+$sql="SELECT u.ID, u.Username, u.Password, u.Balance, u.Credit, u.Remarks, u.LastActivity, u.LastLogin, u.SendSMS, u.PlantID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where u.ID<>0 AND u.RoleID = ".(int)ROLE_ID_SHOP;
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -130,7 +130,9 @@ desired effect
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                                        <?php } ?>
                                         <th>Username</th>
                                         <th>Name</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
@@ -139,10 +141,13 @@ desired effect
                                         <th>Unpaid</th>
                                         <th>Unpaid Invoices</th>
                                         <th>Gas Balance</th>
+                                        <th>Amount Credit</th>
                                         <th>Address</th>
                                         <th>Contact Number</th>
                                         <th>Alerts</th>
-                                        <th>Remarks</th>
+                                        <th class="hidden">Remarks</th>
+                                        <th>Last Activity At</th>
+                                        <th>Last Login At</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -151,7 +156,9 @@ desired effect
                                     {
                                         ?>
                                         <tr>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                            <?php } ?>
                                             <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
@@ -188,11 +195,16 @@ desired effect
                                                 }
                                                     ?>
                                             </td>
-                                            <td><?php echo + $row["Balance"]; ?>KG Gas</td>
+                                            <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
+                                            <td>
+                                                Rs. <?php echo financials($row["Credit"]); ?>/-
+                                            </td>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
-                                            <td><?php echo $row["Remarks"]; ?></td>
+                                            <td class="hidden"><?php echo $row["Remarks"]; ?></td>
+                                            <td><?php echo $row["LastActivity"]; ?></td>
+                                            <td><?php echo $row["LastLogin"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editshop.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>

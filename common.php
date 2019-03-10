@@ -45,7 +45,7 @@ define("ROLE_ID_SALES", 5);
 define("ROLE_ID_PLANT", 6);
 define("ROLE_ID_USER", 7);
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
-define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]));
+define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]).' '.date('h:i:s'));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
 define("ADDRESS", dboutput($settingRecordSet["Address"]));
@@ -85,6 +85,7 @@ define("THUMB_HEIGHT", 72); //In Pixel
 define("INDENT", "&nbsp;&nbsp;&nbsp;");
 define("MAX_IMAGE_SIZE", 5120); //In KB
 
+define("DIR_PAYMENT_IMAGES", "assets/payments/");
 define("DIR_USER_IMAGES", "assets/users/");
 define("DIR_LOGO_IMAGE", "assets/logo/");
 define("DIR_PRODUCT_IMAGES", "assets/product/");
@@ -982,6 +983,10 @@ function getRetailPrice($ID)
         $ret = $Rs['RetailPrice'];
     }
     return $ret;
+}
+
+function financials($Number = 0){
+    return number_format((float)$Number, "2", ".");
 }
 
 function dumpArray($RoleID = array())

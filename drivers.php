@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.Remarks, u.ShopID, u.PlantID, r.Name AS Role, u.Address, u.Number, u.SendSMS, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.PlantID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_DRIVER)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Remarks, u.ShopID, u.PlantID, r.Name AS Role, u.Address, u.Number, u.SendSMS, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.PlantID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_DRIVER)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>

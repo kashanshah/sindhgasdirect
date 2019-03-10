@@ -44,19 +44,20 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
 				// exit();
 				if(dboutput($row["Password"]) == $Password)
 				{
-					
-						$_SESSION["Admin"]=true;
-						$ssql = "SELECT * FROM users WHERE ID = ".$row['ID']."";
-						$datap = mysql_query($ssql);
-						$rows = mysql_fetch_assoc($datap);
-						foreach($rows as $key => $value)
-						{
-							$_SESSION[$key]=$value;
-						}
-						if($_SESSION["RoleID"] == ROLE_ID_SALES){
-                            $_SESSION["ID"] = $_SESSION["ShopID"];
-                        }
-					
+
+                    $_SESSION["Admin"]=true;
+                    mysql_query("UPDATE users SET LastLogin='".DATE_TIME_NOW."' WHERE ID='".(int)$row["ID"]."'");
+                    $ssql = "SELECT * FROM users WHERE ID = ".$row['ID']."";
+                    $datap = mysql_query($ssql);
+                    $rows = mysql_fetch_assoc($datap);
+                    foreach($rows as $key => $value)
+                    {
+                        $_SESSION[$key]=$value;
+                    }
+                    if($_SESSION["RoleID"] == ROLE_ID_SALES){
+                        $_SESSION["ID"] = $_SESSION["ShopID"];
+                    }
+
 					header("Location: dashboard.php");
 				}
 				else
