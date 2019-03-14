@@ -44,6 +44,7 @@ define("ROLE_ID_CUSTOMER", 4);
 define("ROLE_ID_SALES", 5);
 define("ROLE_ID_PLANT", 6);
 define("ROLE_ID_USER", 7);
+define("GAS_DIFFERENCE_NOTIFICATION", "Gas Difference");
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
 define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]).' '.date('h:i:s'));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
@@ -986,7 +987,27 @@ function getRetailPrice($ID)
 }
 
 function financials($Number = 0){
-    return number_format((float)$Number, "2", ".");
+    return number_format((float)$Number, "2");
+}
+
+function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0){
+    $query4 = "INSERT INTO notifications SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
+        Name='".dbinput($Name)."',
+        Description='".dbinput($Description)."',
+        Link='".dbinput($Link)."',
+        UserID=".(int)$UserID.",
+        RoleID=".(int)$RoleID.",
+        Priority=".(int)$Priority.",
+        Status=0
+        ";
+    mysql_query($query4) or die(mysql_error());
+    return mysql_insert_id();
+}
+
+function getNotificationCount($ID = 0, $RoleID = 0){
+    $q = "SELECT COUNT(ID) AS Count from notifications WHERE Status = 0 AND (UserID = ". (int)$ID." OR RoleID = ".(int)$RoleID.")";
+    $r = mysql_query($q) or die(mysql_error());
+    return (int)mysql_result($r, 0, 0);
 }
 
 function dumpArray($RoleID = array())

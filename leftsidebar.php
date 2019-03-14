@@ -90,6 +90,9 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?>">
                     <a href="returntoshop.php"><i class="fa fa-circle-o"></i>Cylinder Return from Customer </a></li>
                 </li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindershoptodriver.php") ? 'active' : ''); ?>">
+                    <a href="cylindershoptodriver.php"><i class="fa fa-circle-o"></i>Cylinder Return to Driver</a></li>
+                </li>
 
                 <!--NEW MENU -->
 

@@ -29,4 +29,24 @@ if(isset($_REQUEST["action"])){
         }
         echo json_encode($ret);
     }
+    else if($_REQUEST["action"] == "markasread"){
+        $phone = '';
+        $ret = array("code"=>-1, "msg"=>"");
+        foreach ($_REQUEST as $key=>$val)
+            $$key=$val;
+        if(!is_numeric($ID) && $ID == 0){
+            $ret = array(
+                "code" => -1,
+                "msg" => "Please provide a correct notification ID"
+            );
+        }
+        else{
+            $ret = mysql_query("UPDATE notifications SET Status=1 WHERE ID=".$ID);
+            $ret = array(
+                "code" => 0,
+                "msg" => "success"
+            );
+        }
+        echo json_encode($ret);
+    }
 }

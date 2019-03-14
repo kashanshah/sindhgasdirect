@@ -143,6 +143,20 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 
         $i = 0;
         foreach ($CylinderID as $CID) {
+            if((float)$ShopTotalWeight[$i] != (float)$CurrentCylinderWeight[$i]){
+                createNotification(
+                    GAS_DIFFERENCE_NOTIFICATION,
+                    "Shopkeeper: ".getValue('users', 'Name', 'ID', $_SESSION["ID"]) .' ('. getValue('users', 'Name', 'ID', $_SESSION["ID"]) . ")
+                    Cylinder ID: " .getValue('cylinders', 'BarCode', 'ID', $CID)."
+				    Weight when received: " .financials($ShopTotalWeight[$i])."KG
+				    Weight when sold: " .financials($CurrentCylinderWeight[$i])."KG",
+                    'viewsale.php?ID='.(int)$SaleID,
+                    (int)$_SESSION["ShopID"],
+                    0,
+                    100
+                );
+            }
+
             $query4 = "INSERT INTO sale_details SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				SaleID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
@@ -150,6 +164,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				ReturnWeight=0,
 				ReturnDate='1970-01-01',
 				TierWeight='" . (float)$CylinderWeight[$i] . "',
+				ShopTotalWeight='".(float)$ShopTotalWeight[$i]."',
 				TotalWeight='" . (float)$CurrentCylinderWeight[$i] . "',
 				Price='" . (float)$SalePrice[$i] . "',
 				GasRate='" . (float)($SalePrice[$i] / ($CurrentCylinderWeight[$i] - $CylinderWeight[$i])) . "',
@@ -816,7 +831,7 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td style="width:5%"><input type="hidden" name="CylinderID[]" value="' + $("[name='CylinderID']").val() + '" /><span class="SerialNo" >' + $("[name='CylinderID']").val() + '</span></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span id="CylinderCartName' + i + '" >' + $("[name='CylinderID'] option:selected").text() + '</span></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('tierweight') + '</span>KG</td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="ShopTotalWeight[]" value="'+ $("[name='CylinderID'] option:selected").data('weight') +'" /><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td>' + gasWeight.toFixed(2) + 'KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight').toFixed(2) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight.toFixed(2) + '</span>KG</td>');

@@ -57,6 +57,12 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
                     if($_SESSION["RoleID"] == ROLE_ID_SALES){
                         $_SESSION["ID"] = $_SESSION["ShopID"];
                     }
+                    if($_SESSION["RoleID"] == ROLE_ID_SHOP){
+                        $_SESSION["ShopID"] = $_SESSION["ID"];
+                    }
+                    if($_SESSION["RoleID"] == ROLE_ID_PLANT){
+                        $_SESSION["PlantID"] = $_SESSION["ID"];
+                    }
 
 					header("Location: dashboard.php");
 				}

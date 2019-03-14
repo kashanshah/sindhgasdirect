@@ -1,3 +1,6 @@
+<div class="loading-overlay">
+    <div class="spin-loader"></div>
+</div>
 <style>
     <?php
     if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
@@ -48,6 +51,25 @@
     .skin-blue .sidebar-menu > li > a{
         padding:5px 5px 7px 15px;
     }
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        opacity: 0.6;
+        z-index: 1040;
+    }
+
+    .spin-loader {
+        height: 100%;
+        background: url("assets/images/loader.gif") no-repeat center center transparent;
+        position: relative;
+        top: 25%;
+    }
+
 </style>
 <header class="main-header">
 
@@ -94,29 +116,41 @@
                 </ul>
               </li><!-- /.messages-menu -->
 
-                    <!-- Notifications Menu --
+                    <!-- Notifications Menu -->
+                <?php
+                $NotifCount = getNotificationCount($_SESSION["ID"], $_SESSION["RoleID"]);
+                ?>
                     <li class="dropdown notifications-menu">
-                      <!-- Menu toggle button --
+                      <!-- Menu toggle button -->
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+                          <?php echo $NotifCount == 0 ? '' : '<span class="label label-danger">'.$NotifCount.'</span>'; ?>
                       </a>
                       <ul class="dropdown-menu">
-                        <li class="header">You have 10 notifications</li>
+                        <li class="header">You have <?php echo $NotifCount; ?> new notifications</li>
                         <li>
-                          <!-- Inner Menu: contains the notifications --
                           <ul class="menu">
-                            <li><!-- start notification --
-                              <a href="#">
-                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                              </a>
-                            </li><!-- end notification --
+                              <?php
+                              $hQuer = "SELECT ID, Name, Description, Status, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded from notifications WHERE Status = 0 AND (UserID = ". (int)$_SESSION["ID"]." OR RoleID = ".(int)$_SESSION["RoleID"].") ORDER BY Priority, ID DESC ";
+                              $hQuerRes = mysql_query($hQuer) or die(mysql_error());
+                              while($hNotif = mysql_fetch_assoc($hQuerRes)){
+                                  ?>
+                              <li>
+                                  <a href="#" onclick='markReadAndAction(<?php echo $hNotif["ID"]; ?>, "<?php echo $hNotif["Link"]; ?>")'>
+                                      <span style="font-weight:bold;"><?php echo $hNotif["Name"]; ?><small class="pull-right"><?php echo $hNotif["DateAdded"]; ?></small></span>
+                                      <br/><?php echo $hNotif["Description"]; ?>
+                                  </a>
+                              </li>
+                              <?php
+
+                              }
+
+                              ?>
                           </ul>
                         </li>
-                        <li class="footer"><a href="#">View all</a></li>
+                        <li class="footer"><a href="notifications.php">View all</a></li>
                       </ul>
                     </li>
-                    <!-- Tasks Menu -->
                     <!--              <li class="dropdown tasks-menu">
                                     <!-- Menu Toggle Button --
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

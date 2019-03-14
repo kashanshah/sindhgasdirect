@@ -71,6 +71,20 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 
 		$i = 0;
 		foreach($CylinderID as $CID){
+            if((float)$ShopCylinderWeight[$i] != (float)$CylinderWeight[$i]){
+                createNotification(
+                    GAS_DIFFERENCE_NOTIFICATION,
+                    "Shopkeeper: ".getValue('users', 'Name', 'ID', $_SESSION["ID"]) .' ('. getValue('users', 'Name', 'ID', $_SESSION["ID"]) . ")
+                    Cylinder ID: " .getValue('cylinders', 'BarCode', 'ID', $CID)."
+				    Weight when received from customer: " .financials($ShopCylinderWeight[$i])."KG
+				    Weight when dispatched to driver: " .financials($CylinderWeight[$i])."KG",
+                    'viewpurchase.php?ID='.getCurrentPurchaseInvoiceID($CID),
+                    (int)$_SESSION["ShopID"],
+                    0,
+                    100
+                );
+            }
+
 			$query2 = "INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID."',
 				CylinderID='".(int)$CID."',
@@ -511,7 +525,15 @@ $(document).ready(function() {
 		});
 		if(j!=1)
 		{
-			$(".cart_table").append('<tr class="DivCartCylinder"><td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td><td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td><td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td><td><input type="number" step="any" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td><td><span id="CylinderGasWeight'+i+'"></span></td><td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td></tr>');
+			$(".cart_table").append('<tr class="DivCartCylinder">' +
+                '<td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td>' +
+                '<td><span class="CylinderCartName CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span></td>' +
+                '<td><span id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span></td>' +
+                '<td><input type="hidden" name="ShopCylinderWeight[]" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" />' +
+                '<input type="number" step="any" name="CylinderWeight[]" class="CylinderWeight CylinderWeight'+i+'" data-id="'+i+'" required="" value="'+$("[name='CylinderID'] option:selected").data('currentweight')+'" /></td>' +
+                '<td><span id="CylinderGasWeight'+i+'"></span></td>' +
+                '<td><div class="btn-group"><a class="btn btn-danger dropdown-toggle" onclick="deletethisrow(this);">Delete</a></div></td>' +
+                '</tr>');
 			i = i + 1;
 			gettotal();
 			calculateWeights();

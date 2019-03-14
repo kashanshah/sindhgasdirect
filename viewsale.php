@@ -219,13 +219,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<th>SNo.</th>
 								<th>Cylinder Code</th>
 								<th>Tier Weight (KG)</th>
+								<th>Shop Weight (KG)</th>
 								<th>Cylinder Weight (KG)</th>
 								<th>Gas Weight (KG)</th>
 								<th>Price (Rs.)</th>
 								<th>Return Status</th>
 							</tr>
 <?php
-$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
+$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.ShopTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 $cou2 = 0;
@@ -239,10 +240,11 @@ while($data = mysql_fetch_array($resource)){
 							<tr>
 								<td><?php echo $cou2; ?></td>
 								<td><?php echo $data["BarCode"]; ?></td>
-								<td><?php echo $data["TierWeight"]; ?></td>
-								<td><?php echo $data["TotalWeight"]; ?></td>
-								<td><?php echo ($data["TotalWeight"] - $data["TierWeight"]); ?></td>
-								<td><?php echo $data["Price"]; ?></td>
+								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
+								<td><?php echo financials($data["ShopTotalWeight"]); ?>KG</td>
+								<td><?php echo financials($data["TotalWeight"]); ?>KG</td>
+								<td><?php echo financials($data["TotalWeight"] - $data["TierWeight"]); ?>KG</td>
+								<td>Rs. <?php echo financials($data["Price"]); ?></td>
 								<td><?php echo $__RETURNSTATUS[$data["ReturnStatus"]].($data["ReturnStatus"] > 0 ? ' at '.date('H:i A, d M, Y', strtotime($data["ReturnDate"])).' with weight: '.$data["ReturnWeight"].'KG' : ''); ?></td>
 							</tr>
 <?php
@@ -253,8 +255,9 @@ while($data = mysql_fetch_array($resource)){
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><?php echo $__totalGasWeight; ?></td>
-								<td><?php echo $__totalPrice; ?></td>
+								<td></td>
+								<td><?php echo financials($__totalGasWeight); ?>KG</td>
+								<td>Rs. <?php echo financials($__totalPrice); ?></td>
 							</tr>
 						</table><!-- /.box-body -->
 					</div><!-- /.box-body -->

@@ -56,8 +56,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 	else if(!isset($CylinderID) && empty($CylinderID)) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select a cylinder to purchase.</div>';
 	else if(!isset($TotalAmount)) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Correct Total Amount</div>';
 	
-	if($msg == "")
-	{
+	if($msg == ""){
 		mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 			PerformedBy = '".(int)$_SESSION["ID"]."',
 			IssuedTo = '".(int)$HandedTo."',
@@ -82,8 +81,24 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 		$i = 0;
         $totaltmpSaving = 0;
         foreach($CylinderID as $CID){
-			$Price = GAS_RATE * ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
+            if((float)$CompanyTotalWeight[$i] != (float)$CurrentCylinderWeight[$i]){
+                createNotification(
+                GAS_DIFFERENCE_NOTIFICATION,
+                "Driver: ".getValue('users', 'Name', 'ID', $DriverID[$i]) .' ('. getValue('users', 'Name', 'ID', $DriverID[$i]) . ")
+                    Cylinder ID: " .getValue('cylinders', 'BarCode', 'ID', $CID)."
+				    Weight when dispatched: " .financials($CompanyTotalWeight[$i])."KG
+				    Weight when received: " .financials($CurrentCylinderWeight[$i])."KG",
+                'viewpurchase.php?ID='.(int)$InvoiceID,
+                (int)$_SESSION["PlantID"],
+                0,
+                100
+            );
+            }
+
+            $Price = GAS_RATE * ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]);
             $totaltmpSaving = $totaltmpSaving + $CurrentCylinderWeight[$i] - $CylinderWeight[$i];
+
+
             $query4 = "INSERT INTO purchase_details SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PurchaseID='".(int)$InvoiceID."',
 				CylinderID='".(int)$CID."',
@@ -98,7 +113,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				GasRate='".(float)(GAS_RATE)."',
 				PerformedBy = '".(int)$_SESSION["ID"]."'
 				";
-			mysql_query($query4) or die(mysql_error());
+            mysql_query($query4) or die(mysql_error());
 			$query2 = "INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID."',
 				CylinderID='".(int)$CID."',
@@ -115,7 +130,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
         sendUserSMS($DriverID[$i-1], 'Delivered - '.$CylinderCount . ' cylinder(s) has been delivered to '.$_SESSION["Name"].' with total return gas of '.$totaltmpSaving.'KG at '.date('h:iA d-m-Y'));
 
         $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
-			<i class="fa fa-ban"></i>
+			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 			Purchase has been added!
 			</div>';
