@@ -37,14 +37,15 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "drivers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "adddriver.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editdriver.php") ? 'active' : ''); ?>"><a href="drivers.php"><i class="fa fa-truck"></i>Drivers</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "vehicles.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addvehicle.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editvehicle.php") ? 'active' : ''); ?>"><a href="vehicles.php"><i class="fa fa-truck"></i>Vehicles</a></li>
 
-                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "config.php") ? 'active' : ''); ?>">
-                    <a href="config.php"><i class="fa fa-gear"></i> <span>Configurations</span></a>
-                </li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "payments.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpayment.php") ? 'active' : ''); ?>"><a href="payments.php"><i class="fa fa-dollar"></i>Payments</a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "config.php") ? 'active' : ''); ?>">
+                    <a href="config.php"><i class="fa fa-gear"></i> <span>Configurations</span></a>
+                </li>
                 <!--NEW MENU -->
 
 
