@@ -1,12 +1,12 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
 get_right(array(1, 2));
-$DateAddedFrom = "";
-$DateAddedTo = "";
+$DateAddedFrom = date('Y-m-d 00:00:00');
+$DateAddedTo = date('Y-m-d 23:59:59');
 $HeadID = array();
 $Headings="";
 $HeadID=array();
-$SortBy="s.ID";
+$SortBy="p.ID";
 
 foreach($_POST AS $key => $val)
 	$$key = $val;
@@ -17,7 +17,7 @@ if(isset($_REQUEST["Headings"]))
 	$HeadID=$_REQUEST['Headings'];
 }
 
-$sql="SELECT s.ID, u.Name, u.NIC, u.Number, u.Address, u.Email, u.Remarks, s.Total, s.Discount, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified, a.Username AS PerformedBy FROM sales s LEFT JOIN users u ON u.ID = s.CustomerID LEFT JOIN admins a ON a.ID = s.PerformedBy WHERE s.ID <>0 AND (s.DateAdded BETWEEN '".$DateAddedFrom."' AND '".$DateAddedTo."') "." ORDER BY ".$SortBy." ASC";
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .  ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND u.PlantID='".(int)$_SESSION["ID"]."'" : " AND p.ShopID = '".(int)$_SESSION["ID"]."'") ) . " ORDER BY " . $SortBy;
 $resource=mysql_query($sql) or die(mysql_error());
 	
 ?>
@@ -146,15 +146,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
               <div class="box">
                 <div class="box-body">
-				<form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
+				<form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="GET">
 				  <div class="form-group">
 					<label class="control-label col-md-1 col-sm-1 col-xs-6">From Date</label>
 					<div class="col-md-3">
-					  <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
+					  <input name="DateAddedFrom" value="<?php echo date('Y-m-d', strtotime($DateAddedFrom)); ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
 					</div>
 					<label class="control-label col-md-1 col-sm-1 col-xs-6">Till Date</label>
 					<div class="col-md-3 col-sm-5 col-xs-6">
-					  <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
+					  <input name="DateAddedTo" value="<?php echo date('Y-m-d', strtotime($DateAddedTo)); ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
 					</div>
 					<label class="control-label col-md-1 col-sm-1 col-xs-6">Headers</label>
 					<div class="col-md-3 col-sm-5 col-xs-6">
@@ -165,25 +165,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<div class="overSelect"></div>
 						</div>
 						<div id="checkboxes" style="height:250px; overflow:auto;">
-							<label><input <?php echo (in_array("Name", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Name" /> Customer Name</label>
-							<label><input <?php echo (in_array("Total", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Total" /> Total</label>
-							<label><input <?php echo (in_array("Discount", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Discount" /> Discount</label>
-							<label><input <?php echo (in_array("Paid", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Paid" /> Paid</label>
-							<label><input <?php echo (in_array("Unpaid", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Unpaid" /> Unpaid</label>
-							<label><input <?php echo (in_array("Note", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Note" /> Note</label>
-							<label><input <?php echo (in_array("DateAdded", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="DateAdded" /> Sales Date</label>
-							<label><input <?php echo (in_array("NIC", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="NIC" /> Customer NIC</label>
-							<label><input <?php echo (in_array("Number", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Number" /> Customer Number</label>
-							<label><input <?php echo (in_array("Address", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Address" /> Customer Address</label>
-							<label><input <?php echo (in_array("Email", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="Email" /> Customer Email</label>
-							<label><input <?php echo (in_array("PerformedBy", $HeadID) ? "checked = checked" : "") ?> type="checkbox" name="Headings[]" value="PerformedBy" /> Salesman Username</label>
+<!--							<label><input --><?php //echo (in_array("Name", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Name" /> Customer Name</label>-->
+<!--							<label><input --><?php //echo (in_array("Total", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Total" /> Total</label>-->
+<!--							<label><input --><?php //echo (in_array("Discount", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Discount" /> Discount</label>-->
+<!--							<label><input --><?php //echo (in_array("Paid", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Paid" /> Paid</label>-->
+<!--							<label><input --><?php //echo (in_array("Unpaid", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Unpaid" /> Unpaid</label>-->
+<!--							<label><input --><?php //echo (in_array("Note", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Note" /> Note</label>-->
+<!--							<label><input --><?php //echo (in_array("DateAdded", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="DateAdded" /> Sales Date</label>-->
+<!--							<label><input --><?php //echo (in_array("NIC", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="NIC" /> Customer NIC</label>-->
+<!--							<label><input --><?php //echo (in_array("Number", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Number" /> Customer Number</label>-->
+<!--							<label><input --><?php //echo (in_array("Address", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Address" /> Customer Address</label>-->
+<!--							<label><input --><?php //echo (in_array("Email", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="Email" /> Customer Email</label>-->
+<!--							<label><input --><?php //echo (in_array("PerformedBy", $HeadID) ? "checked = checked" : "") ?><!-- type="checkbox" name="Headings[]" value="PerformedBy" /> Salesman Username</label>-->
 								<?php
-								// $query = "SHOW FIELDS FROM records";
-								// $res = mysql_query($query);
-								// while($row = mysql_fetch_array($res))
-								// {
-								// echo '<label>&emsp;<input '.(in_array($row['Field'], $HeadID) ? "checked = checked" : "").' type="checkbox" name="Headings[]" value="'.$row['Field'].'"/> '.$row['Field'].'</label>';
-								// }
+								 $query = "SHOW FIELDS FROM sales";
+								 $res = mysql_query($query);
+								 while($row = mysql_fetch_array($res))
+								 {
+								 echo '<label>&emsp;<input '.(in_array($row['Field'], $HeadID) ? "checked = checked" : "").' type="checkbox" name="Headings[]" value="'.$row['Field'].'"/> '.$row['Field'].'</label>';
+								 }
 								// ?>
 						</div>
 					</div>
