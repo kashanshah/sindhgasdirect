@@ -8,7 +8,7 @@ $BarCode = "";
 $Description = "";
 $ShortDescription = "";
 $TierWeight = "";
-$Commercial = 0;
+$CylinderType = 0;
 $Image = "";
 $ManufacturingDate = date('Y-m-d');
 $ExpiryDate = "";
@@ -22,7 +22,7 @@ if (isset($_POST['addstd']) && $_POST['addstd'] == 'Save') {
     if (isset($_POST['Description'])) $Description = trim($_POST['Description']);
     if (isset($_POST['ShortDescription'])) $ShortDescription = trim($_POST['ShortDescription']);
     if (isset($_POST['TierWeight'])) $TierWeight = trim($_POST['TierWeight']);
-    if (isset($_POST['Commercial'])) $Commercial = trim($_POST['Commercial']);
+    if (isset($_POST['CylinderType'])) $CylinderType = trim($_POST['CylinderType']);
     if (isset($_POST['Image'])) $Image = trim($_POST['Image']);
 
     if (isset($_POST['ManufacturingDate'])) $ManufacturingDate = trim($_POST['ManufacturingDate']);
@@ -65,7 +65,7 @@ if (isset($_POST['addstd']) && $_POST['addstd'] == 'Save') {
 						Description='" . dbinput($Description) . "',
 						ShortDescription='" . dbinput($ShortDescription) . "',
 						TierWeight='" . (float)$TierWeight . "',
-						Commercial='" . (int)$Commercial . "',
+						CylinderType='" . (int)$CylinderType . "',
 						PlantID='" . (int)$_SESSION["ID"] . "',
 						PerformedBy = '" . (int)$_SESSION["ID"] . "'") or die(mysql_error());
 
@@ -246,14 +246,20 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
+                                    <label class="col-md-3 control-label" for="CylinderType">Cylinder Type</label>
                                     <div class="col-md-6">
-                                        <input type="radio" value="1"
-                                               name="Commercial" <?php echo($Commercial == "1" ? 'checked=""' : '') ?>>
-                                        Yes
-                                        <input type="radio" value="0"
-                                               name="Commercial" <?php echo($Commercial == "0" ? 'checked=""' : '') ?>>
-                                        No
+                                        <select name="CylinderType" id="CylinderType" class="form-control">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if ($CylinderType == $Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?> - <?php echo $Rs['Capacity'] ?>kg
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">

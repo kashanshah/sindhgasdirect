@@ -3,7 +3,7 @@
 get_right(array(ROLE_ID_ADMIN));
 
 $msg='';
-$ID = "";
+$ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 $Rate = 0;
 $Capacity = 0;
 $Commercial = 0;
@@ -12,7 +12,7 @@ $MethodID = 0;
 $DateAdded = "";
 $DateModified = "";
 
-if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
+if(isset($_POST['editstd']) && $_POST['editstd']=='Save'){
     foreach ($_REQUEST as $key=>$val)
         $$key = $val;
 
@@ -21,20 +21,49 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
     else if($Capacity == 0 || $Capacity == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter correct capacity.</div>';
     if($msg=="")
     {
-        mysql_query("INSERT into cylindertypes SET
-						DateAdded='".DATE_TIME_NOW."',
+        mysql_query("UPDATE cylindertypes SET
 						DateModified='".DATE_TIME_NOW."',
+						Name='".dbinput($Name)."',
 						Rate='".(float)($Rate/$Capacity)."',
 						Capacity='".(float)$Capacity."',
 						Commercial='".(int)$Commercial."',
-						Name='".dbinput($Name)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
+						WHERE ID='".(int)$ID."'
 						") or die(mysql_error());
 
         $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <i class="fa fa-check"></i>Cylinder Type has been added.
+                    <i class="fa fa-check"></i>Cylinder Type has been edited.
                 </div>';
+        redirect("cylindertypes.php");
+    }
+}
+else{
+    if(isset($_REQUEST['ID'])) $ID=$_REQUEST['ID'];
+    else
+    {
+        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				Invalide cylinder type ID
+				</div>';
+        redirect("cylindertypes.php");
+    }
+    $sql="SELECT * FROM cylindertypes where ID=".(int)$ID;
+    $resource=mysql_query($sql) or die(mysql_error());
+    if(mysql_num_rows($resource) > 0)
+    {
+        $row=mysql_fetch_array($resource);
+        foreach ($row as $key=>$val)
+            $$key=$val;
+    }
+    else
+    {
+        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
+				<i class="fa fa-ban"></i>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<b>Invalide cylinder type ID</b>
+				</div>';
         redirect("cylindertypes.php");
     }
 }
@@ -50,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Cylinder Type</title>
+    <title><?php echo SITE_TITLE; ?>- Edit Cylinder Type</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -114,13 +143,13 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Cylinder Type
+                Edit Cylinder Type
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li><a href="cylindertypes.php"><i class="fa fa-cube"></i> Cylinder Types</a></li>
-                <li class="active">Add Cylinder Type</li>
+                <li class="active">Edit Cylinder Type</li>
             </ol>
         </section>
 
@@ -129,12 +158,12 @@ desired effect
             <div class="row">
                 <div class="col-xs-12">
                     <!-- /.box -->
-                    <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form id="frmPages" action="<?php echo $self; ?>?ID=<?php echo $ID; ?>" class="form-horizontal" method="post" enctype="multipart/form-data">
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
                                     <a style="float:right;" class="btn btn-group-vertical btn-danger" href="cylindertypes.php" >Back</a>
-                                    <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
+                                    <input style="float:right;;margin-right:15px;" type="submit" name="editstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
                         </div>
@@ -154,13 +183,13 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="Rate">Rate</label>
+                                    <label class="col-md-3 control-label" for="Rate">Rate (Rs.)</label>
                                     <div class="col-md-6">
-                                        <input type="number" step="any" class="form-control" id="Rate" value="<?php echo $Rate*$Capacity;?>" placeholder="Enter Rate" name="Rate">
+                                        <input type="number" step="any" class="form-control" id="Rate" value="<?php echo financials($Rate*$Capacity); ?>" placeholder="Enter Rate" name="Rate">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="Capacity">Capacity</label>
+                                    <label class="col-md-3 control-label" for="Capacity">Capacity (KG)</label>
                                     <div class="col-md-6">
                                         <input type="number" step="any" class="form-control" id="Capacity" value="<?php echo $Capacity;?>" placeholder="Enter Capacity" name="Capacity">
                                     </div>

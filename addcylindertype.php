@@ -1,11 +1,13 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN));
 
 $msg='';
 $ID = "";
-$Amount = 0;
-$Details = "";
+$Rate = 0;
+$Capacity = 0;
+$Commercial = 0;
+$Name = "";
 $MethodID = 0;
 $DateAdded = "";
 $DateModified = "";
@@ -15,86 +17,25 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
         $$key = $val;
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
-    else if($Amount == 0 || $Amount == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter the amount paid.</div>';
-    else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
-    {
-        $filenamearray2=explode(".", $_FILES["File"]['name']);
-        $ext2=End($filenamearray2);
-
-        if(!in_array($ext2, $_IMAGE_ALLOWED_TYPES))
-        {
-            $msg='<div class="alert alert-danger alert-dismissable">
-				<i class="fa fa-ban"></i>
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				Only '.implode(", ", $_IMAGE_ALLOWED_TYPES) . ' Images can be uploaded.
-				</div>';
-        }
-        else if($_FILES["File"]['size'] > (MAX_IMAGE_SIZE*1024))
-        {
-            $msg='<div class="alert alert-danger alert-dismissable">
-				<i class="fa fa-ban"></i>
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				Image size must be ' . MAX_IMAGE_SIZE . ' KB or less.
-				</div>';
-        }
-    }
+    else if($Rate == 0 || $Rate == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter correct rates.</div>';
+    else if($Capacity == 0 || $Capacity == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter correct capacity.</div>';
     if($msg=="")
     {
-        mysql_query("INSERT into payments SET
+        mysql_query("INSERT into cylindertypes SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
-						MethodID='".(int)$MethodID."',
-						UserID='".(int)$_SESSION["ID"]."',
-						Amount='".(float)$Amount."',
-						Details='".dbinput($Details)."',
+						Rate='".(float)($Rate/$Capacity)."',
+						Capacity='".(float)$Capacity."',
+						Commercial='".(int)$Commercial."',
+						Name='".dbinput($Name)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
 						") or die(mysql_error());
-        $PaymentID = mysql_insert_id();
-        mysql_query("UPDATE users SET
-						DateModified='".DATE_TIME_NOW."',
-						Credit=Credit+".(float)$Amount."
-						WHERE ID=".(int)$_SESSION["ID"]."
-						") or die(mysql_error());
-
 
         $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<i class="fa fa-check"></i>Payment has been added.
-					</div>';
-
-        if(isset($_FILES["File"]) && $_FILES["File"]['name'] != ""){
-            ini_set('memory_limit', '-1');
-
-            $tempName2 = $_FILES["File"]['tmp_name'];
-            $realName2 = "S".$PaymentID.".".$ext2;
-            $StoreImage = $realName2;
-            $target2 = DIR_PAYMENT_IMAGES . $realName2;
-            $moved2=move_uploaded_file($tempName2, $target2);
-            if($moved2)
-            {
-
-                $query2="UPDATE payments SET Image='" . dbinput($realName2) . "' WHERE  ID=" . (int)$PaymentID;
-                mysql_query($query2) or die(mysql_error());
-                redirect("payments.php");
-            }
-            else
-            {
-                $_SESSION["msg"]='<div class="alert alert-warning alert-dismissable">
-						<i class="fa fa-ban"></i>
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						Payment has been added but Image could not be uploaded.
-						</div>';
-                redirect("payments.php");
-            }
-        }
-        else
-        {
-            $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<i class="fa fa-check"></i>Payment has been added.
-					</div>';
-            redirect("payments.php");
-        }
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-check"></i>Cylinder Type has been added.
+                </div>';
+        redirect("cylindertypes.php");
     }
 }
 
@@ -109,7 +50,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Payment</title>
+    <title><?php echo SITE_TITLE; ?>- Add Cylinder Type</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -173,13 +114,13 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Payment
+                Add Cylinder Type
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="payments.php"><i class="fa fa-dollar"></i> Payments</a></li>
-                <li class="active">Add Payment</li>
+                <li><a href="cylindertypes.php"><i class="fa fa-cube"></i> Cylinder Types</a></li>
+                <li class="active">Add Cylinder Type</li>
             </ol>
         </section>
 
@@ -192,7 +133,7 @@ desired effect
                         <div class="box ">
                             <div class="box-header">
                                 <div class="btn-group-right">
-                                    <a style="float:right;" class="btn btn-group-vertical btn-danger" href="payments.php" >Back</a>
+                                    <a style="float:right;" class="btn btn-group-vertical btn-danger" href="cylindertypes.php" >Back</a>
                                     <input style="float:right;;margin-right:15px;" type="submit" name="addstd" class="btn btn-group-vertical btn-success" value="Save"></button>
                                 </div>
                             </div>
@@ -207,38 +148,32 @@ desired effect
                             </div>
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="example-text-input">Image</label>
+                                    <label class="col-md-3 control-label" for="Name">Name</label>
                                     <div class="col-md-6">
-                                        <input type="file" name="File">
-                                        <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_PAYMENT_IMAGES.$Image.'" />'; ?>
+                                        <input type="text" class="form-control" id="Name" value="<?php echo $Name;?>" placeholder="Enter Name" name="Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="Amount">Amount</label>
+                                    <label class="col-md-3 control-label" for="Rate">Rate (Rs.)</label>
                                     <div class="col-md-6">
-                                        <input type="number" step="any" class="form-control" id="Amount" value="<?php echo $Amount;?>" placeholder="Enter Amount" name="Amount">
+                                        <input type="number" step="any" class="form-control" id="Rate" value="<?php echo $Rate*$Capacity;?>" placeholder="Enter Rate" name="Rate">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="paymentmethodple-text-input">MethodID</label>
+                                    <label class="col-md-3 control-label" for="Capacity">Capacity (KG)</label>
                                     <div class="col-md-6">
-                                        <select name="MethodID" id="MethodID" class="form-control">
-                                            <?php
-                                            $r = mysql_query("SELECT ID, Name, Details FROM paymentmethods WHERE Status = 1") or die(mysql_error());
-                                            $n = mysql_num_rows($r);
-                                            while ($Rs = mysql_fetch_assoc($r)) {
-                                                ?>
-                                                <option value="<?php echo $Rs['ID']; ?>" <?php if ($CylinderID == $Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
-                                                <?php
-                                            }
-                                            ?>
-                                        </select>
+                                        <input type="number" step="any" class="form-control" id="Capacity" value="<?php echo $Capacity;?>" placeholder="Enter Capacity" name="Capacity">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="paymentmethodple-text-input">Details</label>
+                                <div class="form-group hidden">
+                                    <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
                                     <div class="col-md-6">
-                                        <textarea name="Details" class="form-control" ><?php echo $Details;?></textarea>
+                                        <input type="radio" value="1"
+                                               name="Commercial" <?php echo($Commercial == "1" ? 'checked=""' : '') ?>>
+                                        Yes
+                                        <input type="radio" value="0"
+                                               name="Commercial" <?php echo($Commercial == "0" ? 'checked=""' : '') ?>>
+                                        No
                                     </div>
                                 </div>
                                 <?php if(CAPTCHA_VERIFICATION == 1) { ?>
@@ -295,9 +230,6 @@ desired effect
     $(function () {
         //Initialize Select2 Elements
         $(".select2").select2();
-        $("#frmPages").submit(function(){
-            return confirm("Are you sure to add Rs. "+$("#Amount").val() + " through " + $("#MethodID option:selected").text() + ". \nThis can not be undo.");
-        });
     });
 </script>
 </body>

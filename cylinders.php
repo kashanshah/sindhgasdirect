@@ -131,7 +131,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                          <?php
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                              ?>
+                              <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                              <?php
+                          }
+                          ?>
                         <th>BarCode</th>
                           <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <th>Plant</th>
@@ -140,11 +146,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Tier Weight (KG)</th>
                         <th>Current Weight (KG)</th>
                         <th>Current Gas Weight (KG)</th>
-                        <th>Commercial</th>
+                        <th>Cylinder Type</th>
                         <th>Current Status</th>
                         <th>Date Manufacturing</th>
                         <th>Date Added</th>
-                        <th></th>
+                          <?php
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                              ?>
+                              <th></th>
+                              <?php
+                          }
+                          ?>
                       </tr>
                     </thead>
 		<tbody>
@@ -152,9 +164,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 {
 	?>
                       <tr>
-                        <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
-                  
-                        <td><center><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></center></td>
+                          <?php
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                              ?>
+                              <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]"
+                                                          class="no-margin chkIds"></td>
+                              <?php
+                          }
+                          ?>
+                        <td><img src="<?php echo 'barcode.php?text='.$row["BarCode"]; ?>" height="50" width="150"><br/><?php echo $row["BarCode"]; ?></td>
                           <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                               <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                           <?php } ?>
@@ -162,26 +180,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td><?php echo $row["TierWeight"]; ?></td>
                         <td><?php echo getCurrentWeight($row["ID"]); ?></td>
                         <td><?php echo getCurrentWeight($row["ID"]) - $row["TierWeight"]; ?></td>
-                          <td><?php echo $row["Commercial"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
+                        <td><?php echo getValue('cylindertypes', 'Name', 'ID', $row["CylinderType"]),'<br/>Capacity: '.getValue('cylindertypes', 'Capacity', 'ID', $row["CylinderType"]).'KG'; ?></td>
                         <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])).'<br/>'.getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                         <td><?php echo $row["ManufacturingDate"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
-						
-                        <td>
-							<div class="btn-group">
-			
-							  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<span class="caret"></span>
-								<span class="sr-only">Toggle Dropdown</span>
-							  </button>
-							  <ul class="dropdown-menu" role="menu">
-								<li><a href="editcylinder.php?ID=<?php echo $row["ID"]; ?>">Edit</a></li>
-								<li class="divider"></li>
-								<li class="divider"></li>
-								<li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a></li>
-							  </ul>
-							</div>
-						</td>
+                          <?php
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT){
+                              ?>
+                              <td>
+                                  <div class="btn-group">
+                                      <a class="btn btn-xs btn-warning" href="editcylinder.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
+                                      <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                  </div>
+                              </td>
+                          <?php
+                          }
+                          ?>
                       </tr>
 <?php
 }
