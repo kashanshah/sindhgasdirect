@@ -87,7 +87,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- ViewSale</title>
+    <title><?php echo SITE_TITLE; ?>- View Sale</title>
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -152,13 +152,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            ViewSale
+            View Sale
             <small></small>
           </h1>
           <ol class="breadcrumb">
             <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li><a href="sales.php"><i class="fa fa-cart-arrow-down"></i> Sales</a></li>
-            <li class="active">ViewSale</li>
+            <li class="active">View Sale</li>
           </ol>
         </section>
 
@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Sale ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3><b>Gas Rate: </b><?php echo $row["GasRate"]; ?></h3>
+					<h3><b>Gas Rate: </b><?php echo financials($row["GasRate"]); ?></h3>
 					<h3><b>Invoices: </b>
 						<select id="invoiceid<?php echo $row["ID"]; ?>">
 							<?php
@@ -276,25 +276,25 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Total Amount</label>
 						<div class="col-md-12">
-							<input type="number" step="any" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>" id="TotalAmount">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo financials($row["Total"]); ?>" id="TotalAmount">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Adjustment</label>
 						<div class="col-md-12">
-							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo ($row["Balance"] * $row["GasRate"]); ?>" name="Paid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo financials($row["Balance"] * $row["GasRate"]); ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
-							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo financials($row["Paid"]); ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">
-							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo financials($row["Unpaid"]); ?>" name="Unpaid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">

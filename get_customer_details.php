@@ -17,11 +17,11 @@ include("checkadminlogin.php");
 			"Image" => ($Image == '' ? 'user.jpg' : $Image),
 			"Name" => $Name,
 			"Number" => $Number,
-			"Balance" => $Balance,
+			"Balance" => financials($Balance),
 			"SendSMS" => (int)$SendSMS,
 			"Address" => $Address,
 			"Email" => $Email,
-            "CreditLimit" => $CreditLimit,
+            "CreditLimit" => financials($CreditLimit),
 			"Remarks" => $Remarks);
 		echo (json_encode($data));
 

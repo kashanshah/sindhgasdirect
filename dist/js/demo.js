@@ -728,3 +728,8 @@ function markReadAndAction(ID, Link){
         }
     });
 }
+
+
+function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+};

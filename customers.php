@@ -160,7 +160,7 @@ desired effect
                                             <td><?php echo $row["Number"]; ?></td>
                                             <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo number_format(abs($Bal), 2).'/-'; ?>
+                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo financials($Bal).'/-'; ?>
                                                 <?php
                                                 if($Bal < 0){
                                                     $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";
@@ -186,9 +186,9 @@ desired effect
                                                 }
                                                 ?>
                                             </td>
-                                            <td><?php echo number_format($row["Balance"], 2); ?>KG Gas</td>
-                                            <td>Rs. <?php echo $row["CreditLimit"]; ?></td>
-                                            <td>Rs. <?php echo $row["SecurityDeposite"]; ?></td>
+                                            <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
+                                            <td>Rs. <?php echo financials($row["CreditLimit"]); ?></td>
+                                            <td>Rs. <?php echo financials($row["SecurityDeposite"]); ?></td>
                                             <td><?php echo $row["Remarks"]; ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>

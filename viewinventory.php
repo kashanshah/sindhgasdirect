@@ -126,8 +126,13 @@ desired effect
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-
+                                        <?php
+                                        if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                                            ?>
+                                            <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                                            <?php
+                                        }
+                                        ?>
                                         <th>BarCode</th>
                                         <th>Short Description</th>
                                         <th>Tier Weight (KG)</th>
@@ -135,7 +140,13 @@ desired effect
                                         <th>Current Gas Weight (KG)</th>
                                         <th>Status</th>
                                         <th>Date Manufacturing</th>
-                                        <th></th>
+                                        <?php
+                                        if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                                            ?>
+                                            <th></th>
+                                            <?php
+                                        }
+                                        ?>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -143,10 +154,15 @@ desired effect
                                         if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
                                             ?>
                                             <tr>
+                                            <?php
+                                            if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                                                ?>
                                                 <td style="width:5%"><input type="checkbox"
                                                                             value="<?php echo $row["ID"]; ?>"
                                                                             name="ids[]" class="no-margin chkIds"></td>
-
+                                                <?php
+                                            }
+                                                ?>
                                                 <td><?php echo $row["BarCode"]; ?></td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
                                                 <td><?php echo $row["TierWeight"]; ?></td>
@@ -155,6 +171,9 @@ desired effect
                                                 <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])) . '<br/>' . getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                                                 <td><?php echo $row["ManufacturingDate"]; ?></td>
 
+                                            <?php
+                                            if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                                                ?>
                                                 <td>
                                                     <div class="btn-group">
 
@@ -173,6 +192,9 @@ desired effect
                                                         </ul>
                                                     </div>
                                                 </td>
+                                                <?php
+                                            }
+                                                ?>
                                             </tr>
                                         <?php }
                                     }

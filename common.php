@@ -987,7 +987,7 @@ function getRetailPrice($ID)
 }
 
 function financials($Number = 0){
-    return number_format((float)$Number, "2");
+    return number_format((float)$Number, "2", ".", "");
 }
 
 function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0){
