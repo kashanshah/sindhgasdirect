@@ -183,9 +183,9 @@ desired effect
                                                     <b>Mobile:</b> <?php echo $row["CustomerMobile"];
                                                 } ?>
                                             </td>
-                                            <td><?php echo $row["Total"]; ?></td>
-                                            <td>Rs. <?php echo $row["Paid"]; ?>/-</td>
-                                            <td>Rs. <?php echo $row["Unpaid"]; ?>/-</td>
+                                            <td>Rs. <?php echo financials($row["Total"]); ?>/-</td>
+                                            <td>Rs. <?php echo financials($row["Paid"]); ?>/-</td>
+                                            <td>Rs. <?php echo financials($row["Unpaid"]); ?>/-</td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                             <td><?php echo $row["DateModified"]; ?></td>
                                             <td>
@@ -221,7 +221,7 @@ desired effect
                                                 <?php
                                                 if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                                                     ?>
-                                                    <?php echo($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-sm" href="addpaymentsale.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
+                                                    <?php echo(financials($row["Unpaid"]) > 0 ? '<a class="btn btn-warning btn-sm" href="addpaymentsale.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
                                                     <?php
                                                 }
                                                 ?>

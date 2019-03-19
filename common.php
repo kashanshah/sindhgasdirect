@@ -960,6 +960,40 @@ function getCurrentWeight($ID)
     return (float)$ret;
 }
 
+function getGasRate($ID, $SpecialRate = 0){
+    $res = mysql_query("SELECT Capacity, Rate FROM cylindertypes WHERE ID = " . (int)$ID . " ") or die(mysql_error());
+    $ret = 0;
+    if (mysql_num_rows($res) == 0) {
+        $ret = 0;
+    } else {
+        $Rs = mysql_fetch_assoc($res);
+        if($SpecialRate == 0){
+            $ret = $Rs['Rate'];
+        }
+        else{
+            $ret = $SpecialRate;
+        }
+    }
+    return $ret;
+}
+
+function getCylinderRate($ID, $SpecialRate = 0){
+    $res = mysql_query("SELECT Capacity, Rate FROM cylindertypes WHERE ID = " . (int)$ID . " ") or die(mysql_error());
+    $ret = 0;
+    if (mysql_num_rows($res) == 0) {
+        $ret = 0;
+    } else {
+        $Rs = mysql_fetch_assoc($res);
+        if($SpecialRate == 0){
+            $ret = $Rs['Rate'] * $Rs['Capacity'];
+        }
+        else{
+            $ret = $SpecialRate * $Rs['Capacity'];
+        }
+    }
+    return $ret;
+}
+
 function getCurrentPurchaseWeight($ID)
 {
     $res = mysql_query("SELECT pd.* FROM purchase_details pd LEFT JOIN cylinders c ON c.ID=pd.CylinderID WHERE c.ID = " . (int)$ID . " ORDER BY pd.ID DESC LIMIT 1") or die(mysql_error());

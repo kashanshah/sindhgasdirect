@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d23109a9-8739-4d7f-be36-b768877471ed" name="Default Changelist" comment="process update&#10;storage&#10;gas against gas&#10;Send SMS option for all users&#10;function for SendSMS">
-      <change beforePath="$PROJECT_DIR$/EMAILBACKUP.sql" beforeDir="false" afterPath="$PROJECT_DIR$/EMAILBACKUP.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/a.zip" beforeDir="false" afterPath="$PROJECT_DIR$/a.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leftsidebar.php" beforeDir="false" afterPath="$PROJECT_DIR$/leftsidebar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/q.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/addpaymentsale.php" beforeDir="false" afterPath="$PROJECT_DIR$/addpaymentsale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/addsale.php" beforeDir="false" afterPath="$PROJECT_DIR$/addsale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common.php" beforeDir="false" afterPath="$PROJECT_DIR$/common.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/sales.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,10 +34,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addpurchase.php">
+        <entry file="file://$PROJECT_DIR$/addsale.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="106" column="16" selection-start-line="105" selection-start-column="16" selection-end-line="106" selection-end-column="16" />
+            <state relative-caret-position="114">
+              <caret line="732" column="122" lean-forward="true" selection-start-line="732" selection-start-column="42" selection-end-line="732" selection-end-column="122" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
               </folding>
@@ -45,30 +46,100 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/leftsidebar.php">
+        <entry file="file://$PROJECT_DIR$/addpaymentsale.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="44" selection-start-line="44" selection-end-line="44" />
+            <state relative-caret-position="73">
+              <caret line="305" column="41" selection-start-line="305" selection-start-column="41" selection-end-line="305" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notifications.php">
+        <entry file="file://$PROJECT_DIR$/sales.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="133" column="46" selection-start-line="133" selection-start-column="46" selection-end-line="133" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addsale.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="159" selection-start-line="145" selection-end-line="159" />
+            <state relative-caret-position="83">
+              <caret line="223" column="100" selection-start-line="223" selection-start-column="100" selection-end-line="223" selection-end-column="100" />
               <folding>
-                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+                <element signature="e#147#154#1" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/js/demo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="294">
+              <caret line="734" column="2" selection-start-line="734" selection-start-column="2" selection-end-line="734" selection-end-column="2" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -77,59 +148,53 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/viewsale.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="259" column="40" selection-start-line="259" selection-start-column="40" selection-end-line="259" selection-end-column="40" />
+            <state relative-caret-position="127">
+              <caret line="200" column="37" selection-start-line="200" selection-start-column="27" selection-end-line="200" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cylindershoptodriver.php">
+        <entry file="file://$PROJECT_DIR$/common.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="80" column="76" selection-start-line="80" selection-start-column="76" selection-end-line="80" selection-end-column="76" />
-              <folding>
-                <element signature="n#style#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="294">
+              <caret line="993" column="16" lean-forward="true" selection-start-line="993" selection-start-column="16" selection-end-line="993" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/viewpurchase.php">
+        <entry file="file://$PROJECT_DIR$/customers.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="73" selection-start-line="2" selection-start-column="73" selection-end-line="2" selection-end-column="73" />
+            <state relative-caret-position="172">
+              <caret line="190" column="98" selection-start-line="190" selection-start-column="98" selection-end-line="190" selection-end-column="98" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/returntoplant.php">
+        <entry file="file://$PROJECT_DIR$/get_customer_details.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="106" column="211" selection-start-line="106" selection-start-column="211" selection-end-line="106" selection-end-column="211" />
-              <folding>
-                <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="294">
+              <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="2" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/login.php">
+        <entry file="file://$PROJECT_DIR$/addsalesman.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="98">
-              <caret line="95" column="40" selection-start-line="95" selection-start-column="40" selection-end-line="95" selection-end-column="40" />
+            <state relative-caret-position="319">
+              <caret line="254" column="50" lean-forward="true" selection-start-line="254" selection-start-column="50" selection-end-line="254" selection-end-column="50" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addshop.php">
+        <entry file="file://$PROJECT_DIR$/addcylinder.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="55" selection-start-line="6" selection-start-column="49" selection-end-line="6" selection-end-column="55" />
+            <state relative-caret-position="151">
+              <caret line="66" column="39" lean-forward="true" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -138,54 +203,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>CID</find>
-      <find>$CurrentCylinderWeight</find>
-      <find>id=&quot;cy</find>
+      <find>GAS_RATE</find>
+      <find>getcylindergasta</find>
+      <find>.data('pr</find>
+      <find>name=&quot;SalePrice[]&quot;</find>
+      <find>&quot;.SalePrice&quot;</find>
+      <find>SalePrice' +</find>
+      <find>load</find>
+      <find>#overlay</find>
+      <find>fadein</find>
+      <find>fadeIn</find>
+      <find>credit limi</find>
+      <find>.html(</find>
+      <find>.text</find>
+      <find>phonemsg</find>
+      <find>hide</find>
+      <find>''</find>
+      <find>Gas Rate</find>
+      <find>GasRate</find>
+      <find>current full</find>
+      <find>current</find>
+      <find>&lt;th</find>
+      <find>please pay at</find>
+      <find>currentbalance</find>
+      <find>creditlimit</find>
+      <find>echo</find>
       <find>insert in</find>
-      <find>INSERT IN</find>
-      <find>INSERT INTO</find>
-      <find>$InvoiceID</find>
-      <find>$SaleID</find>
-      <find>TotalWeight</find>
-      <find>cylinders</find>
-      <find>insert</find>
-      <find>companyt</find>
-      <find>tierwe</find>
-      <find>CompanyTotalWeight</find>
-      <find>ShopTotalWeight</find>
-      <find>TierWeight</find>
-      <find>CylinderWeight[]</find>
-      <find>&quot;hidden&quot;</find>
-      <find>insert</find>
-      <find>CylinderWeight</find>
-      <find>ShopCylinderWeight</find>
-      <find>return fr</find>
-      <find>notifi</find>
-      <find>[]&quot;</find>
-      <find>INSERT INTO</find>
-      <find>CurrentCylinderWeight</find>
-      <find>ShopID</find>
-      <find>Driver</find>
-      <find>DriverID</find>
-      <find>config</find>
+      <find>update</find>
+      <find>Rs.</find>
+      <find>remaining</find>
+      <find>add pa</find>
     </findStrings>
     <replaceStrings>
-      <replace>purchase</replace>
-      <replace>RETAILS_GAS_RATE</replace>
-      <replace>RETAIL_GAS_RATE</replace>
-      <replace>RegistrationNo</replace>
-      <replace>edit</replace>
-      <replace>Edit</replace>
-      <replace>vehicle</replace>
-      <replace>Vehicle</replace>
-      <replace>circle-o</replace>
-      <replace>sales.php</replace>
-      <replace>$tmpSaving</replace>
-      <replace>h:iA d-m-Y</replace>
-      <replace>'&quot;.DATE_TIME_NOW.&quot;'</replace>
-      <replace>overflow:auto</replace>
-      <replace>Payment Methods</replace>
-      <replace>Name</replace>
       <replace>payment method</replace>
       <replace>Payment Method</replace>
       <replace>Details</replace>
@@ -200,6 +249,22 @@
       <replace>Add Purchase Payment</replace>
       <replace>CompanyTotalWeight</replace>
       <replace>ShopTotalWeight</replace>
+      <replace>cylindertypes</replace>
+      <replace>Cylinder type</replace>
+      <replace>ROLE_ID_ADMIN</replace>
+      <replace>cylindertype</replace>
+      <replace>Rate</replace>
+      <replace>Edit</replace>
+      <replace>&lt;label class=&quot;col-md-3 control-label&quot; for=&quot;Capacity&quot;&gt;Capacity (KG)&lt;/label&gt;</replace>
+      <replace>&lt;label class=&quot;col-md-3 control-label&quot; for=&quot;Rate&quot;&gt;Rate (Rs.)&lt;/label&gt;</replace>
+      <replace>edit</replace>
+      <replace>Cylinder Type</replace>
+      <replace>Name</replace>
+      <replace>CylinderType</replace>
+      <replace>View Sale</replace>
+      <replace>show</replace>
+      <replace>hide</replace>
+      <replace>&quot;number&quot; step=&quot;any&quot;</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -208,17 +273,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/editadmin.php" />
-        <option value="$PROJECT_DIR$/editshop.php" />
-        <option value="$PROJECT_DIR$/editcustomer.php" />
-        <option value="$PROJECT_DIR$/editcylinder.php" />
-        <option value="$PROJECT_DIR$/adddriver.php" />
-        <option value="$PROJECT_DIR$/editdriver.php" />
-        <option value="$PROJECT_DIR$/editsalesman.php" />
-        <option value="$PROJECT_DIR$/addsalesman.php" />
-        <option value="$PROJECT_DIR$/useraccounts.php" />
-        <option value="$PROJECT_DIR$/printbarcode.php" />
-        <option value="$PROJECT_DIR$/printdriverslip.php" />
         <option value="$PROJECT_DIR$/tcpdf/examples/SaleInvoice.php" />
         <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/cylindertostore.php" />
@@ -247,18 +301,29 @@
         <option value="$PROJECT_DIR$/salesreports.php" />
         <option value="$PROJECT_DIR$/salesreportsdetailed.php" />
         <option value="$PROJECT_DIR$/ajax.php" />
-        <option value="$PROJECT_DIR$/common.php" />
-        <option value="$PROJECT_DIR$/dist/js/demo.js" />
         <option value="$PROJECT_DIR$/header.php" />
         <option value="$PROJECT_DIR$/addpurchase.php" />
         <option value="$PROJECT_DIR$/notifications.php" />
         <option value="$PROJECT_DIR$/login.php" />
-        <option value="$PROJECT_DIR$/addsale.php" />
-        <option value="$PROJECT_DIR$/viewsale.php" />
         <option value="$PROJECT_DIR$/cylindershoptodriver.php" />
         <option value="$PROJECT_DIR$/viewpurchase.php" />
         <option value="$PROJECT_DIR$/returntoplant.php" />
         <option value="$PROJECT_DIR$/leftsidebar.php" />
+        <option value="$PROJECT_DIR$/addcylindertype.php" />
+        <option value="$PROJECT_DIR$/cylindertypes.php" />
+        <option value="$PROJECT_DIR$/editcylindertype.php" />
+        <option value="$PROJECT_DIR$/cylinders.php" />
+        <option value="$PROJECT_DIR$/viewinventory.php" />
+        <option value="$PROJECT_DIR$/editcylinder.php" />
+        <option value="$PROJECT_DIR$/addcylinder.php" />
+        <option value="$PROJECT_DIR$/get_customer_details.php" />
+        <option value="$PROJECT_DIR$/dist/js/demo.js" />
+        <option value="$PROJECT_DIR$/customers.php" />
+        <option value="$PROJECT_DIR$/viewsale.php" />
+        <option value="$PROJECT_DIR$/common.php" />
+        <option value="$PROJECT_DIR$/addsale.php" />
+        <option value="$PROJECT_DIR$/sales.php" />
+        <option value="$PROJECT_DIR$/addpaymentsale.php" />
       </list>
     </option>
   </component>
@@ -283,6 +348,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -310,7 +376,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,11 +388,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/assets" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -384,7 +449,9 @@
       <workItem from="1552261594916" duration="2999000" />
       <workItem from="1552419516806" duration="852000" />
       <workItem from="1552511555263" duration="31000" />
-      <workItem from="1552591710353" duration="12413000" />
+      <workItem from="1552591710353" duration="12471000" />
+      <workItem from="1552754745017" duration="599000" />
+      <workItem from="1553026401165" duration="8788000" />
     </task>
     <task id="LOCAL-00001" summary="Error log error removed&#10;Driver menu added&#10;indenting">
       <created>1551041815514</created>
@@ -453,13 +520,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182956000" />
+    <option name="totallyTimeSpent" value="192401000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20430966" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21069433" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -502,50 +569,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="process update&#10;storage&#10;gas against gas&#10;Send SMS option for all users&#10;function for SendSMS" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/events.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="12" lean-forward="true" selection-end-line="271" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addevent.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="66" selection-start-line="65" selection-end-line="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addplant.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8">
-          <caret line="62" selection-start-line="61" selection-end-line="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editshop.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8">
-          <caret line="282" selection-start-line="275" selection-end-line="282" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editproduct.php" />
-    <entry file="file://$PROJECT_DIR$/products.php" />
-    <entry file="file://$PROJECT_DIR$/paymentmethods.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2160">
-          <caret line="144" column="27" selection-end-line="267" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editpaymentmethod.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="49" selection-start-line="23" selection-start-column="49" selection-end-line="23" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/editplant.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -572,13 +595,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="109">
           <caret line="359" column="18" selection-start-line="359" selection-start-column="14" selection-end-line="359" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addsalesman.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3810">
-          <caret line="254" column="50" lean-forward="true" selection-start-line="254" selection-start-column="50" selection-end-line="254" selection-end-column="50" />
         </state>
       </provider>
     </entry>
@@ -656,13 +672,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addpayment.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="57" lean-forward="true" selection-start-line="52" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addpaymentpurchase.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2715">
@@ -677,27 +686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/customers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="50" selection-start-line="29" selection-start-column="50" selection-end-line="29" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sales.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" selection-start-line="27" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/payments.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="196" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="196" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/checkadminlogin.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -709,13 +697,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
           <caret line="212" column="4" lean-forward="true" selection-start-line="212" selection-start-column="4" selection-end-line="212" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/viewinventory.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="136" column="49" lean-forward="true" selection-start-line="136" selection-start-column="49" selection-end-line="136" selection-end-column="62" />
         </state>
       </provider>
     </entry>
@@ -760,90 +741,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="999" column="36" selection-start-line="999" selection-start-column="36" selection-end-line="999" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/js/demo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="721" selection-start-line="721" selection-end-line="721" />
-          <folding>
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/header.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="97">
@@ -851,51 +748,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notifications.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="133" column="46" selection-start-line="133" selection-start-column="46" selection-end-line="133" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addshop.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="55" selection-start-line="6" selection-start-column="49" selection-end-line="6" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="95" column="40" selection-start-line="95" selection-start-column="40" selection-end-line="95" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addpurchase.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
+        <state relative-caret-position="1590">
           <caret line="106" column="16" selection-start-line="105" selection-start-column="16" selection-end-line="106" selection-end-column="16" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/viewsale.php">
+    <entry file="file://$PROJECT_DIR$/notifications.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="259" column="40" selection-start-line="259" selection-start-column="40" selection-end-line="259" selection-end-column="40" />
+        <state relative-caret-position="1995">
+          <caret line="133" column="46" selection-start-line="133" selection-start-column="46" selection-end-line="133" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cylindershoptodriver.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
+        <state relative-caret-position="1200">
           <caret line="80" column="76" selection-start-line="80" selection-start-column="76" selection-end-line="80" selection-end-column="76" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -906,30 +776,233 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addsale.php">
+    <entry file="file://$PROJECT_DIR$/returntoplant.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="159" selection-start-line="145" selection-end-line="159" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="1590">
+          <caret line="106" column="211" selection-start-line="106" selection-start-column="211" selection-end-line="106" selection-end-column="211" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/returntoplant.php">
+    <entry file="file://$PROJECT_DIR$/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="106" column="211" selection-start-line="106" selection-start-column="211" selection-end-line="106" selection-end-column="211" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="1425">
+          <caret line="95" column="40" selection-start-line="95" selection-start-column="40" selection-end-line="95" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addshop.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="55" selection-start-line="6" selection-start-column="49" selection-end-line="6" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/payments.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="24" column="136" selection-end-line="276" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addpayment.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="57" lean-forward="true" selection-start-line="52" selection-end-line="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/leftsidebar.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        <state relative-caret-position="195">
+          <caret line="29" column="409" lean-forward="true" selection-start-line="29" selection-start-column="409" selection-end-line="29" selection-end-column="409" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addcylindertype.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="26" column="45" selection-start-line="26" selection-start-column="45" selection-end-line="26" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editcylindertype.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="187" column="133" selection-start-line="187" selection-start-column="133" selection-end-line="187" selection-end-column="133" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cylinders.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="189" selection-start-line="186" selection-end-line="189" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/viewinventory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="137" selection-start-line="136" selection-end-line="137" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cylindertypes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="165" selection-start-line="163" selection-end-line="165" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editcylinder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="208" selection-start-line="208" selection-end-line="208" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addcylinder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="66" column="39" lean-forward="true" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addsalesman.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="254" column="50" lean-forward="true" selection-start-line="254" selection-start-column="50" selection-end-line="254" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get_customer_details.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/js/demo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="734" column="2" selection-start-line="734" selection-start-column="2" selection-end-line="734" selection-end-column="2" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/customers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="190" column="98" selection-start-line="190" selection-start-column="98" selection-end-line="190" selection-end-column="98" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/viewsale.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="200" column="37" selection-start-line="200" selection-start-column="27" selection-end-line="200" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="993" column="16" lean-forward="true" selection-start-line="993" selection-start-column="16" selection-end-line="993" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addsale.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="732" column="122" lean-forward="true" selection-start-line="732" selection-start-column="42" selection-end-line="732" selection-end-column="122" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sales.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="223" column="100" selection-start-line="223" selection-start-column="100" selection-end-line="223" selection-end-column="100" />
+          <folding>
+            <element signature="e#147#154#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addpaymentsale.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="305" column="41" selection-start-line="305" selection-start-column="41" selection-end-line="305" selection-end-column="41" />
         </state>
       </provider>
     </entry>

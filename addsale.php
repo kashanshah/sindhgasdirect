@@ -340,7 +340,7 @@ desired effect
                                     <div class="col-md-12">
                                         <select name="CylinderID" id="CylinderID" class="form-control">
                                             <?php
-                                            $r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'") or die(mysql_error());
+                                            $r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'") or die(mysql_error());
                                             $n = mysql_num_rows($r);
                                             if ($n == 0) {
                                                 echo '<option value="0">No Cylinder Added</option>';
@@ -350,12 +350,11 @@ desired effect
                                                         ?>
                                                         <option data-tierweight="<?php echo financials($Rs["TierWeight"]); ?>"
                                                                 data-weight="<?php echo financials(getCurrentPurchaseWeight($Rs["ID"])); ?>"
-                                                                data-price="<?php echo financials(RETAIL_GAS_RATE * (getCurrentPurchaseWeight($Rs["ID"]) - $Rs["TierWeight"])); ?>"
+                                                                data-price="<?php echo financials(getCylinderRate($Rs["CylinderType"])); ?>"
                                                                 BarCode="<?php echo $Rs["BarCode"]; ?>"
-                                                                value="<?php echo $Rs['ID']; ?>" <?php if ($CylinderID == $Rs['ID']) {
-                                                            echo 'selected=""';
-                                                        } ?>><?php echo $Rs['BarCode']; ?>
-                                                            - <?php echo financials($Rs['TierWeight']); ?>kg
+                                                                value="<?php echo $Rs['ID']; ?>"
+                                                            <?php echo ($CylinderID == $Rs['ID'] ? 'selected=""' : ''); ?>>
+                                                            <?php echo $Rs['BarCode']; ?> - <?php echo financials($Rs['TierWeight']); ?>kg
                                                         </option>
                                                         <?php
                                                     }
@@ -397,9 +396,9 @@ desired effect
                                             <th>Tier Weight</th>
                                             <th>Full Weight</th>
                                             <th>Gas Weight</th>
-                                            <th>Current Full Weight</th>
-                                            <th>Current Gas Weight</th>
-                                            <th>Gas Rate</th>
+                                            <th class="hidden">Current Full Weight</th>
+                                            <th class="hidden">Current Gas Weight</th>
+                                            <th class="hidden">Gas Rate</th>
                                             <th>Price</th>
                                             <th><a class="btn btn-danger dropdown-toggle"
                                                    href="<?php echo $_SERVER["REQUEST_URI"]; ?>">Clear All</a></th>
@@ -502,11 +501,9 @@ desired effect
                                                             echo '<option value="">Please select a customer</option>';
                                                             while ($Rs = mysql_fetch_assoc($r)) { ?>
                                                                 <option
-                                                                        data-currentbalance="<?php echo getUserBalance($Rs["ID"]); ?>"
-                                                                        data-creditlimit="<?php echo $Rs["CreditLimit"]; ?>"
-                                                                        value="<?php echo $Rs['ID']; ?>" <?php if ($CustomerID == $Rs['ID']) {
-                                                                    echo 'Selected=""';
-                                                                } ?>><?php echo $Rs['Name']; ?></option>
+                                                                        data-currentbalance="<?php echo financials(getUserBalance($Rs["ID"])); ?>"
+                                                                        data-creditlimit="<?php echo financials($Rs["CreditLimit"]); ?>"
+                                                                        value="<?php echo $Rs['ID']; ?>" <?php echo $CustomerID == $Rs['ID'] ? 'Selected=""' : ''; ?>><?php echo $Rs['Name']; ?></option>
                                                             <?php }
                                                         }
                                                         ?>
@@ -706,27 +703,29 @@ desired effect
         if (!$("#myModal").hasClass("in")) {
             e.preventDefault();
             $("#myModal").modal('show');
-            $("#phonemsg").text('');
+            $("#phonemsg").hide();
         } else {
             if (!options.submit) {
                 e.preventDefault();
+                $("#overlay").show();
                 if ($("#NewOldCustomer").prop("checked")) {
-                    $("#overlay").fadeIn();
-                    $("#phonemsg").text('');
+                    $("#overlay").show();
+                    $("#phonemsg").hide();
                     $.ajax({
                         url: 'ajax.php',
                         data: {action: 'checkavailabilityphone', phone: $("#number").val()},
                         success: function (data) {
-                            $("#overlay").fadeOut();
+                            $("#overlay").hide();
                             data = JSON.parse(data);
                             if (data.code < 0) {
                                 $("#phonemsg").text(data.msg);
+                                $("#phonemsg").show();
                             } else {
                                 $(e.currentTarget).trigger('submit', {'submit': true});
                             }
                         },
                         error: function () {
-                            $("#overlay").fadeOut();
+                            $("#overlay").hide();
                         }
                     });
                 } else {
@@ -734,7 +733,7 @@ desired effect
                     var fCurrentBalance = parseFloat($('[name="CustomerID"] option:selected').data("currentbalance")) || 0;
                     var fCurrentPayable = parseFloat($('#Unpaid').val()) || 0;
                     var fCurrentPaying = parseFloat($('#Paid').val()) || 0;
-                    var duesAfterThisInvoice = ((fCurrentBalance - fCurrentPayable) + fCurrentPaying + fCreditLimit);
+                    var duesAfterThisInvoice = financial((fCurrentBalance - fCurrentPayable) + fCurrentPaying + fCreditLimit);
                     // console.log("fCreditLimit", fCreditLimit);
                     // console.log("fCurrentBalance", fCurrentBalance);
                     // console.log("fCurrentPayable", fCurrentPayable);
@@ -745,6 +744,7 @@ desired effect
                     }
                     else{
                         e.preventDefault();
+                        $("#overlay").hide();
                         $("#CreditLimitExceedMsg").slideDown().text("Credit limit of Rs. " + fCreditLimit + " is crossed. Please pay atleast" + financial(duesAfterThisInvoice));
                         $("#Paid").focus();
                     }
@@ -833,14 +833,15 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('tierweight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="ShopTotalWeight[]" value="'+ $("[name='CylinderID'] option:selected").data('weight') +'" /><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td>' + gasWeight + 'KG</td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight + '</span>KG</td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + financial(($("[name='CylinderID'] option:selected").data('price')) / gasWeight) + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight + '</span>KG</td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + financial(($("[name='CylinderID'] option:selected").data('price')) / gasWeight) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + financial($("[name='CylinderID'] option:selected").data('price')) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" ><i class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " .CurrentGasRate.CurrentGasRate" + i).val(<?php echo RETAIL_GAS_RATE; ?>);
             i = i + 1;
+            $(".SalePrice").trigger("keyup");
             gettotal();
             calculateWeights();
         }

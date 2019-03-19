@@ -64,8 +64,8 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 	if($msg == "")
 	{
 		$query3 = "UPDATE sales SET DateModified = '".DATE_TIME_NOW."',
-				Paid=PAID+".(float)$NewPayment.",
-				Unpaid=Unpaid-".(float)($NewPayment).",
+				Paid=PAID+".(float)financials($NewPayment).",
+				Unpaid=Unpaid-".(float)financials($NewPayment).",
 				Note='".dbinput($Note)."'
 				WHERE ID=".$ID."
 				";
@@ -73,8 +73,8 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 		
 		$query3 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',
-				Paid='".(float)$NewPayment."',
-				Unpaid='".(float)($TotalAmount - ($Paid + $NewPayment))."',
+				Paid='".(float)financials($NewPayment)."',
+				Unpaid='".(float)financials($TotalAmount - ($Paid + $NewPayment))."',
 				SaleID=".$ID.",
 				Note = '".dbinput($Note)."'
 				";
@@ -213,7 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Sale ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3><b>Gas Rate: </b><?php $GasRate = $row["GasRate"]; echo $GasRate; ?></h3>
+					<h3><b>Gas Rate: </b><?php $GasRate = $row["GasRate"]; echo financials($GasRate); ?></h3>
 					<h3><b>Invoices: </b>
 						<select id="invoiceid<?php echo $row["ID"]; ?>">
 							<?php
@@ -253,10 +253,10 @@ while($data = mysql_fetch_array($resource)){
 							<tr>
 								<td><?php echo $cou2; ?></td>
 								<td><?php echo $data["BarCode"]; ?></td>
-								<td><?php echo $data["TierWeight"]; ?></td>
-								<td><?php echo $data["TotalWeight"]; ?></td>
-								<td><?php echo ($data["TotalWeight"] - $data["TierWeight"]); ?></td>
-								<td><?php echo $data["Price"]; ?></td>
+								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
+								<td><?php echo financials($data["TotalWeight"]); ?>KG</td>
+								<td><?php echo financials($data["TotalWeight"] - $data["TierWeight"]); ?>KG</td>
+								<td>Rs. <?php echo financials($data["Price"]); ?>/-</td>
 							</tr>
 <?php
 }
@@ -266,8 +266,8 @@ while($data = mysql_fetch_array($resource)){
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><?php echo $__totalGasWeight; ?></td>
-								<td><?php echo $__totalPrice; ?></td>
+								<td><?php echo financials($__totalGasWeight); ?>KG</td>
+								<td>Rs. <?php echo financials($__totalPrice); ?>/-</td>
 							</tr>
 						</table><!-- /.box-body -->
 					</div><!-- /.box-body -->
@@ -286,25 +286,25 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Total Amount</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>" id="TotalAmount">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo financials($row["Total"]); ?>" id="TotalAmount">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Paid</label>
 						<div class="col-md-12">
-                            <input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"] + ($row["Balance"] * $GasRate); ?>" name="Paid" readonly="">
+                            <input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo financials($row["Paid"] + ($row["Balance"] * $GasRate)); ?>" name="Paid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
+							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo financials($row["Unpaid"]); ?>" name="Unpaid" readonly="">
 						</div>
 					</div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">New Payment</label>
 						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the amount paying" value="<?php echo $NewPayment; ?>" max="<?php echo $Unpaid; ?>" name="NewPayment">
+							<input type="number" step="any" class="form-control" placeholder="Enter the amount paying" value="<?php echo financials($NewPayment); ?>" max="<?php echo financials($Unpaid); ?>" name="NewPayment">
 						</div>
 					</div>
                     <div class="form-group">
