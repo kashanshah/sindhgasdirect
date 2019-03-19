@@ -69,7 +69,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
 				Number = "' . dbinput($Number) . '",
 				SendSMS = "' . (int)$SendSMS . '",
-				Balance=Balance-' . (int)$Balance . ',
+				Balance=Balance-' . (float)$Balance . ',
 				Email = "' . dbinput($Email) . '",
 				Address = "' . dbinput($Address) . '",
 				Remarks = "' . dbinput($Remarks) . '",
