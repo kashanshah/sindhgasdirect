@@ -3,10 +3,11 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 $msg='';
-$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User FROM 
+$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User, ct.Wastage FROM 
 cylinder_savings cs LEFT JOIN 
 users p ON p.ID=cs.UserID LEFT JOIN 
 cylinders c ON c.ID=cs.CylinderID LEFT JOIN 
+cylindertypes ct ON ct.ID=c.ID LEFT JOIN 
 roles r ON r.ID=p.RoleID 
 WHERE cs.ID<>0 
 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' AND cs.SaleID = 0' :
@@ -114,7 +115,6 @@ desired effect
                                         <th>Cylinder ID</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
-                                            <th>Shop</th>
                                         <?php } ?>
                                         <th>Saved By</th>
                                         <th>Gas Saved</th>
@@ -127,18 +127,18 @@ desired effect
                                     $TotalGasSaved = 0;
                                     while($row=mysql_fetch_array($resource))
                                     {
-                                        $TotalGasSaved = $TotalGasSaved + $row["Savings"];
+                                        $CurSav = (float)$row["Savings"] - (float)$row["Wastage"];
+                                        $TotalGasSaved = $TotalGasSaved + $CurSav;
                                         ?>
                                         <tr>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
 
                                             <td><?php echo $row["BarCode"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                                <td><?php echo $row["Plant"]; ?></td>
-                                                <td><?php echo $row["Shop"]; ?></td>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["Plant"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["UserRole"]. ': ' . $row["User"]; ?></td>
-                                            <td><?php echo $row["Savings"]; ?> KG</td>
+                                            <td><?php echo financials($CurSav); ?>KG (<?php echo financials($row["Savings"]) . ' - ' . financials($row["Wastage"]); ?>)</td>
                                             <td><?php echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                         </tr>
@@ -147,7 +147,7 @@ desired effect
                                     ?>
                                     </tbody>
                                 </table>
-                                <h3>Total Savings: <?php echo $TotalGasSaved; ?> KG</h3>
+                                <h3>Total Savings: <?php echo financials($TotalGasSaved); ?> KG</h3>
                             </form>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
