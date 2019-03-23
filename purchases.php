@@ -165,11 +165,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td class="text-center">
 							<a class="btn btn-primary btn-xs" href="viewpurchase.php?ID=<?php echo $row["ID"]; ?>">View</a>
 					   <?php
-						if($_SESSION["RoleID"] == ROLE_ID_ADMIN){
-						?>
-							  <?php echo ($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-xs" href="addpaymentpurchase.php?ID='.$row["ID"].'">Add Payment</a>' : ''); ?>
-					   <?php
-						}
                        if($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                            ?>
                            <?php
@@ -186,7 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        }
                            ?>
                            <?php
-                           if ($_SESSION["RoleID"] == ROLE_ID_SHOP || $_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                           if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                                ?>
                                <?php echo($row["Unpaid"] > 0 ? '<a class="btn btn-warning btn-xs" href="addpaymentpurchase.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
                                <?php

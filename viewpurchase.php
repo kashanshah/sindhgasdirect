@@ -172,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="box-header">
                       <div class="btn-group-right">
                           <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_SHOP){
+                          if($_SESSION["RoleID"] == ROLE_ID_SHOP){
                               ?>
                               <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentpurchase.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
                               <?php
@@ -234,7 +234,7 @@ while($data = mysql_fetch_array($resource)){
 	$__totalGasWeight += ($data["TotalWeight"] - $data["TierWeight"]);
 	$__totalPrice += ($data["Price"]);
 ?>
-							<tr>
+							<tr <?php echo $data["CompanyTotalWeight"] == $data["TotalWeight"] ? '' : 'class="bg bg-yellow"'; ?>>
 								<td><?php echo $cou2; ?></td>
 								<td><?php echo $data["BarCode"]; ?></td>
 								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
