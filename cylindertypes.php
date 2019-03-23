@@ -28,7 +28,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT ID, Name, Capacity, Rate, Commercial, DateAdded, DateModified FROM 
+$sql="SELECT ID, Name, Capacity, Wastage, Rate, Commercial, DateAdded, DateModified FROM 
 cylindertypes 
 WHERE ID<>0 ";
 $resource=mysql_query($sql) or die(mysql_error());
@@ -139,6 +139,7 @@ desired effect
                                         <?php } ?>
                                         <th>Name</th>
                                         <th>Capacity</th>
+                                        <th>Wastage</th>
                                         <th>Rate</th>
                                         <th>Date Added</th>
                                         <th>Date Modified</th>
@@ -155,6 +156,7 @@ desired effect
                                             <?php } ?>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <td><?php echo financials($row["Capacity"]); ?> KG</td>
+                                            <td><?php echo financials($row["Wastage"]); ?> KG</td>
                                             <td>Rs. <?php echo financials($row["Rate"]*$row["Capacity"]); ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                             <td><?php echo $row["DateModified"]; ?></td>

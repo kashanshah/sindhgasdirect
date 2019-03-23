@@ -6,6 +6,7 @@ $msg='';
 $ID = "";
 $Rate = 0;
 $Capacity = 0;
+$Wastage = 0;
 $Commercial = 0;
 $Name = "";
 $MethodID = 0;
@@ -19,13 +20,16 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
     else if($Rate == 0 || $Rate == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter correct rates.</div>';
     else if($Capacity == 0 || $Capacity == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter correct capacity.</div>';
+    else if($Wastage == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please enter wastage.</div>';
     if($msg=="")
     {
         mysql_query("INSERT into cylindertypes SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
 						Rate='".(float)($Rate/$Capacity)."',
+						Wastage='".(float)($Wastage)."',
 						Capacity='".(float)$Capacity."',
+						Wastage='".(float)$Wastage."',
 						Commercial='".(int)$Commercial."',
 						Name='".dbinput($Name)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
@@ -163,6 +167,12 @@ desired effect
                                     <label class="col-md-3 control-label" for="Capacity">Capacity (KG)</label>
                                     <div class="col-md-6">
                                         <input type="number" step="any" class="form-control" id="Capacity" value="<?php echo $Capacity;?>" placeholder="Enter Capacity" name="Capacity">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="Wastage">Wastage (KG)</label>
+                                    <div class="col-md-6">
+                                        <input type="number" step="any" class="form-control" id="Wastage" value="<?php echo $Wastage;?>" placeholder="Enter Wastage" name="Wastage">
                                     </div>
                                 </div>
                                 <div class="form-group hidden">
