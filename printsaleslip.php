@@ -86,26 +86,29 @@ th, td { font-size: 8px; }
 							<th colspan="2" style="font-weigt: bold;text-align: left;"><b>Amount</b></th>
 							<th colspan="3" style="text-align: center; font-weigt: bold" ><?php echo financials($row["Total"]); ?></th>
 						  </tr>
+                        <?php
+                        $Adjustment = financials($row["Balance"] * $row["GasRate"]);
+                        ?>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Gas Adjustment</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Balance"] * $row["GasRate"]); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($Adjustment); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Payable</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Total"] -($row["Balance"] * $row["GasRate"])); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials($row["Total"] - $Adjustment); ?></th>
 						  </tr>
 						  <tr>
 							<th colspan="8"  style="text-align: right;">
-								Rupees <?php echo convertNumber(financials($row["Total"] - ($row["Balance"] * $row["GasRate"]), 0)); ?> only
+								Rupees <?php echo convertNumber($row["Total"] - $Adjustment); ?> only
 							</th>
 						  </tr>
 						  <?php
-						  if(($row["Unpaid"] + $row["NewPaid"]) != ($row["Total"] - ($row["Balance"] * $row["GasRate"])))
+						  if((financials($row["Unpaid"] + $row["NewPaid"])) != financials($row["Total"] - $Adjustment))
 						  {
 							  ?>
 						  <tr>
 							<th colspan="5" style="font-weigt: bold;text-align: left;">Amount Paid Before</th>
-							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials(($row["Total"] - $row["Balance"]) - ($row["Paid"] + $row["Unpaid"])); ?></th>
+							<th colspan="3" style="text-align: center;font-weigt: bold" ><?php echo financials(($row["Total"] - $Adjustment) - ($row["Paid"] + $row["Unpaid"])); ?></th>
 						  </tr>
 						  <?php
 						  }
