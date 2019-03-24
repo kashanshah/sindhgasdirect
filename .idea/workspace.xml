@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d23109a9-8739-4d7f-be36-b768877471ed" name="Default Changelist" comment="process update&#10;storage&#10;gas against gas&#10;Send SMS option for all users&#10;function for SendSMS">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/a.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addpaymentsale.php" beforeDir="false" afterPath="$PROJECT_DIR$/addpaymentsale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addpurchase.php" beforeDir="false" afterPath="$PROJECT_DIR$/addpurchase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addsale.php" beforeDir="false" afterPath="$PROJECT_DIR$/addsale.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common.php" beforeDir="false" afterPath="$PROJECT_DIR$/common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customers.php" beforeDir="false" afterPath="$PROJECT_DIR$/customers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/printbarcode.php" beforeDir="false" afterPath="$PROJECT_DIR$/printbarcode.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/printsaleslip.php" beforeDir="false" afterPath="$PROJECT_DIR$/printsaleslip.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchases.php" beforeDir="false" afterPath="$PROJECT_DIR$/purchases.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/returntoshop.php" beforeDir="false" afterPath="$PROJECT_DIR$/returntoshop.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sales.php" beforeDir="false" afterPath="$PROJECT_DIR$/sales.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shops.php" beforeDir="false" afterPath="$PROJECT_DIR$/shops.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,20 +54,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/printsaleslip.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="90">
               <caret line="123" column="139" selection-start-line="123" selection-start-column="139" selection-end-line="123" selection-end-column="139" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/purchases.php">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/dashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="98">
-              <caret line="8" column="48" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="48" />
+            <state relative-caret-position="146">
+              <caret line="343" column="391" selection-start-line="343" selection-start-column="391" selection-end-line="343" selection-end-column="391" />
             </state>
           </provider>
         </entry>
@@ -151,7 +139,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Commercial</find>
       <find>isCommercialCylinder</find>
       <find>if(isCommercialCylinder($CID) == 1)</find>
       <find>exit</find>
@@ -181,6 +168,7 @@
       <find>TotalAmount</find>
       <find>Paid</find>
       <find>amount paid</find>
+      <find>salescha</find>
     </findStrings>
     <replaceStrings>
       <replace>PlantID</replace>
@@ -260,7 +248,6 @@
         <option value="$PROJECT_DIR$/cylindertypes.php" />
         <option value="$PROJECT_DIR$/savings.php" />
         <option value="$PROJECT_DIR$/viewpurchase.php" />
-        <option value="$PROJECT_DIR$/dashboard.php" />
         <option value="$PROJECT_DIR$/purchases.php" />
         <option value="$PROJECT_DIR$/addpurchase.php" />
         <option value="$PROJECT_DIR$/sales.php" />
@@ -272,6 +259,7 @@
         <option value="$PROJECT_DIR$/customers.php" />
         <option value="$PROJECT_DIR$/addpaymentsale.php" />
         <option value="$PROJECT_DIR$/printsaleslip.php" />
+        <option value="$PROJECT_DIR$/dashboard.php" />
       </list>
     </option>
   </component>
@@ -401,7 +389,7 @@
       <workItem from="1552754745017" duration="599000" />
       <workItem from="1553026401165" duration="9203000" />
       <workItem from="1553107920175" duration="3980000" />
-      <workItem from="1553351156230" duration="14299000" />
+      <workItem from="1553351156230" duration="14537000" />
     </task>
     <task id="LOCAL-00001" summary="Error log error removed&#10;Driver menu added&#10;indenting">
       <created>1551041815514</created>
@@ -470,7 +458,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="211095000" />
+    <option name="totallyTimeSpent" value="211333000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
@@ -489,7 +477,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.36482084" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.29641694" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.36970684" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -788,13 +776,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="165" column="94" selection-start-line="165" selection-start-column="86" selection-end-line="165" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leftsidebar.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
@@ -897,8 +878,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/printsaleslip.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
+        <state relative-caret-position="90">
           <caret line="123" column="139" selection-start-line="123" selection-start-column="139" selection-end-line="123" selection-end-column="139" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="343" column="391" selection-start-line="343" selection-start-column="391" selection-end-line="343" selection-end-column="391" />
         </state>
       </provider>
     </entry>

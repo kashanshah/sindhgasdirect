@@ -341,7 +341,7 @@ desired effect
     $Revenue = 0;
     for($dCou=11; $dCou>=0; $dCou--) {
         $dateAdded = date('Y-m', strtotime("-$dCou month"));
-        $salesChart1SQL = mysql_query("SELECT SUM(s.Paid + s.Unpaid) AS Total, '".$dateAdded."' AS month FROM sales s LEFT JOIN users u ON s.PerformedBy=u.ID WHERE DATE_FORMAT(s.DateAdded, '%Y-%m') = '".$dateAdded."' " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND u.PlantID="'.$_SESSION["ID"].'"' : ' AND s.PerformedBy="'.$_SESSION["ID"].'"')) or die(mysql_error());
+        $salesChart1SQL = mysql_query("SELECT SUM(s.Paid + s.Unpaid) AS Total, '".$dateAdded."' AS month FROM sales s LEFT JOIN users u ON s.PerformedBy=u.ID WHERE DATE_FORMAT(s.DateAdded, '%Y-%m') = '".$dateAdded."' " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND u.PlantID="'.$_SESSION["ID"].'"' : ' AND s.PerformedBy="'.$_SESSION["ID"].'"'))) or die(mysql_error());
         $Rs = mysql_fetch_array($salesChart1SQL);
         array_push($salesArr, financials($Rs["Total"]));
         array_push($monthsArr, date('F Y', strtotime(date('Y-m-d', strtotime($Rs["month"])))));
