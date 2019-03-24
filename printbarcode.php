@@ -85,11 +85,13 @@ th, td { font-size: 8px; }
 							<th colspan="5"  style="font-weigt: bold;text-align: left;">Amount Payable</th>
 							<th style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Total"] - $row["Discount"], 2); ?></th>
 						  </tr>
+<!--
 						  <tr>
 							<th colspan="6"  style="text-align: right;">
-								Rupees <?php echo convertNumber($row["Total"] - $row["Discount"]); ?> only
+								Rupees <?php /*echo convertNumber($row["Total"] - $row["Discount"]); */?> only
 							</th>
 						  </tr>
+-->
 						  <tr>
 							<th colspan="5"  style="font-weigt: bold;text-align: left;">Amount Paying</th>
 							<th style="text-align: center;font-weigt: bold" ><?php echo number_format($row["Payment"], 2); ?></th>

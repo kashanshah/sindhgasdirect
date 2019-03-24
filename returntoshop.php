@@ -39,7 +39,7 @@ get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 
 // FOR Amount
 	$Paid = 0;
-	$TotalAmount = 0;
+	$Balance = 0;
 	$Note = "";
 	$CylinderWeight = array();
 		
@@ -59,18 +59,20 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 		$i = 0;
         $totaltmpSaving=0;
 		foreach($CylinderID as $CID){
-			mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
+            mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());
-			mysql_query("UPDATE sale_details SET 
+			mysql_query("UPDATE sale_details SET
 				ReturnDate = '".DATE_TIME_NOW."',
 				ReturnStatus = 1,
-				ReturnWeight='".(int)$CurrentCylinderWeight[$i]."'
+				ReturnWeight='".(float)$CurrentCylinderWeight[$i]."'
 				WHERE SaleID = '".(int)$InvoiceID[$i]."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
-			mysql_query("UPDATE users SET 
+            if(isCommercialCylinder($CID) == 1){
+                mysql_query("UPDATE users SET 
 				Balance = Balance+".((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i])."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
+            }
 			mysql_query("INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID[$i]."',
 				CylinderID='".(int)$CID."',
@@ -78,7 +80,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				Weight='".(float)$CurrentCylinderWeight[$i]."',
 				PerformedBy = '".(int)$CustomerID[$i]."'
 			") or die(mysql_error());
-            $tmpSaving = (int)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID);
+            $tmpSaving = (float)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID);
             $totaltmpSaving = $totaltmpSaving + $tmpSaving;
             if((float)$tmpSaving > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
@@ -234,7 +236,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-12">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-									$r = mysql_query("SELECT ID, BarCode, TierWeight FROM cylinders") or die(mysql_error());
+									$r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders") or die(mysql_error());
 									$n = mysql_num_rows($r);
 									if($n == 0)
 									{
@@ -252,7 +254,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											data-tierweight="<?php echo $Rs["TierWeight"]; ?>" 
 											data-weight="<?php echo $Rs["TierWeight"]; ?>" 
 											BarCode="<?php echo $Rs["BarCode"]; ?>" 
-											data-gasrate="<?php echo getCylinderGasRate($Rs["ID"]); ?>" 
+											data-gasrate="<?php echo getCylinderGasRate($Rs["ID"]); ?>"
+                                            data-capacity="<?php echo financials(getValue('cylindertypes', 'Capacity', 'ID', $Rs["CylinderType"])); ?>"
+                                            data-commercial="<?php echo getValue('cylindertypes', 'Commercial', 'ID', $Rs["CylinderType"]); ?>"
 											value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}
@@ -317,7 +321,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="example-text-input">KGs to be adjusted</label>
 							<div class="col-md-8">
-								<input type="number" step="any" class="form-control" readonly="" name="TotalAmount" value="<?php echo $TotalAmount; ?>" id="TotalAmount">
+								<input type="number" step="any" class="form-control" readonly="" name="TotalBalance" value="<?php echo $TotalBalance; ?>" id="TotalBalance">
 							</div>
 						</div>
 						<div class="form-group">
@@ -402,22 +406,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var cWeight = parseFloat($(this).val());
 			var cTierWeight = parseFloat($("#CylinderTierWeight"+$(this).data("id")).text());
 			$("#CylinderGasWeight"+$(this).data("id")).text((cWeight - cTierWeight).toFixed(2));
-			gt = gt + (parseInt($(this).val()) * (parseInt($(this).parent().parent().find('.CylinderCartPrice').text())));
+			gt = gt + (parseFloat($(this).val()) * (parseFloat($(this).parent().parent().find('.CylinderCartPrice').text())));
 		});
 	}
 	function gettotal()
 	{
 		var gt =0;
-		$('.CylinderPrice').each(function(){
-			gt = gt + parseInt($(this).text());
-		});
-		$(".DivTotal .CartGrandTotal").text(gt);
-		$("#TotalAmount").val(gt);
+		var gtadjustableweight =0;
+		$('.Balance').each(function () {
+            gtadjustableweight = gtadjustableweight + parseFloat($(this).text());
+        });
+		$("#TotalBalance").val(gtadjustableweight);
 	}
 	
-// $('#mainForm').submit(function (e) {
-	// e.preventDefault();
-// });
+$('#mainForm').submit(function (e) {
+    if (!$("#myModal").hasClass("in")) {
+        e.preventDefault();
+        $("#myModal").modal('show');
+    }
+});
 
 $(document).ready(function() {
 	$('#myModal').on('shown.bs.modal', function () {
@@ -449,7 +456,9 @@ $(document).ready(function() {
 		var parEl = $(this).closest("tr");
 		var cylWeight = parseFloat(parEl.find(".CylinderTierWeight").text());
 		var newCylWeight = parseFloat(parEl.find(".CurrentCylinderWeight").val());
-		parEl.find(".CylinderPrice").text(((newCylWeight - cylWeight)).toFixed(2));
+		if(parEl.find(".CurrentCylinderGasWeight").data("commercialcylinder") == 1){
+            parEl.find(".Balance").text(((newCylWeight - cylWeight)).toFixed(2));
+        }
 		parEl.find(".CurrentCylinderGasWeight").text((newCylWeight - cylWeight).toFixed(2));
 		gettotal();
 	});
@@ -476,9 +485,9 @@ $(document).ready(function() {
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="display: none">Rs.<span class="CurrentCylinderGasRate">'+$("[name='CylinderID'] option:selected").data('gasrate')+'</span>/KG<input type="hidden" name="GasRate[]" value="'+$("[name='CylinderID'] option:selected").data('gasrate')+'" /></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="number" step="any" min="'+$("[name='CylinderID'] option:selected").data('tierweight')+'" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight'+i+'" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
-            $(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CylinderPrice CylinderPrice'+i+'">' + (gasWeight * $("[name='CylinderID'] option:selected").data('gasrate')) + '</span></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle"><i  onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');" class="fa fa-times"></i></a></div></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="CurrentCylinderGasWeight" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" id="CurrentCylinderGasWeight'+i+'" >'+gasWeight.toFixed(2)+'</span>KG</td>');
+            $(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="Balance Balance'+i+'">' + (gasWeight * $("[name='CylinderID'] option:selected").data('gasrate')) + '</span></td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');"><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
 			i = i + 1;
 			gettotal();
@@ -512,9 +521,6 @@ $(document).ready(function() {
 			  if ($(this).attr("BarCode") == $("#BarCode").val())
 			  {
 				  $("#CylinderID").val($(this).val());
-					$("#Quantity").val('1');
-					var a = $("#Quantity").val() * $("#Price").val();
-					$("#TotalAmount").val(a);
 					$("#AddItemButton").click();
 			  }
 			});
@@ -522,7 +528,7 @@ $(document).ready(function() {
 		});
 		// $("[name='CylinderID']").change(function () {
 			// var a = $("#Quantity").val() * $("#Price").val();
-			// $("#TotalAmount").val(a);
+			// $("#Balance").val(a);
 		// });
 	});
 		

@@ -167,6 +167,7 @@ desired effect
                                             <td>
                                                 Rs. <?php $Bal = getUserBalance($row["ID"], false); echo abs($Bal); ?>/-
                                             </td>
+                                            <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
                                             <td>
                                                 <?php
                                                 if($Bal < 0){

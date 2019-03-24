@@ -74,7 +74,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 		$query3 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',
 				Paid='".(float)financials($NewPayment)."',
-				Unpaid='".(float)financials($TotalAmount - ($Paid + $NewPayment))."',
+				Unpaid='".(float)financials($TotalAmount - ($Paid + $Adjustment + $NewPayment))."',
 				SaleID=".$ID.",
 				Note = '".dbinput($Note)."'
 				";
@@ -85,14 +85,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 			Sale payment has been added!
 			</div>';
-		if($Print == "1")
-		{
-			echo '<script>window.open("printsaleslip.php?ID='.$SaleAmountID.'", "_blank"); </script>';
-			exit();
-		}
-		else{
-			redirect("sales.php");
-		}
+        redirect("viewsale.php?ID=".$ID);
 	}
 		$_SESSION["msg"] = $msg;
 }
@@ -290,11 +283,17 @@ while($data = mysql_fetch_array($resource)){
 						</div>
 					</div>
                     <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Amount Paid</label>
-						<div class="col-md-12">
-                            <input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo financials($row["Paid"] + ($row["Balance"] * $GasRate)); ?>" name="Paid" readonly="">
-						</div>
-					</div>
+                        <label class="col-md-12" for="example-text-input">Amount Adjustment</label>
+                        <div class="col-md-12">
+                            <input type="number" step="any" class="form-control" placeholder="Amount Adjusted with Balanced KGs" value="<?php echo financials($row["Balance"] * $row["GasRate"]); ?>" name="Adjustment" readonly="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12" for="example-text-input">Amount Paid</label>
+                        <div class="col-md-12">
+                            <input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo financials($row["Paid"]); ?>" name="Paid" readonly="">
+                        </div>
+                    </div>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">

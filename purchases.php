@@ -6,7 +6,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_PLANT));
 if(isset($_REQUEST['DID']))
 {
     if($_SESSION["RoleID"] == ROLE_ID_SHOP){
-        mysql_query("UPDATE users SET Balance=Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "") or die('a'.mysql_error());
+        mysql_query("UPDATE users SET Balance = Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "") or die('a'.mysql_error());
         mysql_query("DELETE FROM purchases WHERE ID = " . $_REQUEST['DID'] . "") or die('b'.mysql_error());
         mysql_query("DELETE FROM purchase_details WHERE PurchaseID = " . $_REQUEST['DID'] . "") or die('c'.mysql_error());
         mysql_query("DELETE FROM cylinderstatus WHERE InvoiceID = " . $_REQUEST['DID'] . "") or die('d'.mysql_error());

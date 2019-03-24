@@ -76,7 +76,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				";
 		mysql_query($query3) or die(mysql_error());
 		$InvoiceID = mysql_insert_id();
-		mysql_query("UPDATE users SET Balance=Balance-".(int)$Balance." WHERE ID=".$_SESSION["ID"]) or die(mysql_error());
+		mysql_query("UPDATE users SET Balance = Balance-".(int)$Balance." WHERE ID=".$_SESSION["ID"]) or die(mysql_error());
 		mysql_query("UPDATE purchases SET RefNum='".generate_refno($InvoiceID)."' WHERE ID=".$InvoiceID);
 		$i = 0;
         $totaltmpSaving = 0;

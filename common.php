@@ -414,7 +414,8 @@ function get_right($ID)
 
 function getValue($Table, $Col, $Key, $Val)
 {
-    $r = mysql_query("SELECT " . dbinput($Col) . " FROM " . dbinput($Table) . " WHERE " . dbinput($Key) . "='" . dbinput($Val) . "'");
+    $quer = "SELECT " . dbinput($Col) . " FROM " . dbinput($Table) . " WHERE " . dbinput($Key) . "='" . dbinput($Val) . "'";
+    $r = mysql_query($quer);
     if (mysql_num_rows($r) > 0) {
         $res = mysql_fetch_array($r);
         $ans = $res[dbinput($Col)];
@@ -816,8 +817,7 @@ function getCurrentStatus($ID)
     return $ret;
 }
 
-function getCylinderGasRate($ID)
-{
+function getCylinderGasRate($ID){
     $res = mysql_query("SELECT cs.*, sd.GasRate FROM cylinderstatus cs LEFT JOIN sale_details sd ON cs.InvoiceID=sd.SaleID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
@@ -825,6 +825,18 @@ function getCylinderGasRate($ID)
     } else {
         $Rs = mysql_fetch_assoc($res);
         $ret = $Rs['GasRate'];
+    }
+    return $ret;
+}
+
+function isCommercialCylinder($ID){
+    $res = mysql_query("SELECT ct.Commercial FROM cylindertypes ct LEFT JOIN cylinders c ON c.CylinderType = ct.ID WHERE c.ID = " . (int)$ID . " ORDER BY c.ID DESC LIMIT 1") or die(mysql_error());
+    $ret = 0;
+    if (mysql_num_rows($res) == 0) {
+        $ret = 0;
+    } else {
+        $Rs = mysql_fetch_assoc($res);
+        $ret = (int)$Rs['Commercial'];
     }
     return $ret;
 }
@@ -908,7 +920,7 @@ function getCylinderPurchaseRate($ID)
     return $ret;
 }
 
-function getUserBalance($ID, $AddBalance=true){
+function getUserBalance($ID, $AddBalance=false){
     $TotalUnpaid = 0;
     if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_SHOP){
         $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =".(int)$ID;

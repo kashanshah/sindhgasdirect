@@ -173,14 +173,16 @@ desired effect
                                                             <a onClick='slideToggle("#invoices<?php echo $row["ID"]; ?>")'>View Invoices</a>
                                                             <?php
                                                         }
+                                                        ?>
+                                                        <div id="invoices<?php echo $row["ID"]; ?>" style="display: none;">
+                                                        <?php
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>
-                                                            <div id="invoices<?php echo $row["ID"]; ?>" style="display: none;">
                                                                 <a href="viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
-                                                            </div>
                                                             <?php
                                                         }
                                                         ?>
+                                                        </div>
                                                     </div>
                                                     <?php
                                                 }

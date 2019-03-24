@@ -6,7 +6,7 @@ $msg = '';
 if (isset($_REQUEST['DID'])) {
     if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
 
-        mysql_query("UPDATE users SET Balance=Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "");
+        mysql_query("UPDATE users SET Balance = Balance+" . (int)$_REQUEST['Balance'] . " WHERE ID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sales WHERE ID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sales_amount WHERE SaleID = " . $_REQUEST['DID'] . "");
         mysql_query("DELETE FROM sale_details WHERE SaleID = " . $_REQUEST['DID'] . "");

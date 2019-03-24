@@ -69,7 +69,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				RoleID = "' . ROLE_ID_CUSTOMER . '",
 				Number = "' . dbinput($Number) . '",
 				SendSMS = "' . (int)$SendSMS . '",
-				Balance=Balance-' . (float)financials($Balance ). ',
+				Balance = Balance-' . (float)financials($Balance). ',
 				Email = "' . dbinput($Email) . '",
 				Address = "' . dbinput($Address) . '",
 				Remarks = "' . dbinput($Remarks) . '",
@@ -347,7 +347,7 @@ desired effect
                                             $r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'") or die(mysql_error());
                                             $n = mysql_num_rows($r);
                                             if ($n == 0) {
-                                                echo '<option value="0">No Cylinder Added</option>';
+//                                                echo '<option value="0">No Cylinder Added</option>';
                                             } else {
                                                 while ($Rs = mysql_fetch_assoc($r)) {
                                                     if (getCurrentStatus($Rs["ID"]) == ROLE_ID_SHOP && getCurrentHandedTo($Rs["ID"]) == $_SESSION["ID"]) {
@@ -681,18 +681,22 @@ desired effect
     function gettotal() {
         var gt = 0;
         var gtweight = 0;
+        var gtadjustableweight = 0;
         $('.SalePrice').each(function () {
             gt = gt + parseFloat($(this).val());
         });
         $('.CylinderCapacity').each(function () {
             gtweight = gtweight + parseFloat($(this).val());
         });
+        $('.SalePrice[data-commercialcylinder="1"]').each(function () {
+            gtadjustableweight = gtadjustableweight + parseFloat($(this).val());
+        });
         var RETAIL_GAS_RATE = gt/gtweight;
         // console.log(gt, RETAIL_GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(financial(gt));
-        if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat($("#TotalAmount").val())) {
-            $("#Balance").val(financial($("#TotalAmount").val()/RETAIL_GAS_RATE));
+        if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat(gtadjustableweight)) {
+            $("#Balance").val(financial(gtadjustableweight/RETAIL_GAS_RATE));
             $("#Unpaid").val(financial(0));
         } else {
             $("#Balance").val(financial($("#Balance").attr("data-balance")));
@@ -737,11 +741,11 @@ desired effect
                     var fCurrentPayable = parseFloat($('#Unpaid').val()) || 0;
                     var fCurrentPaying = parseFloat($('#Paid').val()) || 0;
                     var duesAfterThisInvoice = financial((fCurrentBalance - fCurrentPayable) + fCurrentPaying + fCreditLimit);
-                    // console.log("fCreditLimit", fCreditLimit);
-                    // console.log("fCurrentBalance", fCurrentBalance);
-                    // console.log("fCurrentPayable", fCurrZentPayable);
-                    // console.log("fCurrentPaying", fCurrentPaying);
-                    // console.log("duesAfterThisInvoice", duesAfterThisInvoice);
+                    console.log("fCreditLimit", fCreditLimit);
+                    console.log("fCurrentBalance", fCurrentBalance);
+                    console.log("fCurrentPayable", fCurrentPayable);
+                    console.log("fCurrentPaying", fCurrentPaying);
+                    console.log("duesAfterThisInvoice", duesAfterThisInvoice);
                     if(duesAfterThisInvoice >= 0){
                        $('#mainForm').trigger('submit', {'submit': true});
                     }
@@ -839,7 +843,7 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="hidden" name="CylinderCapacity[]" class="CylinderCapacity CylinderCapacity' + i + '" value="'+$("[name='CylinderID'] option:selected").data('capacity')+'" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" /><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + financial(($("[name='CylinderID'] option:selected").data('price')) / gasWeight) + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + financial($("[name='CylinderID'] option:selected").data('price')) + '" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + financial($("[name='CylinderID'] option:selected").data('price')) + '" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" ><i class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " .CurrentGasRate.CurrentGasRate" + i).val(<?php echo RETAIL_GAS_RATE; ?>);
