@@ -180,12 +180,8 @@ desired effect
                             <div class="box-header text-right">
                                 <div class="btn-group-right">
                                     <a style="margin-right:15px;"
-                                            href="addpurchase.php"
-                                            class="btn btn-group-vertical btn-info">Reset
-                                    </a>
-                                    <a style="margin-right:15px;"
                                             class="btn btn-group-vertical btn-danger"
-                                            href="purchases.php">Back
+                                            href="viewpurchase.php?ID=<?php echo $ID; ?>">Back
                                     </a>
                                 </div>
                             </div>
