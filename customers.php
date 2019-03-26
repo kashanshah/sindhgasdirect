@@ -26,7 +26,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.SecurityDeposite, u.Balance, u.SendSMS, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
+$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.SecurityDeposite, u.Balance, u.SendSMS, u.Commercial, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -137,6 +137,7 @@ desired effect
                                         <?php } ?>
                                         <th>Address</th>
                                         <th>Contact Number</th>
+                                        <th>Commercial</th>
                                         <th>Alerts</th>
                                         <th>Unpaid</th>
                                         <th>Gas Balance</th>
@@ -158,6 +159,7 @@ desired effect
                                             <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
+                                            <td><?php echo $row["Commercial"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td>
                                                 Rs. <?php $Bal = getUserBalance($row["ID"], false); echo financials($Bal).'/-'; ?>

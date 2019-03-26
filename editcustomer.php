@@ -4,7 +4,7 @@ get_right(array(ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";
-$Name = "";				$Number = "";			$SendSMS = 1;
+$Name = "";				$Number = "";			$SendSMS = 1;           $Commercial = 0;
 $Address = "";          $CreditLimit = 0;       $SecurityDeposite = 0;
 $Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
@@ -47,6 +47,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Name='".dbinput($Name)."',
 						Number='".dbinput($Number)."',
 						SendSMS='".(int)$SendSMS."',
+						Commercial='".(int)$Commercial."',
 						CreditLimit='".(float)$CreditLimit."',
 						SecurityDeposite='".(float)$SecurityDeposite."',
 						Address='".dbinput($Address)."',
@@ -256,6 +257,13 @@ desired effect
                                     <label class="col-md-3 control-label" for="example-text-input">Contact Number</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="example-text-input" value="<?php echo $Number;?>" placeholder="Enter Contact Number" name="Number">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="Commercial" <?php echo ($Commercial == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="Commercial" <?php echo ($Commercial == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
                                 <div class="form-group">
