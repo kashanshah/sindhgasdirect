@@ -28,7 +28,7 @@ if(isset($_REQUEST['DID']))
     redirect($self);
 }
 
-$sql="SELECT ID, Name, Capacity, Wastage, Rate, Commercial, DateAdded, DateModified FROM 
+$sql="SELECT ID, Name, Capacity, Wastage, Rate, DateAdded, DateModified FROM 
 cylindertypes 
 WHERE ID<>0 ";
 $resource=mysql_query($sql) or die(mysql_error());

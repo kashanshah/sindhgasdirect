@@ -7,7 +7,6 @@ $ID = "";
 $Rate = 0;
 $Capacity = 0;
 $Wastage = 0;
-$Commercial = 0;
 $Name = "";
 $MethodID = 0;
 $DateAdded = "";
@@ -30,7 +29,6 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
 						Wastage='".(float)($Wastage)."',
 						Capacity='".(float)$Capacity."',
 						Wastage='".(float)$Wastage."',
-						Commercial='".(int)$Commercial."',
 						Name='".dbinput($Name)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
 						") or die(mysql_error());
@@ -173,17 +171,6 @@ desired effect
                                     <label class="col-md-3 control-label" for="Wastage">Wastage (KG)</label>
                                     <div class="col-md-6">
                                         <input type="number" step="any" class="form-control" id="Wastage" value="<?php echo $Wastage;?>" placeholder="Enter Wastage" name="Wastage">
-                                    </div>
-                                </div>
-                                <div class="form-group hidden">
-                                    <label class="col-md-3 control-label" for="Commercial">Commercial?</label>
-                                    <div class="col-md-6">
-                                        <input type="radio" value="1"
-                                               name="Commercial" <?php echo($Commercial == "1" ? 'checked=""' : '') ?>>
-                                        Yes
-                                        <input type="radio" value="0"
-                                               name="Commercial" <?php echo($Commercial == "0" ? 'checked=""' : '') ?>>
-                                        No
                                     </div>
                                 </div>
                                 <?php if(CAPTCHA_VERIFICATION == 1) { ?>
