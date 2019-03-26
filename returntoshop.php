@@ -68,7 +68,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				ReturnStatus = 1,
 				ReturnWeight='".(float)$CurrentCylinderWeight[$i]."'
 				WHERE SaleID = '".(int)$InvoiceID[$i]."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
-            if(isCommercialCylinder($CID) == 1){
+            if(isCommercialUser($CustomerID[$i]) == 1){
                 mysql_query("UPDATE users SET 
 				Balance = Balance+".((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i])."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
@@ -256,7 +256,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											BarCode="<?php echo $Rs["BarCode"]; ?>" 
 											data-gasrate="<?php echo getCylinderGasRate($Rs["ID"]); ?>"
                                             data-capacity="<?php echo financials(getValue('cylindertypes', 'Capacity', 'ID', $Rs["CylinderType"])); ?>"
-                                            data-commercial="<?php echo getValue('cylindertypes', 'Commercial', 'ID', $Rs["CylinderType"]); ?>"
+                                            data-commercial="<?php echo isCommercialUser(getCurrentHandedTo($Rs["ID"])); ?>"
 											value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}

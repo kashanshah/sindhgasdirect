@@ -829,8 +829,8 @@ function getCylinderGasRate($ID){
     return $ret;
 }
 
-function isCommercialCylinder($ID){
-    $res = mysql_query("SELECT ct.Commercial FROM cylindertypes ct LEFT JOIN cylinders c ON c.CylinderType = ct.ID WHERE c.ID = " . (int)$ID . " ORDER BY c.ID DESC LIMIT 1") or die(mysql_error());
+function isCommercialUser($ID){
+    $res = mysql_query("SELECT Commercial FROM users WHERE ID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
         $ret = 0;

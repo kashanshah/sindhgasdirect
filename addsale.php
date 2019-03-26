@@ -356,7 +356,6 @@ desired effect
                                                                 data-weight="<?php echo financials(getCurrentPurchaseWeight($Rs["ID"])); ?>"
                                                                 data-price="<?php echo financials(getCylinderRate($Rs["CylinderType"])); ?>"
                                                                 data-capacity="<?php echo financials(getValue('cylindertypes', 'Capacity', 'ID', $Rs["CylinderType"])); ?>"
-                                                                data-commercial="<?php echo getValue('cylindertypes', 'Commercial', 'ID', $Rs["CylinderType"]); ?>"
                                                                 BarCode="<?php echo $Rs["BarCode"]; ?>"
                                                                 value="<?php echo $Rs['ID']; ?>"
                                                             <?php echo ($CylinderID == $Rs['ID'] ? 'selected=""' : ''); ?>>
@@ -498,7 +497,7 @@ desired effect
                                                 <div class="col-md-8">
                                                     <select class="form-control" name="CustomerID" style="width: 100%;">
                                                         <?php
-                                                        $r = mysql_query("SELECT ID, Name, CreditLimit FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
+                                                        $r = mysql_query("SELECT ID, Name, CreditLimit, Commercial FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
                                                         if ($n == 0) {
                                                             echo '<option value="0">No Customer Added</option>';
@@ -508,6 +507,7 @@ desired effect
                                                                 <option
                                                                         data-currentbalance="<?php echo financials(getUserBalance($Rs["ID"])); ?>"
                                                                         data-creditlimit="<?php echo financials($Rs["CreditLimit"]); ?>"
+                                                                        data-commercial="<?php echo (int)$Rs["Commercial"]; ?>"
                                                                         value="<?php echo $Rs['ID']; ?>" <?php echo $CustomerID == $Rs['ID'] ? 'Selected=""' : ''; ?>><?php echo $Rs['Name']; ?></option>
                                                             <?php }
                                                         }
@@ -688,19 +688,25 @@ desired effect
         $('.CylinderCapacity').each(function () {
             gtweight = gtweight + parseFloat($(this).val());
         });
-        $('.SalePrice[data-commercialcylinder="1"]').each(function () {
+        $('.SalePrice').each(function () {
             gtadjustableweight = gtadjustableweight + parseFloat($(this).val());
         });
         var RETAIL_GAS_RATE = gt/gtweight;
         // console.log(gt, RETAIL_GAS_RATE);
         $("#TotalAmount").val(gt);
         $("#Unpaid").val(financial(gt));
-        if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat(gtadjustableweight)) {
-            $("#Balance").val(financial(gtadjustableweight/RETAIL_GAS_RATE));
-            $("#Unpaid").val(financial(0));
-        } else {
-            $("#Balance").val(financial($("#Balance").attr("data-balance")));
-            $("#Unpaid").val(financial((gt/RETAIL_GAS_RATE - parseFloat($("#Balance").val()))*RETAIL_GAS_RATE));
+        if($('[name="CustomerID"] option:selected').data("commercial") == "1"){
+            if ((parseFloat($("#Balance").attr("data-balance")) * RETAIL_GAS_RATE) > parseFloat(gtadjustableweight)) {
+                $("#Balance").val(financial(gtadjustableweight/RETAIL_GAS_RATE));
+                $("#Unpaid").val(financial(0));
+            } else {
+                $("#Balance").val(financial($("#Balance").attr("data-balance")));
+                $("#Unpaid").val(financial((gt/RETAIL_GAS_RATE - parseFloat($("#Balance").val()))*RETAIL_GAS_RATE));
+            }
+        }
+        else{
+            $("#Balance").val(0);
+            $("#Unpaid").val(financial(gt));
         }
         $("#Paid").attr("max", $("#Unpaid").val());
     }
@@ -841,9 +847,9 @@ desired effect
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="hidden" name="ShopTotalWeight[]" value="'+ $("[name='CylinderID'] option:selected").data('weight') +'" /><span id="CylinderGasWeight' + i + '">' + $("[name='CylinderID'] option:selected").data('weight') + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td>' + gasWeight + 'KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" min="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" name="CurrentCylinderWeight[]" class="CurrentCylinderWeight CurrentCylinderWeight' + i + '" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="hidden" name="CylinderCapacity[]" class="CylinderCapacity CylinderCapacity' + i + '" value="'+$("[name='CylinderID'] option:selected").data('capacity')+'" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" /><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight + '</span>KG</td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="hidden" name="CylinderCapacity[]" class="CylinderCapacity CylinderCapacity' + i + '" value="'+$("[name='CylinderID'] option:selected").data('capacity')+'" /><span class="CurrentCylinderGasWeight" id="CurrentCylinderGasWeight' + i + '" >' + gasWeight + '</span>KG</td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td class="hidden"><input type="number" step="any" class="CurrentGasRate CurrentGasRate' + i + '" value="' + financial(($("[name='CylinderID'] option:selected").data('price')) / gasWeight) + '" /></td>');
-            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + financial($("[name='CylinderID'] option:selected").data('price')) + '" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" /></td>');
+            $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><input type="number" step="any" name="SalePrice[]" class="SalePrice SalePrice' + i + '" required="" value="' + financial($("[name='CylinderID'] option:selected").data('price')) + '" /></td>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + "").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder' + $("[name='CylinderID']").val() + '\');" ><i class="fa fa-times"></i></a></div></td>');
             $(".cart_table").append('</tr>');
             $(".cart_table .DivCartCylinder" + $("[name='CylinderID']").val() + " .CurrentGasRate.CurrentGasRate" + i).val(<?php echo RETAIL_GAS_RATE; ?>);
