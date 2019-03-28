@@ -151,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Date Manufacturing</th>
                         <th>Date Added</th>
                           <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_PLANT) {
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) {
                               ?>
                               <th></th>
                               <?php
@@ -185,12 +185,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td><?php echo $row["ManufacturingDate"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
                           <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_PLANT){
+                          if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){
                               ?>
                               <td>
                                   <div class="btn-group">
+                                      <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                          <a class="btn btn-xs btn-primary" href="viewjourney.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
+                                      <?php } ?>
+                                      <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                       <a class="btn btn-xs btn-warning" href="editcylinder.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
                                       <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                      <?php } ?>
                                   </div>
                               </td>
                           <?php

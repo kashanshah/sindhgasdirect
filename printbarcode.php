@@ -8,7 +8,7 @@ $row=mysql_fetch_array($resource);
 ?>
 <body onload="window.print()">
 <style>
-* { font-size: 10px; }
+* { font-size: 10px;font-family: 'Calibri', Sans-Serif; }
 th, td { font-size: 8px; }
 	table.bordered { border:1px solid #ccc;border-collapse:collapse; }
 	table.bordered tr { border:1px solid #ccc; }
