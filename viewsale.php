@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Sale ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3 class=""><b>Gas Rate: </b><?php echo financials($row["GasRate"]); ?></h3>
+					<h3 class="hidden"><b>Gas Rate: </b><?php echo financials($row["GasRate"]); ?></h3>
 					<h3><b>Invoices: </b>
 						<select id="invoiceid<?php echo $row["ID"]; ?>">
 							<?php
