@@ -3,8 +3,6 @@
 get_right(array(1));
 $DateAddedFrom = "";
 $DateAddedTo = "";
-$sql="SELECT s.ID, s.Total, s.Discount, s.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified, u.Name, u.NIC, u.Number, u.Address, u.Email, u.Remarks, u.DateAdded, u.Remarks s.Discount, s.Total, sa.Paid, s.Unpaid, s.Note, s.DateAdded, s.DateModified FROM sales s users u ON u.ID = s.CustomerID WHERE s.ID <>0 AND (s.DateAdded BETWEEN '".$DateAddedFrom."' AND '".$DateAddedTo."')";
-$resource=mysql_query($sql) or die(mysql_error());
 
 ?>
 <!DOCTYPE html>
@@ -77,80 +75,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Admins
-            <small>View Admins</small>
+            Reports
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Admins</li>
+            <li class="active">Reports</li>
           </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
           <div class="row">
-            <div class="col-xs-12">
+            <div class="">
               <!-- /.box -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
-              <div class="box">
-                <div class="box-header">
-                      <div class="btn-group-right">
-                       <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addadmin.php'" data-original-title="" title="">Add New</button>
-						<button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
-                      </div>
-                </div><!-- /.box-header -->
-                <div class="box-body table-responsive">
-				<form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
-                  <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-                        <th>Username</th>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Address</th>
-                        <th>Contact Number</th>
-                        <th>Remarks</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-		<tbody>
-<?php while($row=mysql_fetch_array($resource))
-{
-	?>
-                      <tr>
-                        <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
-                        <td><?php echo $row["Username"]; ?></td>
-                        <td><?php echo $row["Name"]; ?></td>
-                        <td><?php echo $row["Role"]; ?></td>
-                        <td><?php echo $row["Address"]; ?></td>
-                        <td><?php echo $row["Number"]; ?></td>
-                        <td><?php echo $row["Remarks"]; ?></td>
-                        <td>
-							<div class="btn-group">
-							  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-								<span class="caret"></span>
-								<span class="sr-only">Toggle Dropdown</span>
-							  </button>
-							  <ul class="dropdown-menu" role="menu">
-								<li><a href="viewadmin.php?ID=<?php echo $row["ID"]; ?>">View Profile</a></li>
-								<li><a href="editadmin.php?ID=<?php echo $row["ID"]; ?>">Edit</a></li>
-								<li class="divider"></li>
-								<li><a href="printadmin.php?ID=<?php echo $row["ID"]; ?>" target="_blank">Print Profile</a></li>
-								<li class="divider"></li>
-								<li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a></li>
-							  </ul>
-							</div>
-						</td>
-                      </tr>
-<?php }
-	?>
-                    </tbody>
-                  </table>
-				  </form>
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <a href="reports_cylinders.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-red"><i class="fa fa-cubes"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Cylinders Report</span>
+                                <span class="info-box-text"><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'")); ?> Cylinder(s)</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <a href="reports_users.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-blue"><i class="fa fa-users"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Users Report</span>
+                                <span class="info-box-text"><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM users WHERE ID <> 0")); ?> Cylinder(s)</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->

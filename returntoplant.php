@@ -75,8 +75,11 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				PerformedBy = '".(int)$CustomerID[$i]."',
 				IssuedTo = '".(int)$_SESSION["ID"]."',
 				Note = '".dbinput($Note)."'") or die(mysql_error());
+
+            $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
+            $Wastage = (int)getValue('cylindertypes', 'Wastage', 'ID', $CType);
             mysql_query("UPDATE users SET 
-				Balance = Balance+".((float)((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]))."
+				Balance = Balance+".financials((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i]  - $Wastage)."
 				WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
             mysql_query("UPDATE cylinders SET DateModified = '".DATE_TIME_NOW."',
 				Status=0 WHERE ID='".(int)$CID."'") or die(mysql_error());

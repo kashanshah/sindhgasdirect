@@ -135,6 +135,7 @@ desired effect
                                         ?>
                                         <th>BarCode</th>
                                         <th>Short Description</th>
+                                        <th>Cylinder Type</th>
                                         <th>Tier Weight (KG)</th>
                                         <th>Current Weight (KG)</th>
                                         <th>Current Gas Weight (KG)</th>
@@ -165,6 +166,7 @@ desired effect
                                                 ?>
                                                 <td><?php echo $row["BarCode"]; ?></td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
+                                                <td><?php echo getValue('cylindertypes', 'Name', 'ID', $row["CylinderType"]).' - '.getValue('cylindertypes', 'Capacity', 'ID', $row["CylinderType"]).'KG | Wastage: '.getValue('cylindertypes', 'Wastage', 'ID', $row["CylinderType"]); ?>KG</td>
                                                 <td><?php echo $row["TierWeight"]; ?></td>
                                                 <td><?php echo getCurrentWeight($row["ID"]); ?></td>
                                                 <td><?php echo getCurrentWeight($row["ID"]) - $row["TierWeight"]; ?></td>

@@ -44,6 +44,10 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "payments.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpayment.php") ? 'active' : ''); ?>"><a href="payments.php"><i class="fa fa-dollar"></i>Payments</a></li>
                 <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "reports.php") ? 'active' : ''); ?>">
+                    <a href="reports.php"><i class="fa fa-newspaper-o"></i> <span>Reports</span></a>
+                </li>
+                <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "config.php") ? 'active' : ''); ?>">
                     <a href="config.php"><i class="fa fa-gear"></i> <span>Configurations</span></a>
                 </li>

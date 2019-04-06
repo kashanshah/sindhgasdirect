@@ -150,7 +150,7 @@ desired effect
                         <section class="content">
                             <div class="row">
                                 <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
                                         <div class="info-box">
                                             <span class="info-box-icon bg-yellow"><i class="fa  fa-cubes"></i></span>
                                             <div class="info-box-content">
@@ -159,12 +159,21 @@ desired effect
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
                                         <div class="info-box">
                                             <span class="info-box-icon bg-blue"><i class="fa fa-star"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Total Gas Savings Today</span>
-                                                <span class="info-box-number"><?php echo @(int)mysql_result(mysql_query("SELECT SUM(cs.Savings - ct.Wastage) AS Savings FROM cylinder_savings cs LEFT JOIN cylinders c ON c.ID=cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE DATE_FORMAT(cs.DateAdded, '%Y-%m-%d') >= '" . date('Y-m-d') . "' " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND c.PlantID='.$_SESSION["ID"] : '')), 0); ?>KGs</span>
+                                                <span class="info-box-number"><?php echo @(int)mysql_result(mysql_query("SELECT SUM(cs.Savings) AS Savings FROM cylinder_savings cs LEFT JOIN cylinders c ON c.ID=cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE DATE_FORMAT(cs.DateAdded, '%Y-%m-%d') >= '" . date('Y-m-d') . "' " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND c.PlantID='.$_SESSION["ID"] : '')), 0); ?>KGs</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-red"><i class="fa fa-star"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Gas Wastage Today</span>
+                                                <span class="info-box-number"><?php echo @(int)mysql_result(mysql_query("SELECT SUM(ct.Wastage) AS Wastage FROM cylinder_savings cs LEFT JOIN cylinders c ON c.ID=cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE DATE_FORMAT(cs.DateAdded, '%Y-%m-%d') >= '" . date('Y-m-d') . "' " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND c.PlantID='.$_SESSION["ID"] : '')), 0); ?>KGs</span>
                                             </div>
                                         </div>
                                     </div>
