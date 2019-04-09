@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 $DateAddedFrom = "";
 $DateAddedTo = "";
 
@@ -89,7 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="">
               <!-- /.box -->
 <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
-                <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12">
                     <a href="reports_cylinders.php">
                         <div class="info-box">
                             <span class="info-box-icon bg-red"><i class="fa fa-cubes"></i></span>
@@ -100,13 +100,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12">
                     <a href="reports_users.php">
                         <div class="info-box">
-                            <span class="info-box-icon bg-blue"><i class="fa fa-users"></i></span>
+                            <span class="info-box-icon bg-yellow"><i class="fa fa-users"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-number">Users Report</span>
                                 <span class="info-box-text"><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM users WHERE ID <> 0")); ?> Cylinder(s)</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a href="reports_inventory.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Inventory</span>
+                                <span class="info-box-text">View Inventory Report</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a href="reports_sales.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-purple"><i class="fa fa-cart-plus"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Sales</span>
+                                <span class="info-box-text">View Sales Report</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a href="reports_purchases.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-blue"><i class="fa fa-cart-arrow-down"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Purchases</span>
+                                <span class="info-box-text">View Purchase Report</span>
                             </div>
                         </div>
                     </a>

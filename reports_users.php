@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(1, 2));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 $ReportName = "Users Report";
 $BalanceFrom = "";
 $BalanceTo = "";
@@ -12,8 +12,8 @@ $CreditTo = "";
 $CreditLimitFrom = "";
 $CreditLimitTo = "";
 $Status = "";
-$PlantID = array();
-$ShopID = array();
+$PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : array($_SESSION["PlantID"]));
+$ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 
 $Headings = "";
 $HeadID = array();
@@ -39,6 +39,7 @@ $sql = "SELECT u.ID, u.Username, u.Password, u.RoleID, r.Name AS Role, u.Name, u
     ($CreditLimitTo != "" ? " AND u.CreditLimit <= '" . $CreditLimitTo ."' " : " ") .
     (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
     (!empty($ShopID) ? " AND u.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
+    ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND u.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
 
@@ -213,7 +214,7 @@ desired effect
                                         <input name="Commercial" value="0" type="radio" <?php echo $Commercial == "0" ? 'checked' : ''; ?> /> Domestic
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : 'hidden'; ?>">
                                     <label class="control-label">Plant(s)</label>
                                     <div class="">
                                         <select name="PlantID[]" id="PlantID" class="form-control select2" multiple
@@ -233,7 +234,7 @@ desired effect
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 <?php echo ($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : 'hidden'; ?>">
                                     <label class="control-label">Shop(s)</label>
                                     <div class="">
                                         <select name="ShopID[]" id="ShopID" class="form-control select2" multiple

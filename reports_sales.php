@@ -1,15 +1,13 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$ReportName = "Cylinders Report";
-$TierWeightFrom = "";
-$TierWeightTo = "";
-$CylinderType = array();
-$ManufacturingDateFrom = "";
-$ManufacturingDateTo = "";
-$ExpiryDateFrom = "";
-$ExpiryDateTo = "";
+$ReportName = "Sales Report";
+$TotalFrom = "";
+$TotalTo = "";
+$DateAddedFrom = "";
+$DateAddedTo = "";
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : array($_SESSION["PlantID"]));
+$ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 $Headings = "";
 $HeadID = array();
 $SortBy = "p.ID";
@@ -22,15 +20,14 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT c.ID, c.BarCode, c.Description, c.ShortDescription, c.TierWeight, ct.Name AS CylinderType, c.ManufacturingDate, c.ExpiryDate, c.PlantID, p.Name AS Plant FROM cylinders c LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = c.PlantID WHERE c.ID <> 0 " .
-    ($TierWeightFrom != "" ? " AND c.TierWeight >= " . $TierWeightFrom : " ") .
-    ($TierWeightTo != "" ? " AND c.TierWeight <= " . $TierWeightTo : " ") .
-    (!empty($CylinderType) ? " AND c.CylinderType IN (" . implode(",", $CylinderType) . ") " : " ") .
-    ($ManufacturingDateFrom != "" ? " AND c.ManufacturingDate >= '" . $ManufacturingDateFrom. "' " : " ") .
-    ($ManufacturingDateTo != "" ? " AND c.ManufacturingDate <= '" . $ManufacturingDateTo. "' " : " ") .
-    ($ExpiryDateFrom != "" ? " AND c.ExpiryDate >= '" . $ExpiryDateFrom. "' " : " ") .
-    ($ExpiryDateTo != "" ? " AND c.ExpiryDate <= '" . $ExpiryDateTo ."' " : " ") .
-    (!empty($PlantID) ? " AND c.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
+    ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
+    ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
+    ($DateAddedFrom != "" ? " AND p.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
+    ($DateAddedTo != "" ? " AND p.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
+    (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
+    (!empty($ShopID) ? " AND p.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
+    ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND p.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
 
@@ -178,38 +175,18 @@ desired effect
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
                                   method="GET">
                                 <div class="col-md-3">
-                                    <label class="control-label">From Tier Weight</label>
+                                    <label class="control-label">From Amount</label>
                                     <div class="">
-                                        <input name="TierWeightFrom" value="<?php echo $TierWeightFrom; ?>"
-                                               id="TierWeightFrom" class="form-control col-md-7 col-xs-12"
-                                               type="number">
+                                        <input name="TotalFrom" value="<?php echo $TotalFrom; ?>"
+                                               id="TotalFrom" class="form-control col-md-7 col-xs-12"
+                                               type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">To Tier Weight</label>
+                                    <label class="control-label">To Amount</label>
                                     <div class="">
-                                        <input name="TierWeightTo" value="<?php echo $TierWeightTo; ?>"
-                                               id="TierWeightTo" class="form-control col-md-7 col-xs-12" type="number">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Cylinder Types</label>
-                                    <div class="">
-                                        <select name="CylinderType[]" id="CylinderType" class="form-control select2"
-                                                multiple data-placeholder="ALL">
-                                            <?php
-                                            $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
-                                            $n = mysql_num_rows($r);
-                                            while ($Rs = mysql_fetch_assoc($r)) {
-                                                ?>
-                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $CylinderType)) {
-                                                    echo 'selected=""';
-                                                } ?>><?php echo $Rs['Name']; ?> - <?php echo $Rs['Capacity'] ?>kg
-                                                </option>
-                                                <?php
-                                            }
-                                            ?>
-                                        </select>
+                                        <input name="TotalTo" value="<?php echo $TotalTo; ?>"
+                                               id="TotalTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : 'hidden'; ?>">
@@ -232,36 +209,40 @@ desired effect
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Manufacturing Date
-                                        From</label>
+                                <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_SHOP ? 'hidden' : ''; ?>">
+                                    <label class="control-label">Shop(s)</label>
                                     <div class="">
-                                        <input name="ManufacturingDateFrom" value="<?php echo $ManufacturingDateFrom; ?>"
-                                               id="ManufacturingDateFrom" class="form-control col-md-7 col-xs-12"
+                                        <select name="ShopID[]" id="ShopID" class="form-control select2" multiple
+                                                data-placeholder="All Shops">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE ID<>0 AND RoleID=" . (int)ROLE_ID_SHOP) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $ShopID)) {
+                                                    echo 'selected=""';
+                                                } ?>><?php echo $Rs['Name']; ?>
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Purchase Date From</label>
+                                    <div class="">
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
+                                               id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
                                                type="date">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Manufacturing Date
-                                        To</label>
+                                    <label class="control-label">Purchase Date Till</label>
                                     <div class="">
-                                        <input name="ManufacturingDateTo" value="<?php echo $ManufacturingDateTo; ?>"
-                                               id="ManufacturingDateTo" class="form-control col-md-7 col-xs-12"
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
+                                               id="DateAddedTo" class="form-control col-md-7 col-xs-12"
                                                type="date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Expiry Date From</label>
-                                    <div class="">
-                                        <input name="ExpiryDateFrom" value="<?php echo $ExpiryDateFrom; ?>"
-                                               id="ExpiryDateFrom" class="form-control col-md-7 col-xs-12" type="date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Expiry Date Till</label>
-                                    <div class="">
-                                        <input name="ExpiryDateTo" value="<?php echo $ExpiryDateTo; ?>"
-                                               id="ExpiryDateTo" class="form-control col-md-7 col-xs-12" type="date">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -282,15 +263,13 @@ desired effect
                                     <!--
                                                             <th>S No.</th>
                                     -->
-                                    <th>CylinderID</th>
-                                    <th>BarCode</th>
-                                    <th>Description</th>
-                                    <th>Short Description</th>
-                                    <th>Tier Weight</th>
-                                    <th>Cylinder Type</th>
-                                    <th>Manufacturing Date</th>
-                                    <th>Expiry Date</th>
+                                    <th>Invoice ID</th>
                                     <th>Plant</th>
+                                    <th>Shop</th>
+                                    <th>Total Price (PKR)</th>
+                                    <th>Amount Paid (PKR)</th>
+                                    <th>Remaining Payment (PKR)</th>
+                                    <th>Date Added</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -301,15 +280,13 @@ desired effect
                                     <!--
 						  <td><?php echo $i; ?></td>
 -->
-                                    <td><?php echo $row["ID"]; ?></td>
-                                    <td><?php echo $row["BarCode"]; ?></td>
-                                    <td><?php echo $row["Description"]; ?></td>
-                                    <td><?php echo $row["ShortDescription"]; ?></td>
-                                    <td><?php echo $row["TierWeight"]; ?></td>
-                                    <td><?php echo $row["CylinderType"]; ?></td>
-                                    <td><?php echo $row["ManufacturingDate"]; ?></td>
-                                    <td><?php echo $row["ExpiryDate"]; ?></td>
-                                    <td><?php echo $row["Plant"]; ?></td>
+                                    <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
+                                    <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
+                                    <td><?php echo $row["ShopName"]; ?></td>
+                                    <td><?php echo $row["Total"]; ?></td>
+                                    <td><?php echo $row["Paid"]; ?></td>
+                                    <td><?php echo $row["Unpaid"]; ?></td>
+                                    <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php
                                     $i++;

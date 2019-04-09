@@ -77,14 +77,20 @@
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "customers.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addcustomer.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editcustomer.php") ? 'active' : ''); ?>"><a href="customers.php"><i class="fa fa-users"></i>Customers</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "salesmans.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsalesman.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editsalesman.php") ? 'active' : ''); ?>"><a href="salesmans.php"><i class="fa fa-user"></i>Salesmans</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "viewinventory.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpurchase.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "returntoshop.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "cylindershoptodriver.php") ? 'active' : ''); ?>"><a href="viewinventory.php"><i class="fa fa-building"></i>Inventory</a></li>
-                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?>"><a href="sales.php"><i class="fa fa-cart-arrow-down"></i>Sales</a></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "sales.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addsale.php") ? 'active' : ''); ?>"><a href="sales.php"><i class="fa fa-cart-plus"></i>Sales</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "purchases.php") ? 'active' : ''); ?>"><a href="purchases.php"><i class="fa fa-cart-arrow-down"></i>Purchases</a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "savings.php") ? 'active' : ''); ?>"><a href="savings.php"><i class="fa fa-star"></i>Gas Savings</a></li>
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "payments.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpayment.php") ? 'active' : ''); ?>"><a href="payments.php"><i class="fa fa-dollar"></i>Payments</a></li>
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "reports.php") ? 'active' : ''); ?>">
+                    <a href="reports.php"><i class="fa fa-newspaper-o"></i> <span>Reports</span></a>
+                </li>
                 <!--NEW MENU -->
+
+
                 <?php
             }
             else if ($_SESSION["RoleID"] == ROLE_ID_SALES) {
@@ -129,7 +135,10 @@
                 <li class="header"></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "paymentmethods.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpaymentmethod.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "editpaymentmethod.php") ? 'active' : ''); ?>"><a href="paymentmethods.php"><i class="fa fa-money"></i>Payment Methods</a></li>
                 <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "payments.php") ? 'active' : ''); ?><?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "addpayment.php") ? 'active' : ''); ?>"><a href="payments.php"><i class="fa fa-dollar"></i>Payments</a></li>
-                <!--NEW MENU -->
+                <li class="header"></li>
+                <li class="<?php echo(($_SERVER['PHP_SELF'] == dirname($_SERVER['PHP_SELF']) . "reports.php") ? 'active' : ''); ?>">
+                    <a href="reports.php"><i class="fa fa-newspaper-o"></i> <span>Reports</span></a>
+                </li>
 
 
                 <?php

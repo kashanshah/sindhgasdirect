@@ -1,14 +1,14 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$ReportName = "Cylinders Report";
+$ReportName = "Inventory Report";
 $TierWeightFrom = "";
 $TierWeightTo = "";
 $CylinderType = array();
-$ManufacturingDateFrom = "";
-$ManufacturingDateTo = "";
-$ExpiryDateFrom = "";
-$ExpiryDateTo = "";
+$DateAddedFrom = "";
+$DateAddedTo = "";
+$WeightFrom = "";
+$WeightTo = "";
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : array($_SESSION["PlantID"]));
 $Headings = "";
 $HeadID = array();
@@ -22,14 +22,14 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT c.ID, c.BarCode, c.Description, c.ShortDescription, c.TierWeight, ct.Name AS CylinderType, c.ManufacturingDate, c.ExpiryDate, c.PlantID, p.Name AS Plant FROM cylinders c LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = c.PlantID WHERE c.ID <> 0 " .
-    ($TierWeightFrom != "" ? " AND c.TierWeight >= " . $TierWeightFrom : " ") .
-    ($TierWeightTo != "" ? " AND c.TierWeight <= " . $TierWeightTo : " ") .
+$sql = "SELECT cs.ID, cs.InvoiceID, cs.HandedTo, ht.Name AS HandedToName, htr.Name AS HandedToRole, cs.Weight, c.TierWeight, ct.Name AS CylinderType, c.BarCode AS BarCode, c.PerformedBy, p.Name AS PerformedByName, pr.Name AS PerformedByRole, cs.DateAdded FROM cylinderstatus cs LEFT JOIN cylinders c ON c.ID = cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = cs.PerformedBy LEFT JOIN roles pr ON pr.ID = p.RoleID LEFT JOIN users ht ON ht.ID = cs.HandedTo LEFT JOIN roles htr ON htr.ID = ht.RoleID WHERE cs.ID <> 0 " .
+    ($TierWeightFrom != "" ? " AND c.TierWeight >= '" . $TierWeightFrom."'" : " ") .
+    ($TierWeightTo != "" ? " AND c.TierWeight <= '" . $TierWeightTo."'" : " ") .
     (!empty($CylinderType) ? " AND c.CylinderType IN (" . implode(",", $CylinderType) . ") " : " ") .
-    ($ManufacturingDateFrom != "" ? " AND c.ManufacturingDate >= '" . $ManufacturingDateFrom. "' " : " ") .
-    ($ManufacturingDateTo != "" ? " AND c.ManufacturingDate <= '" . $ManufacturingDateTo. "' " : " ") .
-    ($ExpiryDateFrom != "" ? " AND c.ExpiryDate >= '" . $ExpiryDateFrom. "' " : " ") .
-    ($ExpiryDateTo != "" ? " AND c.ExpiryDate <= '" . $ExpiryDateTo ."' " : " ") .
+    ($DateAddedFrom != "" ? " AND cs.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
+    ($DateAddedTo != "" ? " AND cs.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
+    ($WeightFrom != "" ? " AND cs.Weight >= '" . $WeightFrom. "' " : " ") .
+    ($WeightTo != "" ? " AND cs.Weight <= '" . $WeightTo ."' " : " ") .
     (!empty($PlantID) ? " AND c.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
@@ -182,14 +182,14 @@ desired effect
                                     <div class="">
                                         <input name="TierWeightFrom" value="<?php echo $TierWeightFrom; ?>"
                                                id="TierWeightFrom" class="form-control col-md-7 col-xs-12"
-                                               type="number">
+                                               type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">To Tier Weight</label>
                                     <div class="">
                                         <input name="TierWeightTo" value="<?php echo $TierWeightTo; ?>"
-                                               id="TierWeightTo" class="form-control col-md-7 col-xs-12" type="number">
+                                               id="TierWeightTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -233,35 +233,33 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Manufacturing Date
-                                        From</label>
+                                    <label class="control-label">Activity Date From</label>
                                     <div class="">
-                                        <input name="ManufacturingDateFrom" value="<?php echo $ManufacturingDateFrom; ?>"
-                                               id="ManufacturingDateFrom" class="form-control col-md-7 col-xs-12"
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
+                                               id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
                                                type="date">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Manufacturing Date
-                                        To</label>
+                                    <label class="control-label">Activity Date To</label>
                                     <div class="">
-                                        <input name="ManufacturingDateTo" value="<?php echo $ManufacturingDateTo; ?>"
-                                               id="ManufacturingDateTo" class="form-control col-md-7 col-xs-12"
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
+                                               id="DateAddedTo" class="form-control col-md-7 col-xs-12"
                                                type="date">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Expiry Date From</label>
+                                    <label class="control-label">Weight From</label>
                                     <div class="">
-                                        <input name="ExpiryDateFrom" value="<?php echo $ExpiryDateFrom; ?>"
-                                               id="ExpiryDateFrom" class="form-control col-md-7 col-xs-12" type="date">
+                                        <input name="WeightFrom" value="<?php echo $WeightFrom; ?>"
+                                               id="WeightFrom" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Expiry Date Till</label>
+                                    <label class="control-label">Weight Till</label>
                                     <div class="">
-                                        <input name="ExpiryDateTo" value="<?php echo $ExpiryDateTo; ?>"
-                                               id="ExpiryDateTo" class="form-control col-md-7 col-xs-12" type="date">
+                                        <input name="WeightTo" value="<?php echo $WeightTo; ?>"
+                                               id="WeightTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -282,15 +280,14 @@ desired effect
                                     <!--
                                                             <th>S No.</th>
                                     -->
-                                    <th>CylinderID</th>
-                                    <th>BarCode</th>
-                                    <th>Description</th>
-                                    <th>Short Description</th>
-                                    <th>Tier Weight</th>
+                                    <th>ID</th>
+                                    <th>Cylinder BarCode</th>
                                     <th>Cylinder Type</th>
-                                    <th>Manufacturing Date</th>
-                                    <th>Expiry Date</th>
-                                    <th>Plant</th>
+                                    <th>Handed By</th>
+                                    <th>Handed To</th>
+                                    <th>Weight (KG)</th>
+                                    <th>TierWeight (KG)</th>
+                                    <th>Activity Date</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -303,13 +300,12 @@ desired effect
 -->
                                     <td><?php echo $row["ID"]; ?></td>
                                     <td><?php echo $row["BarCode"]; ?></td>
-                                    <td><?php echo $row["Description"]; ?></td>
-                                    <td><?php echo $row["ShortDescription"]; ?></td>
-                                    <td><?php echo $row["TierWeight"]; ?></td>
                                     <td><?php echo $row["CylinderType"]; ?></td>
-                                    <td><?php echo $row["ManufacturingDate"]; ?></td>
-                                    <td><?php echo $row["ExpiryDate"]; ?></td>
-                                    <td><?php echo $row["Plant"]; ?></td>
+                                    <td><?php echo $row["PerformedByRole"].': '.$row["PerformedByName"]; ?></td>
+                                    <td><?php echo $row["HandedToRole"].': '.$row["HandedToName"]; ?></td>
+                                    <td><?php echo $row["Weight"]; ?></td>
+                                    <td><?php echo $row["TierWeight"]; ?></td>
+                                    <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php
                                     $i++;
