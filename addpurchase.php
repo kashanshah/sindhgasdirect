@@ -68,7 +68,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				RefNum='',
 				GasRate='".(float)GAS_RATE."',
 				Total='".(float)($TotalAmount)."',
-				Balance='".(int)($Balance)."',
+				Balance = '".(int)($Balance)."',
 				Paid='".(float)$Paid."',
 				Unpaid='".(float)($TotalAmount - ($Balance * GAS_RATE) - $Paid)."',
 				PerformedBy = '".(int)$_SESSION["ID"]."',

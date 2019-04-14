@@ -15,6 +15,7 @@ get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 	$CategoryID="";
 	$CylinderID = array();
 	$CurrentCylinderWeight = array();
+	$InvoiceID = array();
 	$HandedTo = $_SESSION["ID"];
 	$CylinderName = "";
 	$ShortDescription = "";
@@ -66,14 +67,16 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 			mysql_query("UPDATE sale_details SET
 				ReturnDate = '".DATE_TIME_NOW."',
 				ReturnStatus = 1,
-				ReturnWeight='".(float)$CurrentCylinderWeight[$i]."'
+				ReturnWeight='".financials($CurrentCylinderWeight[$i])."'
 				WHERE SaleID = '".(int)$InvoiceID[$i]."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
             if(isCommercialUser($CustomerID[$i]) == 1){
                 $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
                 $Wastage = financials(getValue('cylindertypes', 'Wastage', 'ID', $CType));
-                mysql_query("UPDATE users SET 
+                if(((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i] - $Wastage) > 0){
+                    mysql_query("UPDATE users SET 
                     Balance = Balance+".financials((float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i] - $Wastage)."
                     WHERE ID = '".(int)$CustomerID[$i]."' ") or die(mysql_error());
+                }
             }
 			mysql_query("INSERT INTO cylinderstatus SET DateAdded = '".DATE_TIME_NOW."',
 				InvoiceID='".(int)$InvoiceID[$i]."',

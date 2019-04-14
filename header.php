@@ -222,7 +222,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="viewadmin.php?ID=<?php echo $_SESSION["ID"]; ?>"
+                                <a href="profile.php"
                                    class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="text-right">
