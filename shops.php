@@ -116,15 +116,15 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
-                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){?>
                         <div class="box-header">
                             <div class="btn-group-right">
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
                                 <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
                                 <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addshop.php" data-original-title="" title="">Add New</a>
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
+                                <?php } ?>
                             </div>
                         </div><!-- /.box-header -->
-                        <?php } ?>
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -133,7 +133,6 @@ desired effect
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
-                                        <th>Username</th>
                                         <th>Name</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
@@ -142,9 +141,7 @@ desired effect
                                         <th>Unpaid Invoices</th>
                                         <th>Gas Balance</th>
                                         <th>Amount Credit</th>
-                                        <th>Address</th>
                                         <th>Contact Number</th>
-                                        <th>Alerts</th>
                                         <th class="hidden">Remarks</th>
                                         <th>Last Activity At</th>
                                         <th>Last Login At</th>
@@ -159,15 +156,13 @@ desired effect
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <?php } ?>
-                                            <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo abs($Bal); ?>/-
+                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo financials(abs($Bal)); ?>/-
                                             </td>
-                                            <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
                                             <td>
                                                 <?php
                                                 if($Bal < 0){
@@ -179,16 +174,18 @@ desired effect
                                                         if(mysql_num_rows($osiresource) > 0){
                                                         ?>
                                                         <a onClick='slideToggle("#invoices<?php echo $row["ID"]; ?>")'>View Invoices</a>
+                                                        <div id="invoices<?php echo $row["ID"]; ?>" style="display:none;">
                                                         <?php
                                                         }
                                                         while($oisrow = mysql_fetch_array($osiresource)){
                                                             ?>
-                                                            <div id="invoices<?php echo $row["ID"]; ?>" style="display:none;">
+                                                            <div>
                                                                 <a href="viewpurchase.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
                                                             </div>
                                                             <?php
                                                         }
                                                         ?>
+                                                        </div>
                                                     </div>
                                                     <?php
                                                 }else{
@@ -200,9 +197,7 @@ desired effect
                                             <td>
                                                 Rs. <?php echo financials($row["Credit"]); ?>/-
                                             </td>
-                                            <td><?php echo $row["Address"]; ?></td>
                                             <td><?php echo $row["Number"]; ?></td>
-                                            <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
                                             <td class="hidden"><?php echo $row["Remarks"]; ?></td>
                                             <td><?php echo $row["LastActivity"]; ?></td>
                                             <td><?php echo $row["LastLogin"]; ?></td>

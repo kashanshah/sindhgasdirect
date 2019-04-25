@@ -12,7 +12,7 @@ $CreditTo = "";
 $CreditLimitFrom = "";
 $CreditLimitTo = "";
 $Status = "";
-$PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : array($_SESSION["PlantID"]));
+$PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
 $ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 
 $Headings = "";
@@ -424,6 +424,7 @@ desired effect
 <link rel="stylesheet" href="dist/css/buttons.dataTables.min.css">
 <script src="dist/js/dataTables.buttons.min.js"></script>
 <script src="dist/js/buttons.flash.min.js"></script>
+<script src="dist/js/jszip.min.js"></script>
 <script src="dist/js/pdfmake.min.js"></script>
 <script src="dist/js/vfs_fonts.js"></script>
 <script src="dist/js/buttons.html5.min.js"></script>

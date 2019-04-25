@@ -6,7 +6,7 @@ $TotalFrom = "";
 $TotalTo = "";
 $DateAddedFrom = "";
 $DateAddedTo = "";
-$PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : array($_SESSION["PlantID"]));
+$PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
 $ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 $Headings = "";
 $HeadID = array();
@@ -20,7 +20,7 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
     ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
     ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
     ($DateAddedFrom != "" ? " AND p.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
@@ -266,6 +266,7 @@ desired effect
                                     <th>Invoice ID</th>
                                     <th>Plant</th>
                                     <th>Shop</th>
+                                    <th>No. of Cylinders</th>
                                     <th>Total Price (PKR)</th>
                                     <th>Amount Paid (PKR)</th>
                                     <th>Remaining Payment (PKR)</th>
@@ -280,9 +281,10 @@ desired effect
                                     <!--
 						  <td><?php echo $i; ?></td>
 -->
-                                    <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
+                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
-                                    <td><?php echo $row["ShopName"]; ?></td>
+                                    <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                    <td><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"])); ?></td>
                                     <td><?php echo $row["Total"]; ?></td>
                                     <td><?php echo $row["Paid"]; ?></td>
                                     <td><?php echo $row["Unpaid"]; ?></td>
@@ -336,6 +338,7 @@ desired effect
 <link rel="stylesheet" href="dist/css/buttons.dataTables.min.css">
 <script src="dist/js/dataTables.buttons.min.js"></script>
 <script src="dist/js/buttons.flash.min.js"></script>
+<script src="dist/js/jszip.min.js"></script>
 <script src="dist/js/pdfmake.min.js"></script>
 <script src="dist/js/vfs_fonts.js"></script>
 <script src="dist/js/buttons.html5.min.js"></script>

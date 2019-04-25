@@ -192,7 +192,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                       <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                           <a class="btn btn-xs btn-primary" href="viewjourney.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
                                       <?php } ?>
-                                      <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                      <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                       <a class="btn btn-xs btn-warning" href="editcylinder.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
                                       <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
                                       <?php } ?>

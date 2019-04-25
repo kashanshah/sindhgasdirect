@@ -292,7 +292,8 @@ while($row=mysql_fetch_array($resource))
     <link rel="stylesheet" href="dist/css/buttons.dataTables.min.css">
     <script src="dist/js/dataTables.buttons.min.js"></script>
     <script src="dist/js/buttons.flash.min.js"></script>
-    <script src="dist/js/pdfmake.min.js"></script>
+<script src="dist/js/jszip.min.js"></script>
+<script src="dist/js/pdfmake.min.js"></script>
     <script src="dist/js/vfs_fonts.js"></script>
     <script src="dist/js/buttons.html5.min.js"></script>
     <script src="dist/js/buttons.print.min.js"></script>

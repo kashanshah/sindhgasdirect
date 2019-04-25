@@ -155,18 +155,8 @@ desired effect
 
                                             <td>
                                                 <div class="btn-group">
-
-                                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                        <span class="caret"></span>
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="editvehicle.php?ID=<?php echo $row["ID"]; ?>">Edit</a></li>
-                                                        <li class="divider"></li>
-                                                        <li class="divider"></li>
-                                                        <li><a onclick="doSingleDelete(<?php echo $row["ID"]; ?>)">Delete</a></li>
-                                                    </ul>
-                                                </div>
+                                                    <a class="btn btn-primary btn-xs" title="Edit" href="editvehicle.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         <?php

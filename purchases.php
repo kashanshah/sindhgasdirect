@@ -24,8 +24,8 @@ if(isset($_REQUEST['DID']))
         redirect("purchases.php");
     }
 }
-$sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
-LEFT JOIN users u ON p.ShopID=u.ID WHERE p.ID <> 0 " .($_SESSION["RoleID"] == ROLE_ID_PLANT ? '' : ' AND p.ShopID='.$_SESSION["ID"]);
+$sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, s.Name AS Shop, pl.Name AS Plant, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
+LEFT JOIN users s ON p.ShopID=s.ID LEFT JOIN users pl ON s.PlantID=pl.ID WHERE p.ID <> 0 " .(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ' AND p.ShopID='.$_SESSION["ID"]);
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -142,6 +142,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <tr>
                         <th style="display:none;"><input type="checkbox" class="no-margin checkUncheckAll"></th>
                         <th>Invoice ID</th>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
+                              <th>Plant</th>
+                          <?php } ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
+                              <th>Shop</th>
+                          <?php } ?>
                         <th>Total Price</th>
                         <th>Amount Paid</th>
                         <th>Remaining Payment</th>
@@ -157,6 +163,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <tr>
                         <td style="display:none;width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                         <td><?php echo sprintf('%04u', $row["ID"]); ?></td>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
+                              <td><?php echo $row["Plant"]; ?></td>
+                          <?php } ?>
+                          <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
+                              <td><?php echo $row["Shop"]; ?></td>
+                          <?php } ?>
                         <td><?php echo $row["Total"]; ?></td>
                         <td><?php echo $row["Paid"]; ?></td>
                         <td><?php echo $row["Unpaid"]; ?></td>

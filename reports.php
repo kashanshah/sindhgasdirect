@@ -112,9 +112,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a href="reports_cylinderactivity.php">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-truck"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number">Cylinder Activity</span>
+                                <span class="info-box-text">View Cylinder Activity Report</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
                     <a href="reports_inventory.php">
                         <div class="info-box">
-                            <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+                            <span class="info-box-icon bg-green"><i class="fa fa-cubes"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-number">Inventory</span>
                                 <span class="info-box-text">View Inventory Report</span>

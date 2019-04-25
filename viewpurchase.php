@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
 					<h3><b>Purchase ID: </b><?php echo $ID; ?></h3>
 					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-					<h3><b>Gas Rate: </b><?php $GasRate = $row["GasRate"];echo $GasRate; ?></h3>
+<!--					<h3><b>Gas Rate: </b>--><?php //$GasRate = $row["GasRate"];echo $GasRate; ?><!--</h3>-->
 					<h3><b>Invoices: </b>
 <?php $pdff = explode(',', $row["RefNum"]);?>
 						<select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach($pdff as $pdf)
@@ -223,7 +223,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<th>Return Status</th>
 							</tr>
 <?php
-$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.CompanyTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.PurchaseID=".(int)$ID;
+$query="SELECT pd.ID, c.BarCode, ct.Name AS CylinderType, pd.CylinderID, pd.TierWeight, pd.CompanyTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID LEFT JOIN cylindertypes ct ON c.CylinderType = ct.ID WHERE pd.PurchaseID=".(int)$ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 $cou2 = 0;
@@ -236,7 +236,7 @@ while($data = mysql_fetch_array($resource)){
 ?>
 							<tr <?php echo $data["CompanyTotalWeight"] == $data["TotalWeight"] ? '' : 'class="bg bg-yellow"'; ?>>
 								<td><?php echo $cou2; ?></td>
-								<td><?php echo $data["BarCode"]; ?></td>
+								<td><?php echo $data["BarCode"]; ?><br/><?php echo $data["CylinderType"] ?></td>
 								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
 								<td><?php echo financials($data["CompanyTotalWeight"]); ?>KG</td>
 								<td><?php echo financials($data["TotalWeight"]); ?>KG</td>
@@ -302,12 +302,19 @@ while($data = mysql_fetch_array($resource)){
 							<textarea class="form-control" name="Note" ><?php echo $Note;?></textarea>
 						</div>
 					</div>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">&nbsp;</label>
-						<div class="col-md-12 text-right">
-						   <input type="submit" name="addpurchase" class="btn btn-group-vertical btn-success" value="Save" />
-						</div>
-					</div>
+                    <?php
+                    if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                        ?>
+                        <div class="form-group">
+                            <label class="col-md-12" for="example-text-input">&nbsp;</label>
+                            <div class="col-md-12 text-right">
+                                <input type="submit" name="addpurchase" class="btn btn-group-vertical btn-success"
+                                       value="Save"/>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
               <?php if(CAPTCHA_VERIFICATION == 1) { ?>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Captcha</label>

@@ -1,11 +1,12 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 $msg='';
 $Username = "";			$Password = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";           $ShopID = 0;           $SendSMS = 1;
 $Address = "";			$RoleID = ROLE_ID_SHOP;
+$PlantID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 0 : $_SESSION["ID"]);
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 
 if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
@@ -19,6 +20,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     else if(checkavailability('users', 'Username', $Username) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Username not available choose another!</div>';
     else if(checkavailability('users', 'Number', $Number) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Phone number is already registered with a user!</div>';
     else if($Password == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Password</div>';
+    else if($PlantID == 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select A Plant</div>';
     else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
     {
         $filenamearray2=explode(".", $_FILES["File"]['name']);
@@ -48,7 +50,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".ROLE_ID_SHOP."',
 						ShopID='0',
-						PlantID='".(int)$_SESSION["ID"]."',
+						PlantID='".(int)$PlantID."',
 						Username='".dbinput($Username)."',
 						Password='".dbinput($Password)."',
 						Email='".dbinput($Email)."',
@@ -63,7 +65,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
         mysql_query("UPDATE users SET ShopID='".(int)$UserID."' WHERE ID = '".(int)$UserID."'") or die(mysql_error());
 
 
-        $smssent = sendUserSMS($_SESSION["Number"], 'Shop - A new shop has been added at Plant:  '.$_SESSION["ID"].'. Name: '.$Name.', Number: '.$Number.' at '.date('h:iA d-m-Y'));
+        $smssent = sendUserSMS(getValue('users', 'Number', 'ID', $PlantID), 'Shop - A new shop has been added at Plant:  '.getValue('users', 'Name', 'ID', $PlantID).'. Name: '.$Name.', Number: '.$Number.' at '.date('h:iA d-m-Y'));
 
         $msg='<div class="alert alert-success alert-dismissable">
 					<i class="fa fa-check"></i>
@@ -240,6 +242,23 @@ desired effect
                                         <input type="password" class="form-control" id="Password" value="<?php echo $Password;?>" name="Password">
                                     </div>
                                 </div>
+                                <?php if($_SESSION["RoleID"] != ROLE_ID_PLANT) { ?>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="example-text-input">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="PlantID" id="PlantID">
+                                            <option value="<?php echo $Rs['ID']; ?>" <?php if($PlantID==0) { echo 'selected=""'; } ?>></option>
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = '".ROLE_ID_PLANT."'") or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while($Rs = mysql_fetch_assoc($r)) { ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if($PlantID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['Name']; ?></option>
+                                            <?php }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <?php } ?>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="example-text-input">Name</label>
                                     <div class="col-md-6">

@@ -162,7 +162,7 @@ desired effect
                                             <td><?php echo $row["DateModified"]; ?></td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN) { ?>
+                                                    <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                                         <a class="btn btn-xs btn-warning" href="editcylindertype.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
                                                         <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
                                                     <?php } ?>

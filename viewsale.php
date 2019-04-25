@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(1, 6, 3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -226,7 +226,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<th>Return Status</th>
 							</tr>
 <?php
-$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.ShopTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
+$query="SELECT pd.ID, c.BarCode, pd.CylinderID, c.CylinderType, pd.TierWeight, pd.ShopTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=".(int)$ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 $cou2 = 0;
@@ -239,7 +239,7 @@ while($data = mysql_fetch_array($resource)){
 ?>
 							<tr>
 								<td><?php echo $cou2; ?></td>
-								<td><?php echo $data["BarCode"]; ?></td>
+								<td><?php echo $data["BarCode"]; ?><br/><?php echo getValue('cylindertypes', 'Name', 'ID', $data["CylinderType"]); ?></td>
 								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
 								<td><?php echo financials($data["ShopTotalWeight"]); ?>KG</td>
 								<td><?php echo financials($data["TotalWeight"]); ?>KG</td>
@@ -303,12 +303,16 @@ while($data = mysql_fetch_array($resource)){
 							<textarea class="form-control" name="Note" ><?php echo $Note;?></textarea>
 						</div>
 					</div>
+                    <?php
+                    if($_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                    ?>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">&nbsp;</label>
 						<div class="col-md-12 text-right">
 						   <input type="submit" name="addsale" class="btn btn-group-vertical btn-success" value="Save" />
 						</div>
 					</div>
+                    <?php } ?>
               <?php if(CAPTCHA_VERIFICATION == 1) { ?>
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Captcha</label>

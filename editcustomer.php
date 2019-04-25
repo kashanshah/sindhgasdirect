@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';				$ID = 0;
 $Username = "";			$Email = "";			$Image="";

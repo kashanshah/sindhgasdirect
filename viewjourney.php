@@ -99,7 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="box-body">
                             <div class="table-responsive">
                                 <?php
-                                $sql = "SELECT cs.Weight, DATE_FORMAT(cs.DateAdded, '%D %M %Y, %i:%h %p') AS DateAdded, ht.Name AS HandedTo, ht.RoleID AS HandedToRole, htr.Name AS HandedToRoleName, hb.Name AS HandedBy FROM cylinderstatus cs LEFT JOIN users ht ON ht.ID=cs.HandedTo LEFT JOIN users hb ON hb.ID=cs.PerformedBy LEFT JOIN roles htr ON ht.RoleID=htr.ID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY cs.ID DESC";
+                                $sql = "SELECT cs.Weight, DATE_FORMAT(cs.DateAdded, '%D %M %Y, %H:%i %p') AS DateAdded, ht.Name AS HandedTo, ht.RoleID AS HandedToRole, htr.Name AS HandedToRoleName, hb.Name AS HandedBy FROM cylinderstatus cs LEFT JOIN users ht ON ht.ID=cs.HandedTo LEFT JOIN users hb ON hb.ID=cs.PerformedBy LEFT JOIN roles htr ON ht.RoleID=htr.ID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY cs.ID DESC";
                                 $res = mysql_query($sql) or die(mysql_error());
                                 if (mysql_num_rows($res) == 0) {
                                     ?>

@@ -118,16 +118,22 @@ desired effect
                                         <?php } ?>
                                         <th>Saved By</th>
                                         <th>Gas Saved</th>
-                                        <th>Invoice #</th>
+                                        <th>Wastage</th>
+                                        <th>Net Saving</th>
+<!--                                        <th>Invoice #</th>-->
                                         <th>Date</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                     $TotalGasSaved = 0;
+                                    $TotalGas = 0;
+                                    $TotalWastage = 0;
                                     while($row=mysql_fetch_array($resource))
                                     {
                                         $CurSav = (float)$row["Savings"] - (float)$row["Wastage"];
+                                        $TotalGas += (float)$row["Savings"];
+                                        $TotalWastage += (float)$row["Wastage"];
                                         $TotalGasSaved = $TotalGasSaved + $CurSav;
                                         ?>
                                         <tr>
@@ -138,8 +144,10 @@ desired effect
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["Plant"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["UserRole"]. ': ' . $row["User"]; ?></td>
-                                            <td><?php echo financials($CurSav); ?>KG (<?php echo financials($row["Savings"]) . ' - ' . financials($row["Wastage"]); ?>)</td>
-                                            <td><?php echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?></td>
+                                            <td><?php echo financials($row["Savings"]); ?> KG</td>
+                                            <td><?php echo financials($row["Wastage"]); ?> KG</td>
+                                            <td><?php echo financials($CurSav); ?> KG</td>
+<!--                                            <td>--><?php //echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?><!--</td>-->
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                         </tr>
                                         <?php
@@ -147,7 +155,9 @@ desired effect
                                     ?>
                                     </tbody>
                                 </table>
-                                <h3>Total Savings: <?php echo financials($TotalGasSaved); ?> KG</h3>
+                                <h3>Total Savings: <?php echo financials($TotalGas); ?> KG</h3>
+                                <h3>Total Wastage: <?php echo financials($TotalWastage); ?> KG</h3>
+                                <h3>Net Saving: <?php echo financials($TotalGasSaved); ?> KG</h3>
                             </form>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->

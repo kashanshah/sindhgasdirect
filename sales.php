@@ -25,7 +25,7 @@ if (isset($_REQUEST['DID'])) {
         redirect("sales.php");
     }
 }
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ' AND p.ShopID = ' . (int)$_SESSION["ID"]);
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND p.ShopID = ' . (int)$_SESSION["ID"]);
 $resource = mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -158,13 +158,7 @@ desired effect
                                         <th>Date Added</th>
                                         <th>Date Modified</th>
                                         <th>Invoices</th>
-                                        <?php
-                                        if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
-                                            ?>
-                                            <th></th>
-                                            <?php
-                                        }
-                                        ?>
+                                        <th></th>
 
                                     </tr>
                                     </thead>

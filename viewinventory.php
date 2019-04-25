@@ -152,7 +152,7 @@ desired effect
                                     </thead>
                                     <tbody>
                                     <?php while ($row = mysql_fetch_array($resource)) {
-                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN))) {
+                                        if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"])) {
                                             ?>
                                             <tr>
                                             <?php
@@ -167,9 +167,9 @@ desired effect
                                                 <td><?php echo $row["BarCode"]; ?></td>
                                                 <td><?php echo $row["ShortDescription"]; ?></td>
                                                 <td><?php echo getValue('cylindertypes', 'Name', 'ID', $row["CylinderType"]).' - '.getValue('cylindertypes', 'Capacity', 'ID', $row["CylinderType"]).'KG | Wastage: '.getValue('cylindertypes', 'Wastage', 'ID', $row["CylinderType"]); ?>KG</td>
-                                                <td><?php echo $row["TierWeight"]; ?></td>
-                                                <td><?php echo getCurrentWeight($row["ID"]); ?></td>
-                                                <td><?php echo getCurrentWeight($row["ID"]) - $row["TierWeight"]; ?></td>
+                                                <td><?php echo financials($row["TierWeight"]); ?></td>
+                                                <td><?php echo financials(getCurrentWeight($row["ID"])); ?></td>
+                                                <td><?php echo financials(getCurrentWeight($row["ID"]) - $row["TierWeight"]); ?></td>
                                                 <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])) . '<br/>' . getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
                                                 <td><?php echo $row["ManufacturingDate"]; ?></td>
 
@@ -241,9 +241,30 @@ desired effect
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!-- page script -->
+<script src="dist/js/dataTables.buttons.min.js"></script>
+<script src="dist/js/buttons.flash.min.js"></script>
+<script src="dist/js/jszip.min.js"></script>
+<script src="dist/js/pdfmake.min.js"></script>
+<script src="dist/js/vfs_fonts.js"></script>
+<script src="dist/js/buttons.html5.min.js"></script>
+<script src="dist/js/buttons.print.min.js"></script>
+
 <script>
     $(function () {
-        $("#example1").DataTable();
+        $("#example1").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print',
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    alignment: 'center',
+                    pageSize: 'LEGAL',
+                    bootstrap: true
+                }
+            ],
+            "lengthChange": false,
+        });
         $('#example2').DataTable({
             "paging": true,
             "lengthChange": false,
