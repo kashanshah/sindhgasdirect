@@ -5,9 +5,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 	if(isset($_REQUEST["NewPayment"]))
 		$NewPayment=trim($_REQUEST["NewPayment"]);
-	if(isset($_REQUEST["RefNumber"]))
-		$RefNumber=trim($_REQUEST["RefNumber"]);
-$query="SELECT p.ID, p.RefNum, p.GasRate, p.Total, p.Balance, p.Note, p.Paid, p.Unpaid, DATE_FORMAT(p.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases p LEFT JOIN purchase_details pd ON pd.PurchaseID=p.ID WHERE p.ID=".$ID;
+$query = "SELECT pa.PurchaseID AS InvoiceID, sh.ID AS ShopID, p.Total, p.Balance, p.GasRate, pa.Paid AS NewPaid, p.Unpaid, pa.Unpaid AS NewUnpaid, p.Paid, sh.Name AS ShopName, c.ID AS CustomerID, c.Name AS CustomerName, date_format(p.DateAdded, '%D %M %Y, %I:%i %p') AS DateAdded, date_format(pa.DateAdded, '%D %M %Y, %I:%i %p') AS saDateAdded, pa.Note FROM purchases_amount pa LEFT JOIN purchases p ON p.ID = pa.PurchaseID LEFT JOIN users sh ON sh.ID = p.ShopID LEFT JOIN users c ON c.ID = p.ShopID WHERE pa.ID=" . $ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 if($num == 0)
@@ -16,7 +14,6 @@ if($num == 0)
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 		Invalide purchase ID.
 		</div>';
-	exit();
 	redirect("purchases.php");
 }
 $row=mysql_fetch_array($resource);
@@ -55,8 +52,8 @@ $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 // set document information
 $pdf->SetCreator(COMPANY_NAME);
 $pdf->SetAuthor(COMPANY_NAME);
-$pdf->SetTitle('Purchase Invoice pinv10-'. $RefNumber);
-$pdf->SetSubject('Purchase Invoice pinv10-'. $RefNumber);
+$pdf->SetTitle('Purchase Invoice pinv-'. $ID);
+$pdf->SetSubject('Purchase Invoice pinv10-'. $ID);
 
 // set default header data
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
@@ -112,7 +109,7 @@ $receive = '
 <table border="1" cellspacing="3" cellpadding="4">
 	<tr>
 						<td ><h3>Invoice ID</h3></td>
-						<td ><h3>'.$RefNumber.'</h3></td>
+						<td ><h3>'.$ID.'</h3></td>
 						<td ><h3>Date: </h3></td>
 						<td ><h3>'.date("d-m-Y"). '</h3></td>
 					</tr>
@@ -135,7 +132,7 @@ $receive .= '		<tr>
 					</tr>
 	';
 
-$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.PurchaseID=".(int)$ID;
+$query="SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, p.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID LEFT JOIN purchases p ON p.ID = pd.PurchaseID WHERE pd.PurchaseID=".(int)$row["InvoiceID"];
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 $cou2 = 0;
@@ -160,23 +157,23 @@ $receive .= '
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Balance: </h2></td>
-						<td ><h2 align="right">'.financials($row["Balance"]).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Balance"] * $row["GasRate"]).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Amount Paid Before: </h2></td>
-						<td ><h2 align="right">'.financials(($row["Paid"]-$NewPayment)).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Total"] - $row["NewPaid"] - $row["NewUnpaid"] - ($row["Balance"] * $row["GasRate"])).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>New Payment: </h2></td>
-						<td ><h2 align="right">'.financials($NewPayment).'/-</h2></td>
+						<td ><h2 align="right">'.financials(($row["NewPaid"])).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Total Amount Paid: </h2></td>
-						<td ><h2 align="right">'.financials($row["Paid"]).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["Total"] - $row["NewUnpaid"] - ($row["Balance"] * $row["GasRate"])).'/-</h2></td>
 	</tr>
 	<tr>
 						<td colspan="3"><h2>Remaining Payment: </h2></td>
-						<td ><h2 align="right">'.financials($row["Unpaid"]).'/-</h2></td>
+						<td ><h2 align="right">'.financials($row["NewUnpaid"] ).'/-</h2></td>
 	</tr>'.($row["Note"] != "" ? '
 	<tr>
 						<td colspan="4"><h2>Notes </h2></td>
@@ -207,13 +204,13 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER["PHP_SELF"]).'/'.DIR_PURCHASE_INVOICE . 'pinv' . $row["ID"] . '-' . $RefNumber . '.pdf', 'F');
+$pdf->Output($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER["PHP_SELF"]).'/'.DIR_PURCHASE_INVOICE . 'pinv' . $row["ID"] . '-' . $ID . '.pdf');
 $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 <i class="fa fa-check"></i> Purchase payment has been added.
 </div>';
 
-redirect("purchases.php"); 
+//redirect("purchases.php");
 //$pdf->Output('../../assets/purchase/
 
 //============================================================+

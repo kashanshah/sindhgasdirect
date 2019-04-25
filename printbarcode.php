@@ -114,7 +114,7 @@ th, td { font-size: 8px; }
 					  <span style="font-size: 8px; float: right">www.cloud-innovator.com</span>
 <script>
 		setTimeout(function(){
-		window.close();
+		// window.close();
 		}, 1000); 
 </script>
 </body>

@@ -1318,7 +1318,7 @@ function sendUserSMS($to = 0, $message = '', $check = true){
     $response = '';
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;
-    $to = mysql_query("SELECT ID, Number, SendSMS FROM users WHERE ID = " . $to) or die(mysql_error());
+    $to = mysql_query("SELECT ID, Number, SendSMS FROM users WHERE ID = " . $to) or die(mysql_error('Error in sending message'));
     if(mysql_num_rows($to) == 1){
         $r = mysql_fetch_array($to);
         $send = true;

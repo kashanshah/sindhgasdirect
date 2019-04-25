@@ -62,7 +62,8 @@ if(isset($_POST['addpurchase']) && $_POST['addpurchase']=='Save')
 	if($msg == "")
 	{
 		$query3 = "UPDATE purchases SET DateModified = '".DATE_TIME_NOW."',
-				Note='".dbinput($Note)."'
+				Note='".dbinput($Note)."',
+				DateAdded='".dbinput($DateAdded)."'
 				WHERE ID=".$ID."
 				";
 		mysql_query($query3) or die('a'.mysql_error());
@@ -201,12 +202,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!--					<h3><b>Gas Rate: </b>--><?php //$GasRate = $row["GasRate"];echo $GasRate; ?><!--</h3>-->
 					<h3><b>Invoices: </b>
 <?php $pdff = explode(',', $row["RefNum"]);?>
-						<select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach($pdff as $pdf)
-							{ ?>
-							<option value="<?php echo DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf; ?>.pdf"><?php echo "Invoice # ".$row["ID"]; ?></option>
-							<?php
-							} ?>
-							</select>
+                        <select id="invoiceid<?php echo $row["ID"]; ?>">
+                            <?php
+                            $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '".(int)$row["ID"]."'") or die(mysql_error());
+                            $n = mysql_num_rows($r);
+                            foreach($pdff as $pdf)
+							{
+							    if(file_exists(dirname(__FILE__).'/'.DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf.".pdf")) {
+                                    ?>
+                                    <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "Invoice # " . $row["ID"]; ?></option>
+                                    <?php
+                                }
+                            }
+                            while($Rs = mysql_fetch_assoc($r)) {
+                                ?>
+                                <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
+                            <?php }
+                            ?>
+                        </select>
 						<input type="button" value="View" style="align:right" onClick="read(<?php echo $row["ID"]; ?>)"/>
 					</h3>
 					<h3><b>Purchase Details:</b></h3>
@@ -294,6 +307,12 @@ while($data = mysql_fetch_array($resource)){
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">
 							<input type="number" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
+						</div>
+					</div>
+                    <div class="form-group">
+						<label class="col-md-12" for="example-text-input">Purchase Date</label>
+						<div class="col-md-12">
+                            <input type="date" step="any" class="form-control" placeholder="Enter the Date" value="<?php echo date('Y-m-d', strtotime($row["DateAdded"])); ?>" name="DateAdded" />
 						</div>
 					</div>
                     <div class="form-group">

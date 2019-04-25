@@ -199,7 +199,7 @@ desired effect
                                                        onClick="read(<?php echo $row["ID"]; ?>)"/>
                                             </td>
                                             <td class="text-center">
-                                                <a class="btn btn-primary btn-sm"
+                                                <a class="btn btn-primary btn-xs"
                                                    href="viewsale.php?ID=<?php echo $row["ID"]; ?>">View Details</a>
                                                 <?php
                                                 $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=" . (int)$row["ID"]." AND pd.ReturnStatus=1";
@@ -215,7 +215,7 @@ desired effect
                                                 <?php
                                                 if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                                                     ?>
-                                                    <?php echo(financials($row["Unpaid"]) > 0 ? '<a class="btn btn-warning btn-sm" href="addpaymentsale.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
+                                                    <?php echo(financials($row["Unpaid"]) > 0 ? '<a class="btn btn-warning btn-xs" href="addpaymentsale.php?ID=' . $row["ID"] . '">Add Payment</a>' : ''); ?>
                                                     <?php
                                                 }
                                                 ?>

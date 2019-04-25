@@ -62,6 +62,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save')
 	if($msg == "")
 	{
 		$query3 = "UPDATE sales SET DateModified = '".DATE_TIME_NOW."',
+				DateAdded='".dbinput($DateAdded)."',
 				Note='".dbinput($Note)."'
 				WHERE ID=".$ID."
 				";
@@ -295,6 +296,12 @@ while($data = mysql_fetch_array($resource)){
 						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
 						<div class="col-md-12">
 							<input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo financials($row["Unpaid"]); ?>" name="Unpaid" readonly="">
+						</div>
+					</div>
+                    <div class="form-group">
+						<label class="col-md-12" for="example-text-input">Sale Date</label>
+						<div class="col-md-12">
+							<input type="date" step="any" class="form-control" placeholder="Enter the Date" value="<?php echo date('Y-m-d', strtotime($row["DateAdded"])); ?>" name="DateAdded" />
 						</div>
 					</div>
                     <div class="form-group">

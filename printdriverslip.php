@@ -105,7 +105,7 @@ $row = mysql_fetch_array($resource);
 <p style="text-align: center;font-size: 12px;">Thank You!<br/>Powered by EliteTech<br/>www.elitetech.ae</p>
 <script>
     setTimeout(function () {
-        window.close();
+        // window.close();
     }, 1000);
 </script>
 </body>

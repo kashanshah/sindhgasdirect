@@ -2,7 +2,7 @@
 include("common.php");
 get_right(array(1, 3));
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
-$query="SELECT ID, RefNum, GasRate, Total, GasRate, Balance, Note, Paid, Unpaid, DATE_FORMAT(DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases WHERE ID=".$ID;
+$query="SELECT ID, RefNum, GasRate, ShopID, Total, GasRate, Balance, Note, Paid, Unpaid, DATE_FORMAT(DateAdded, '%D %b %Y %r') AS DateAdded FROM purchases WHERE ID=".$ID;
 // echo $query;
 // exit();
 $resource=mysql_query($query);
@@ -111,13 +111,13 @@ $receive = '
 						<td ><h3>Invoice ID</h3></td>
 						<td ><h3>'.$row["RefNum"].'</h3></td>
 						<td ><h3>Date: </h3></td>
-						<td ><h3>'.date("d-m-Y"). '</h3></td>
+						<td ><h3>'.date('d-m-Y', strtotime($row["DateAdded"])). '</h3></td>
 					</tr>
 					<tr>
-						<td ><h3>Gas Rate: </h3></td>
-						<td ><h3>'.number_format($row["GasRate"], 2). '/-</h3></td>
 						<td ><h3>Store Name:</h3></td>
-						<td ><h3>'.$_SESSION["Name"].'</h3></td>
+						<td ><h3>'.getValue('users', 'Name', 'ID', $row["ShopID"]).'</h3></td>
+						<td ><h3>Invoice Date: </h3></td>
+						<td ><h3>'.date('d-m-Y'). '</h3></td>
 	</tr>
 </table>
 <h2 align="center">Purchase Details</h2>
@@ -196,13 +196,13 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER["PHP_SELF"]).'/'.DIR_PURCHASE_INVOICE . 'pinv' . $row["ID"] . '-' . $row["RefNum"] . '.pdf', 'F');
+$pdf->Output($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER["PHP_SELF"]).'/'.DIR_PURCHASE_INVOICE . 'pinv' . $row["ID"] . '-' . $row["RefNum"] . '.pdf');
 $_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<i class="fa fa-check"></i> 
 	Purchase has been added!
 	</div>';
-redirect("addpurchase.php"); 
+//redirect("addpurchase.php");
 //$pdf->Output('assets/purchase/
 
 //============================================================+

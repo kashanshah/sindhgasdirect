@@ -70,6 +70,16 @@ if (isset($_POST['addpurchase']) && $_POST['addpurchase'] == 'Save') {
             mysql_query($query3) or die(mysql_error());
             $RefNumber = generate_refno($ID);
 
+            $query3 = "INSERT INTO purchases_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
+				PerformedBy = '".(int)$_SESSION["ID"]."',
+				Paid='".(float)financials($NewPayment)."',
+				Unpaid='".(float)financials($TotalAmount - ($Paid + $Balance + $NewPayment))."',
+				PurchaseID=".$ID.",
+				Note = '".dbinput($Note)."'
+				";
+            mysql_query($query3) or die('b'.mysql_error());
+            $PaymentID = mysql_insert_id();
+
             mysql_query("UPDATE purchases SET RefNum=CONCAT(RefNum, '," . dbinput($RefNumber) . "') WHERE ID=" . $ID);
 
             $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
@@ -77,7 +87,7 @@ if (isset($_POST['addpurchase']) && $_POST['addpurchase'] == 'Save') {
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 			Purchase has been added!
 			</div>';
-            redirect("purchaseaddinvoice.php?ID=" . $ID . "&RefNumber=" . $RefNumber . "&NewPayment=" . $NewPayment);
+            redirect("purchaseaddinvoice.php?ID=" . $PaymentID);
         }
     }
     $_SESSION["msg"] = $msg;
@@ -208,11 +218,24 @@ desired effect
                             <h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
                             <h3><b>Gas Rate: </b><?php echo $row["GasRate"]; ?></h3>
                             <h3><b>Invoices: </b>
-                                <?php $pdff = explode(',', $row["RefNum"]); ?>
-                                <select id="invoiceid<?php echo $row["ID"]; ?>"><?php foreach ($pdff as $pdf) { ?>
-                                        <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "pinv" . $row["ID"] . "-" . $pdf; ?></option>
-                                        <?php
-                                    } ?>
+                                <?php $pdff = explode(',', $row["RefNum"]);?>
+                                <select id="invoiceid<?php echo $row["ID"]; ?>">
+                                    <?php
+                                    $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '".(int)$row["ID"]."'") or die(mysql_error());
+                                    $n = mysql_num_rows($r);
+                                    foreach($pdff as $pdf)
+                                    {
+                                        if(file_exists(DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf)) {
+                                            ?>
+                                            <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "Invoice # " . $row["ID"]; ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    while($Rs = mysql_fetch_assoc($r)) {
+                                        ?>
+                                        <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
+                                    <?php }
+                                    ?>
                                 </select>
                                 <input type="button" value="View" style="align:right"
                                        onClick="read(<?php echo $row["ID"]; ?>)"/>
@@ -277,7 +300,7 @@ desired effect
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Total Amount</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control" placeholder="Enter the Total Amount"
+                                    <input type="number" step="any" class="form-control" placeholder="Enter the Total Amount"
                                            readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>"
                                            id="TotalAmount">
                                 </div>
@@ -285,14 +308,15 @@ desired effect
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Amount Paid</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control" placeholder="Enter the Amount Paid"
+                                    <input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid"
                                            value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control" placeholder="Enter the Balance Amount"
+                                    <input type="number" step="any" class="form-control" placeholder="Enter the Balance Amount"
+                                           name="Balance"
                                            readonly="" name="Balance"
                                            value="<?php echo $row["Balance"] * $row["GasRate"]; ?>" id="Balance">
                                 </div>
@@ -300,14 +324,14 @@ desired effect
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Amount Remaining</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control" placeholder="Enter the Amount Unpaid"
+                                    <input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid"
                                            value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">New Payment</label>
                                 <div class="col-md-12">
-                                    <input type="number" class="form-control" placeholder="Enter the amount paying"
+                                    <input type="number" step="any" class="form-control" placeholder="Enter the amount paying"
                                            min="0"
                                            value="<?php echo $Unpaid < $Credit ? $Unpaid : $Credit; ?>" max="<?php echo $Unpaid < $Credit ? $Unpaid : $Credit; ?>"
                                            name="NewPayment">

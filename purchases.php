@@ -169,9 +169,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){?>
                               <td><?php echo $row["Shop"]; ?></td>
                           <?php } ?>
-                        <td><?php echo $row["Total"]; ?></td>
-                        <td><?php echo $row["Paid"]; ?></td>
-                        <td><?php echo $row["Unpaid"]; ?></td>
+                        <td><?php echo financials($row["Total"]); ?></td>
+                        <td><?php echo financials($row["Paid"]); ?></td>
+                        <td><?php echo financials($row["Unpaid"]); ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
                         <td><?php echo $row["DateModified"]; ?></td>
                         <td class="text-center">
