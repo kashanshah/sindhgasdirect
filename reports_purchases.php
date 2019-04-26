@@ -285,9 +285,9 @@ desired effect
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo $row["ShopName"]; ?></td>
                                     <td><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM purchase_details WHERE PurchaseID = ".(int)$row["ID"])); ?></td>
-                                    <td><?php echo $row["Total"]; ?></td>
-                                    <td><?php echo $row["Paid"]; ?></td>
-                                    <td><?php echo $row["Unpaid"]; ?></td>
+                                    <td><?php echo financials($row["Total"]); ?></td>
+                                    <td><?php echo financials($row["Paid"]); ?></td>
+                                    <td><?php echo financials($row["Unpaid"]); ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php

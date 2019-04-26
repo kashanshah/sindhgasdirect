@@ -368,12 +368,12 @@ desired effect
                                     <td><?php echo $row["Address"]; ?></td>
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? ($row["Commercial"] == 1 ? 'Commercial' : 'Domestic') : 'N/A'; ?></td>
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_SHOP || $row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["Balance"] : 'N/A'; ?></td>
-                                    <td><?php echo ($row["RoleID"] == ROLE_ID_SHOP) ? $row["Credit"] : 'N/A'; ?></td>
+                                    <td><?php echo ($row["RoleID"] == ROLE_ID_SHOP) ? financials($row["Credit"]) : 'N/A'; ?></td>
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["Shop"] : 'N/A'; ?></td>
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_SHOP || $row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["Plant"] : 'N/A'; ?></td>
-                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["CreditLimit"] : 'N/A'; ?></td>
+                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? financials($row["CreditLimit"]) : 'N/A'; ?></td>
                                     <td><?php echo $row["Remarks"]; ?></td>
-                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["SecurityDeposite"] : 'N/A'; ?></td>
+                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? financials($row["SecurityDeposite"]) : 'N/A'; ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php

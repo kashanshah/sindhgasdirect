@@ -1,7 +1,9 @@
 <?php
 include("common.php");
 if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
-	header("Location: index.php");
+	redirect("index.php");
+
+$ReturnURL = (isset($_REQUEST["return_url"]) ? $_REQUEST["return_url"] : "dashboard.php");
 
 	$msg = "";
 	if(isset($_POST["Submit"]) && $_POST["Submit"] == "Submit")
@@ -64,7 +66,7 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
                         $_SESSION["PlantID"] = $_SESSION["ID"];
                     }
 
-					header("Location: dashboard.php");
+					redirect($ReturnURL);
 				}
 				else
 				{
@@ -113,7 +115,7 @@ if(isset($_SESSION['Admin']) && $_SESSION['Admin']==true)
         <p class="login-box-msg" id="clockdisp">
             <script language="javascript">localclock();</script>
       	</p>
-        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+        <form method="POST" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
           <div class="input-group <?php echo ($msg != '' ? 'has-error' : '') ?>">
             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
             <input type="text" name="Username" class="form-control" placeholder="Username">

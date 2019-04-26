@@ -1,7 +1,7 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$ReportName = "Inventory Report";
+$ReportName = "Stock Received Report";
 $TierWeightFrom = "";
 $TierWeightTo = "";
 $CylinderType = array();
@@ -22,7 +22,8 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT cs.ID, cs.InvoiceID, cs.HandedTo, ht.Name AS HandedToName, htr.Name AS HandedToRole, cs.Weight, c.TierWeight, ct.Name AS CylinderType, c.BarCode AS BarCode, c.PerformedBy, p.Name AS PerformedByName, pr.Name AS PerformedByRole, cs.DateAdded FROM cylinderstatus cs LEFT JOIN cylinders c ON c.ID = cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = cs.PerformedBy LEFT JOIN roles pr ON pr.ID = p.RoleID LEFT JOIN users ht ON ht.ID = cs.HandedTo LEFT JOIN roles htr ON htr.ID = ht.RoleID WHERE cs.ID <> 0 " .
+$sql = "SELECT cs.ID, cs.InvoiceID, cs.HandedTo, ht.Name AS HandedToName, htr.ID AS HandedToRoleID, htr.Name AS HandedToRole, cs.Weight, c.TierWeight, ct.Name AS CylinderType, ct.Capacity, c.BarCode AS BarCode, c.PerformedBy, p.Name AS PerformedByName, pr.Name AS PerformedByRole, pr.ID AS PerformedByRoleID, cs.DateAdded FROM cylinderstatus cs LEFT JOIN cylinders c ON c.ID = cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = cs.PerformedBy LEFT JOIN roles pr ON pr.ID = p.RoleID LEFT JOIN users ht ON ht.ID = cs.HandedTo LEFT JOIN roles htr ON htr.ID = ht.RoleID WHERE cs.ID <> 0 " .
+    " AND cs.HandedTo = '" . $_SESSION["ID"] . "' " .
     ($TierWeightFrom != "" ? " AND c.TierWeight >= '" . $TierWeightFrom."'" : " ") .
     ($TierWeightTo != "" ? " AND c.TierWeight <= '" . $TierWeightTo."'" : " ") .
     (!empty($CylinderType) ? " AND c.CylinderType IN (" . implode(",", $CylinderType) . ") " : " ") .
@@ -285,33 +286,52 @@ desired effect
                                     <th>Cylinder Type</th>
                                     <th>Handed By</th>
                                     <th>Handed To</th>
-                                    <th>Weight (KG)</th>
                                     <th>TierWeight (KG)</th>
+                                    <th>Capacity (KG)</th>
+                                    <th>Weight (KG)</th>
                                     <th>Activity Date</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
+                                $TotalCylinderWeight = 0;
+                                $TotalCylinders = 0;
                                 while ($row = mysql_fetch_array($resource)) {
-                                ?>
-                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
+                                    if($row["PerformedByRoleID"] == ROLE_ID_DRIVER) {
+                                        $TotalCylinders++;
+                                        $TotalCylinderWeight += $row["Weight"];
+                                        ?>
+                                        <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                            <!--
 						  <td><?php echo $i; ?></td>
 -->
-                                    <td><?php echo $row["ID"]; ?></td>
-                                    <td><?php echo $row["BarCode"]; ?></td>
-                                    <td><?php echo $row["CylinderType"]; ?></td>
-                                    <td><?php echo $row["PerformedByRole"].': '.$row["PerformedByName"]; ?></td>
-                                    <td><?php echo $row["HandedToRole"].': '.$row["HandedToName"]; ?></td>
-                                    <td><?php echo financials($row["Weight"]); ?></td>
-                                    <td><?php echo financials($row["TierWeight"]); ?></td>
-                                    <td><?php echo $row["DateAdded"]; ?></td>
-                                </tr>
-                                <?php
-                                    $i++;
+                                            <td><?php echo $row["ID"]; ?></td>
+                                            <td><?php echo $row["BarCode"]; ?></td>
+                                            <td><?php echo $row["CylinderType"]; ?></td>
+                                            <td><?php echo $row["PerformedByRole"] . ': ' . $row["PerformedByName"]; ?></td>
+                                            <td><?php echo $row["HandedToRole"] . ': ' . $row["HandedToName"]; ?></td>
+                                            <td><?php echo financials($row["TierWeight"]); ?></td>
+                                            <td><?php echo financials($row["Capacity"]); ?></td>
+                                            <td><?php echo financials($row["Weight"]); ?></td>
+                                            <td><?php echo $row["DateAdded"]; ?></td>
+                                        </tr>
+                                        <?php
+                                        $i++;
+                                    }
 
                                 }
                                 ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <td><h3 style="margin:auto;">SUMMARY</h3></td>
+                                    <th>Total Cylinders</th>
+                                    <td><?php echo $TotalCylinders; ?></td>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->

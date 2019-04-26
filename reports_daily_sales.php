@@ -1,15 +1,11 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$ReportName = "Inventory Report";
-$TierWeightFrom = "";
-$TierWeightTo = "";
-$CylinderType = array();
-$DateAddedFrom = date('Y-m-d', strtotime("yesterday"));
-$DateAddedTo = date('Y-m-d');
-$WeightFrom = "";
-$WeightTo = "";
+$TotalFrom = "";
+$TotalTo = "";
+$DateAdded = date('Y-m-d');
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
+$ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 $Headings = "";
 $HeadID = array();
 $SortBy = "p.ID";
@@ -17,20 +13,21 @@ $SortBy = "p.ID";
 foreach ($_REQUEST AS $key => $val)
     $$key = $val;
 
+$ReportName = "Daily Sales Report " . $DateAdded;
+
 if (isset($_REQUEST["Headings"])) {
     $Headings = implode(',', $_REQUEST['Headings']);
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT cs.ID, cs.InvoiceID, cs.HandedTo, ht.Name AS HandedToName, htr.Name AS HandedToRole, cs.Weight, c.TierWeight, ct.Name AS CylinderType, c.BarCode AS BarCode, c.PerformedBy, p.Name AS PerformedByName, pr.Name AS PerformedByRole, cs.DateAdded FROM cylinderstatus cs LEFT JOIN cylinders c ON c.ID = cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = cs.PerformedBy LEFT JOIN roles pr ON pr.ID = p.RoleID LEFT JOIN users ht ON ht.ID = cs.HandedTo LEFT JOIN roles htr ON htr.ID = ht.RoleID WHERE cs.ID <> 0 " .
-    ($TierWeightFrom != "" ? " AND c.TierWeight >= '" . $TierWeightFrom."'" : " ") .
-    ($TierWeightTo != "" ? " AND c.TierWeight <= '" . $TierWeightTo."'" : " ") .
-    (!empty($CylinderType) ? " AND c.CylinderType IN (" . implode(",", $CylinderType) . ") " : " ") .
-    ($DateAddedFrom != "" ? " AND cs.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
-    ($DateAddedTo != "" ? " AND cs.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
-    ($WeightFrom != "" ? " AND cs.Weight >= '" . $WeightFrom. "' " : " ") .
-    ($WeightTo != "" ? " AND cs.Weight <= '" . $WeightTo ."' " : " ") .
-    (!empty($PlantID) ? " AND c.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
+    ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
+    ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
+    ($DateAdded != "" ? " AND p.DateAdded >= '" . $DateAdded. " 00:00:00' " : " ") .
+    ($DateAdded != "" ? " AND p.DateAdded <= '" . $DateAdded. " 23:59:59' " : " ") .
+    (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
+    (!empty($ShopID) ? " AND p.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
+    ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND p.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
 
@@ -178,38 +175,18 @@ desired effect
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
                                   method="GET">
                                 <div class="col-md-3">
-                                    <label class="control-label">From Tier Weight</label>
+                                    <label class="control-label">From Amount</label>
                                     <div class="">
-                                        <input name="TierWeightFrom" value="<?php echo $TierWeightFrom; ?>"
-                                               id="TierWeightFrom" class="form-control col-md-7 col-xs-12"
+                                        <input name="TotalFrom" value="<?php echo $TotalFrom; ?>"
+                                               id="TotalFrom" class="form-control col-md-7 col-xs-12"
                                                type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">To Tier Weight</label>
+                                    <label class="control-label">To Amount</label>
                                     <div class="">
-                                        <input name="TierWeightTo" value="<?php echo $TierWeightTo; ?>"
-                                               id="TierWeightTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Cylinder Types</label>
-                                    <div class="">
-                                        <select name="CylinderType[]" id="CylinderType" class="form-control select2"
-                                                multiple data-placeholder="ALL">
-                                            <?php
-                                            $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
-                                            $n = mysql_num_rows($r);
-                                            while ($Rs = mysql_fetch_assoc($r)) {
-                                                ?>
-                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $CylinderType)) {
-                                                    echo 'selected=""';
-                                                } ?>><?php echo $Rs['Name']; ?> - <?php echo $Rs['Capacity'] ?>kg
-                                                </option>
-                                                <?php
-                                            }
-                                            ?>
-                                        </select>
+                                        <input name="TotalTo" value="<?php echo $TotalTo; ?>"
+                                               id="TotalTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : 'hidden'; ?>">
@@ -232,34 +209,32 @@ desired effect
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Activity Date From</label>
+                                <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_SHOP ? 'hidden' : ''; ?>">
+                                    <label class="control-label">Shop(s)</label>
                                     <div class="">
-                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
-                                               id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
+                                        <select name="ShopID[]" id="ShopID" class="form-control select2" multiple
+                                                data-placeholder="All Shops">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE ID<>0 AND RoleID=" . (int)ROLE_ID_SHOP) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $ShopID)) {
+                                                    echo 'selected=""';
+                                                } ?>><?php echo $Rs['Name']; ?>
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Sales Date</label>
+                                    <div class="">
+                                        <input name="DateAdded" value="<?php echo $DateAdded; ?>"
+                                               id="DateAdded" class="form-control col-md-7 col-xs-12"
                                                type="date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Activity Date To</label>
-                                    <div class="">
-                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
-                                               id="DateAddedTo" class="form-control col-md-7 col-xs-12"
-                                               type="date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Weight From</label>
-                                    <div class="">
-                                        <input name="WeightFrom" value="<?php echo $WeightFrom; ?>"
-                                               id="WeightFrom" class="form-control col-md-7 col-xs-12" type="number" step="any" />
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Weight Till</label>
-                                    <div class="">
-                                        <input name="WeightTo" value="<?php echo $WeightTo; ?>"
-                                               id="WeightTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -280,38 +255,80 @@ desired effect
                                     <!--
                                                             <th>S No.</th>
                                     -->
-                                    <th>ID</th>
-                                    <th>Cylinder BarCode</th>
-                                    <th>Cylinder Type</th>
-                                    <th>Handed By</th>
-                                    <th>Handed To</th>
-                                    <th>Weight (KG)</th>
-                                    <th>TierWeight (KG)</th>
-                                    <th>Activity Date</th>
+                                    <th>Invoice ID</th>
+                                    <th>Plant</th>
+                                    <th>Shop</th>
+                                    <th>No. of Cylinders</th>
+                                    <th>Total Price (PKR)</th>
+                                    <th>Amount Paid (PKR)</th>
+                                    <th>Remaining Payment (PKR)</th>
+                                    <th>Date Added</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
+                                $TotalAmount = 0;
+                                $TotalCylinders = 0;
+                                $TotalAmountPaid = 0;
+                                $TotalAmountUnpaid = 0;
                                 while ($row = mysql_fetch_array($resource)) {
+                                    $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"]));
+                                    $TotalAmount += $row["Total"];
+                                    $TotalAmountPaid += $row["Paid"];
+                                    $TotalAmountUnpaid += $row["Unpaid"];
+                                    $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <!--
 						  <td><?php echo $i; ?></td>
 -->
-                                    <td><?php echo $row["ID"]; ?></td>
-                                    <td><?php echo $row["BarCode"]; ?></td>
-                                    <td><?php echo $row["CylinderType"]; ?></td>
-                                    <td><?php echo $row["PerformedByRole"].': '.$row["PerformedByName"]; ?></td>
-                                    <td><?php echo $row["HandedToRole"].': '.$row["HandedToName"]; ?></td>
-                                    <td><?php echo financials($row["Weight"]); ?></td>
-                                    <td><?php echo financials($row["TierWeight"]); ?></td>
+                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
+                                    <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
+                                    <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                    <td><?php echo $CylinderCount; ?></td>
+                                    <td><?php echo financials($row["Total"]); ?></td>
+                                    <td><?php echo financials($row["Paid"]); ?></td>
+                                    <td><?php echo financials($row["Unpaid"]); ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
+                                    <?php
+                                    $i2 = 0;
+                                    $innQuer = mysql_query("SELECT sd.ID, sd.CylinderID, c.Barcode, ct.Name AS CylinderType, ct.Capacity, sd.Price FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE sd.SaleID = ".$row["ID"]) or die(mysql_error());
+                                    while($innRow = mysql_fetch_array($innQuer)){
+                                        $i2++;
+                                        ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <!--
+						  <td><?php echo $i; ?></td>
+-->
+                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
+                                    <td><?php echo $i2; ?></td>
+                                    <th>Cylinder</th>
+                                    <td><?php echo $innRow["Barcode"]; ?><br/><?php echo $innRow["CylinderType"]; ?></td>
+                                    <th>Price</th>
+                                    <td><?php echo financials($innRow["Price"]); ?></td>
+                                    <th>Capacity</th>
+                                    <td><?php echo financials($innRow["Capacity"]); ?>KG</td>
+                                </tr>
+                                        <?php
+                                    }
+                                    ?>
+
                                 <?php
                                     $i++;
 
                                 }
                                 ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <td><h3 style="margin:auto;">SUMMARY</h3></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th><?php echo $TotalCylinders; ?></th>
+                                    <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
+                                    <td><?php echo $row["DateAdded"]; ?></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->

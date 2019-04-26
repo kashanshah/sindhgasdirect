@@ -230,7 +230,7 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Purchase Date From</label>
+                                    <label class="control-label">Sales Date From</label>
                                     <div class="">
                                         <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
                                                id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
@@ -238,7 +238,7 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Purchase Date Till</label>
+                                    <label class="control-label">Sales Date Till</label>
                                     <div class="">
                                         <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
                                                id="DateAddedTo" class="form-control col-md-7 col-xs-12"
@@ -285,9 +285,9 @@ desired effect
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
                                     <td><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"])); ?></td>
-                                    <td><?php echo $row["Total"]; ?></td>
-                                    <td><?php echo $row["Paid"]; ?></td>
-                                    <td><?php echo $row["Unpaid"]; ?></td>
+                                    <td><?php echo financials($row["Total"]); ?></td>
+                                    <td><?php echo financials($row["Paid"]); ?></td>
+                                    <td><?php echo financials($row["Unpaid"]); ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php

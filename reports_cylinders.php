@@ -305,7 +305,7 @@ desired effect
                                     <td><?php echo $row["BarCode"]; ?></td>
                                     <td><?php echo $row["Description"]; ?></td>
                                     <td><?php echo $row["ShortDescription"]; ?></td>
-                                    <td><?php echo $row["TierWeight"]; ?></td>
+                                    <td><?php echo financials($row["TierWeight"]); ?></td>
                                     <td><?php echo $row["CylinderType"]; ?></td>
                                     <td><?php echo $row["ManufacturingDate"]; ?></td>
                                     <td><?php echo $row["ExpiryDate"]; ?></td>
