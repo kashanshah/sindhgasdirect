@@ -143,7 +143,7 @@ desired effect
                                         <th>Gas Balance</th>
                                         <th>Credit Limit</th>
                                         <th>Security Deposite</th>
-                                        <th>Remarks</th>
+<!--                                        <th>Remarks</th>-->
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -193,10 +193,13 @@ desired effect
                                             <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
                                             <td>Rs. <?php echo financials($row["CreditLimit"]); ?></td>
                                             <td>Rs. <?php echo financials($row["SecurityDeposite"]); ?></td>
-                                            <td><?php echo $row["Remarks"]; ?></td>
+<!--                                            <td>--><?php //echo $row["Remarks"]; ?><!--</td>-->
                                             <td>
-                                                <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
-                                                <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-info btn-xs" title="View" href="viewcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
+                                                    <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php }
