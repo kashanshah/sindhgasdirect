@@ -321,9 +321,15 @@ desired effect
                                         $query = "SELECT s.ID AS SaleID, c.Balance, s.Total, s.Paid, s.Balance, (s.Balance * s.GasRate) AS Adjustment, s.Unpaid FROM sales s LEFT JOIN users c ON c.ID=s.CustomerID WHERE s.CustomerID = ".(int)$ID;
                                         $res = mysql_query($query) or die(mysql_error());
                                         $EndingBalance = 0;
+                                        $TotalSales = 0;
+                                        $TotalAdjustment = 0;
+                                        $TotalPaid = 0;
                                         $i=0;
                                         while($row = mysql_fetch_array($res)){
                                             $EndingBalance += $row["Unpaid"];
+                                            $TotalSales += $row["Total"];
+                                            $TotalAdjustment += $row["Adjustment"];
+                                            $TotalPaid += $row["Paid"];
                                             $i++;
                                             ?>
                                             <tr>
@@ -337,6 +343,14 @@ desired effect
                                             <?php
                                         }
                                         ?>
+                                        <tr>
+                                            <th>SUMMARY</th>
+                                            <td></a></td>
+                                            <td>Rs. <?php echo financials($TotalSales); ?></td>
+                                            <td>Rs. <?php echo financials($TotalPaid); ?></td>
+                                            <td>Rs. <?php echo financials($TotalAdjustment); ?></td>
+                                            <td>Rs. <?php echo financials($EndingBalance); ?></td>
+                                        </tr>
                                     </table>
                                 </div>
                             </div><!-- /.box-body -->
