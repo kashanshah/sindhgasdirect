@@ -371,7 +371,7 @@ desired effect
         $(".select2").select2();
 
         $("#example1").DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print',
                 {
@@ -381,7 +381,8 @@ desired effect
                     pageSize: 'LEGAL'
                 }
             ],
-            "lengthChange": false,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+            // "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,

@@ -252,9 +252,9 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <!--
+
                                                             <th>S No.</th>
-                                    -->
+
                                     <th>Invoice ID</th>
                                     <th>Plant</th>
                                     <th>Shop</th>
@@ -279,9 +279,9 @@ desired effect
                                     $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
+
 						  <td><?php echo $i; ?></td>
--->
+
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
@@ -298,9 +298,9 @@ desired effect
                                         $i2++;
                                         ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
+
 						  <td><?php echo $i; ?></td>
--->
+
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo $i2; ?></td>
                                     <th>Cylinder</th>
@@ -321,6 +321,7 @@ desired effect
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <td><h3 style="margin:auto;">SUMMARY</h3></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <th><?php echo $TotalCylinders; ?></th>
@@ -384,7 +385,7 @@ desired effect
         $(".select2").select2();
 
         $("#example1").DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print',
                 {
@@ -394,7 +395,8 @@ desired effect
                     pageSize: 'LEGAL'
                 }
             ],
-            "lengthChange": false,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+//            "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,

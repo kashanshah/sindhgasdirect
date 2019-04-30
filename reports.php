@@ -250,7 +250,7 @@ desired effect
         $("#example1").DataTable();
         $('#example2').DataTable({
             "paging": true,
-            "lengthChange": false,
+            //            "lengthChange": false,
             "searching": false,
             "ordering": true,
             "info": true,

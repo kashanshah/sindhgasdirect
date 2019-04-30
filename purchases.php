@@ -248,7 +248,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#example1").DataTable();
         $('#example2').DataTable({
           "paging": true,
-          "lengthChange": false,
+          //            "lengthChange": false,
           "searching": false,
           "ordering": true,
           "info": true,

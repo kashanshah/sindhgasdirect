@@ -280,10 +280,8 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <!--
-                                                            <th>S No.</th>
-                                    -->
-                                    <th>ID</th>
+                                    <th>S No.</th>
+                                    <!--<th>ID</th>-->
                                     <th>Cylinder BarCode</th>
                                     <th>Cylinder Type</th>
                                     <th>Tier Weight (KG)</th>
@@ -304,10 +302,8 @@ desired effect
                                     if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"])) {
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                            <!--
-						  <td><?php echo $i; ?></td>
--->
-                                            <td><?php echo $row["ID"]; ?></td>
+                                            <td><?php echo $i; ?></td>
+                                            <!--<td><?php /*echo $row["ID"]; */?></td>-->
                                             <td><?php echo $row["BarCode"]; ?></td>
                                             <td><?php echo $row["CylinderTypeName"]; ?></td>
                                             <td><?php echo financials($row["TierWeight"]); ?></td>
@@ -338,9 +334,7 @@ desired effect
                                 }
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
-						  <td><?php echo $i; ?></td>
--->
+                                    <!--<th>SUMMARY</th>-->
                                     <th>Total Cylinders:<br/><?php echo $i-1; ?></td>
                                     <th>Cylinders at Plant:<br/><?php echo $PlantCylinders; ?></th>
                                     <th>Filled Cylinders:<br/><?php echo $FilledCylinders; ?></th>
@@ -404,7 +398,7 @@ desired effect
         $(".select2").select2();
 
         $("#example1").DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print',
                 {
@@ -414,7 +408,8 @@ desired effect
                     pageSize: 'LEGAL'
                 }
             ],
-            "lengthChange": false,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+            //            "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,

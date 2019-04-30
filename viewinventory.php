@@ -252,7 +252,7 @@ desired effect
 <script>
     $(function () {
         $("#example1").DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print',
                 {
@@ -263,7 +263,8 @@ desired effect
                     bootstrap: true
                 }
             ],
-            "lengthChange": false,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+            // "lengthChange": false,
         });
         $('#example2').DataTable({
             "paging": true,

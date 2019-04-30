@@ -277,10 +277,8 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <!--
-                                                            <th>S No.</th>
-                                    -->
-                                    <th>ID</th>
+                                    <th>S No.</th>
+                                    <!--<th>ID</th>-->
                                     <th>Cylinder BarCode</th>
                                     <th>Cylinder Type</th>
                                     <th>Handed By</th>
@@ -295,10 +293,10 @@ desired effect
                                 while ($row = mysql_fetch_array($resource)) {
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
+
 						  <td><?php echo $i; ?></td>
--->
-                                    <td><?php echo $row["ID"]; ?></td>
+
+                                    <!--<td><?php /*echo $row["ID"]; */?></td>-->
                                     <td><?php echo $row["BarCode"]; ?></td>
                                     <td><?php echo $row["CylinderType"]; ?></td>
                                     <td><?php echo $row["PerformedByRole"].': '.$row["PerformedByName"]; ?></td>
@@ -367,7 +365,7 @@ desired effect
         $(".select2").select2();
 
         $("#example1").DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print',
                 {
@@ -377,7 +375,8 @@ desired effect
                     pageSize: 'LEGAL'
                 }
             ],
-            "lengthChange": false,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+//            "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,
