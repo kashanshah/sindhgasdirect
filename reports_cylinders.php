@@ -279,10 +279,7 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <!--
-                                                            <th>S No.</th>
-                                    -->
-                                    <th>CylinderID</th>
+                                    <th>S No.</th>
                                     <th>BarCode</th>
                                     <th>Description</th>
                                     <th>Short Description</th>
@@ -298,10 +295,7 @@ desired effect
                                 while ($row = mysql_fetch_array($resource)) {
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <!--
-						  <td><?php echo $i; ?></td>
--->
-                                    <td><?php echo $row["ID"]; ?></td>
+                                    <td><?php echo $i; ?></td>
                                     <td><?php echo $row["BarCode"]; ?></td>
                                     <td><?php echo $row["Description"]; ?></td>
                                     <td><?php echo $row["ShortDescription"]; ?></td>
@@ -316,6 +310,25 @@ desired effect
 
                                 }
                                 ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <th>SUMMARY</th>
+                                    <td></td>
+                                    <th></th>
+                                    <td>Total Cylinders: <?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'")); ?></td>
+                                    <td></td>
+                                    <td>
+                                        <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
+                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
+                                            <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM cylinders WHERE CylinderType = '".(int)$cyltrow["ID"]."' AND ExpiryDate > '" . date('Y-m-d h:i:s') . "'")); ?>
+                                            <br/>
+                                            <?php
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?php echo $row["ManufacturingDate"]; ?></td>
+                                    <td><?php echo $row["ExpiryDate"]; ?></td>
+                                    <td><?php echo $row["Plant"]; ?></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->

@@ -285,7 +285,16 @@ desired effect
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
-                                    <td><?php echo $CylinderCount; ?></td>
+                                    <td>
+                                        Total Cylinders: <?php echo $CylinderCount; ?>
+                                        <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
+                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
+                                            <br/>
+                                            <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'")); ?>
+                                            <?php
+                                        }
+                                        ?>
+                                    </td>
                                     <td><?php echo financials($row["Total"]); ?></td>
                                     <td><?php echo financials($row["Paid"]); ?></td>
                                     <td><?php echo financials($row["Unpaid"]); ?></td>
