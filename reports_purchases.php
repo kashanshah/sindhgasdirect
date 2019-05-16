@@ -273,7 +273,21 @@ desired effect
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
+                                $TotalAmount = 0;
+                                $TotalCylinders = 0;
+                                $TotalAmountPaid = 0;
+                                $TotalAmountUnpaid = 0;
+                                $ctqr = mysql_query("SELECT ID FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
+                                $count0 = 0;
+                                while($ctqrow = mysql_fetch_array($ctqr)){
+                                    ${'count'.$ctqrow["ID"]} = 0;
+                                }
                                 while ($row = mysql_fetch_array($resource)) {
+                                    $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM purchase_details WHERE PurchaseID = ".(int)$row["ID"]));
+                                    $TotalAmount += $row["Total"];
+                                    $TotalAmountPaid += $row["Paid"];
+                                    $TotalAmountUnpaid += $row["Unpaid"];
+                                    $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <td><?php echo $i; ?></td>
@@ -283,7 +297,10 @@ desired effect
                                     <td>
                                         Total Cylinders: <?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM purchase_details WHERE PurchaseID = ".(int)$row["ID"])); ?>
                                         <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
-                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
+                                        while($cyltrow = mysql_fetch_array($cquer)){
+                                            $countCyl = @mysql_result(mysql_query("SELECT COUNT(pd.ID) FROM purchase_details pd LEFT JOIN cylinders c ON c.ID=pd.CylinderID WHERE pd.PurchaseID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'"));
+                                            ${'count'.$cyltrow["ID"]} = ${'count'.$cyltrow["ID"]} + $countCyl;
+                                            ?>
                                             <br/>
                                             <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(pd.ID) FROM purchase_details pd LEFT JOIN cylinders c ON c.ID=pd.CylinderID WHERE pd.PurchaseID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'")); ?>
                                             <?php
@@ -300,6 +317,26 @@ desired effect
 
                                 }
                                 ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <td><h3 style="margin:auto;">SUMMARY</h3></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Total Cylinders Purchased: <?php echo $TotalCylinders; ?><br/>
+                                        <?php
+
+                                        $ctqr = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
+                                        $count0 = 0;
+                                        while($ctqrow = mysql_fetch_array($ctqr)){
+                                            echo $ctqrow["Name"] . ': '.${'count'.$ctqrow["ID"]}.'<br/>';
+                                        }
+
+                                        ?></th>
+                                    <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
+                                    <td><?php echo $row["DateAdded"]; ?></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->

@@ -8,6 +8,7 @@ $DateAddedFrom = "";
 $DateAddedTo = "";
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
 $ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
+$CustomerID = array();
 $Headings = "";
 $HeadID = array();
 $SortBy = "p.ID";
@@ -27,6 +28,7 @@ $sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS Custom
     ($DateAddedTo != "" ? " AND p.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
     (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
     (!empty($ShopID) ? " AND p.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
+    (!empty($CustomerID) ? " AND p.CustomerID IN (" . implode(",", $CustomerID) . ") " : " ") .
     ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND p.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
@@ -230,6 +232,26 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
+                                    <label class="control-label">Customer(s)</label>
+                                    <div class="">
+                                        <select name="CustomerID[]" id="CustomerID" class="form-control select2" multiple
+                                                data-placeholder="All Customers">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE ID<>0 AND RoleID=" . (int)ROLE_ID_CUSTOMER) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $CustomerID)) {
+                                                    echo 'selected=""';
+                                                } ?>><?php echo $Rs['Name']; ?>
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <label class="control-label">Sales Date From</label>
                                     <div class="">
                                         <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
@@ -264,6 +286,7 @@ desired effect
                                     <th>Invoice ID</th>
                                     <th>Plant</th>
                                     <th>Shop</th>
+                                    <th>Customer</th>
                                     <th>No. of Cylinders</th>
                                     <th>Total Price (PKR)</th>
                                     <th>Amount Paid (PKR)</th>
@@ -273,19 +296,37 @@ desired effect
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
+                                $TotalAmount = 0;
+                                $TotalCylinders = 0;
+                                $TotalAmountPaid = 0;
+                                $TotalAmountUnpaid = 0;
+                                $ctqr = mysql_query("SELECT ID FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
+                                $count0 = 0;
+                                while($ctqrow = mysql_fetch_array($ctqr)){
+                                    ${'count'.$ctqrow["ID"]} = 0;
+                                }
                                 while ($row = mysql_fetch_array($resource)) {
+                                    $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"]));
+                                    $TotalAmount += $row["Total"];
+                                    $TotalAmountPaid += $row["Paid"];
+                                    $TotalAmountUnpaid += $row["Unpaid"];
+                                    $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <td><?php echo $i; ?></td>
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                    <td><?php echo getValue('users', 'Name', 'ID', $row["CustomerID"]); ?></td>
                                     <td>
                                         Total Cylinders: <?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"])); ?>
                                         <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
-                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
+                                        while($cyltrow = mysql_fetch_array($cquer)){
+                                            $countCyl = @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'"));
+                                            ${'count'.$cyltrow["ID"]} = ${'count'.$cyltrow["ID"]} + $countCyl;
+                                            ?>
                                             <br/>
-                                            <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'")); ?>
+                                            <?php echo $cyltrow["Name"]; ?>: <?php echo $countCyl; ?>
                                             <?php
                                         }
                                         ?>
@@ -300,6 +341,27 @@ desired effect
 
                                 }
                                 ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+                                    <td><h3 style="margin:auto;">SUMMARY</h3></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Total Cylinders Sold: <?php echo $TotalCylinders; ?><br/>
+                                        <?php
+
+                                        $ctqr = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
+                                        $count0 = 0;
+                                        while($ctqrow = mysql_fetch_array($ctqr)){
+                                            echo $ctqrow["Name"] . ': '.${'count'.$ctqrow["ID"]}.'<br/>';
+                                        }
+
+                                        ?></th>
+                                    <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
+                                    <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
+                                    <td><?php echo $row["DateAdded"]; ?></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->

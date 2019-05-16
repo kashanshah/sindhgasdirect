@@ -109,7 +109,7 @@ desired effect
                                 <span class="info-box-icon bg-red-active"><i class="fa fa-users"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-number">Users Report</span>
-                                    <span class="info-box-text"><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM users WHERE ID <> 0")); ?> Cylinder(s)</span>
+                                    <span class="info-box-text"><?php echo @mysql_result(mysql_query("SELECT COUNT(ID) AS Total FROM users WHERE ID <> 0")); ?> User(s)</span>
                                 </div>
                             </div>
                         </a>

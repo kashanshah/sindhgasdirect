@@ -350,7 +350,13 @@ desired effect
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
+                                $totalCommercial = 0;
+                                $totalDomestic = 0;
                                 while ($row = mysql_fetch_array($resource)) {
+                                    if($row["Commercial"])
+                                        $totalCommercial++;
+                                    else
+                                        $totalDomestic++;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <td><?php echo $i; ?></td>
@@ -375,6 +381,22 @@ desired effect
 
                                 }
                                 ?>
+                                <th>SUMMARY</th>
+                                <th></th>
+                                <th class="text-right">Total</th>
+                                <th><?php echo $i-1; ?></th>
+                                <th></th>
+                                <th class="text-right">Commercial Users</th>
+                                <th><?php echo $totalCommercial; ?></th>
+                                <th></th>
+                                <th class="text-right">Domestic Users</th>
+                                <th><?php echo $totalDomestic; ?></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
