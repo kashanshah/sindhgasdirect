@@ -1,12 +1,13 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 
 $msg='';
 $ID = "";
 $Amount = 0;
 $Details = "";
 $MethodID = 0;
+$UserID = 0;
 $DateAdded = "";
 $DateModified = "";
 
@@ -40,11 +41,12 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
     }
     if($msg=="")
     {
+        $UserID = ($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $UserID);
         mysql_query("INSERT into payments SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
 						MethodID='".(int)$MethodID."',
-						UserID='".(int)$_SESSION["ID"]."',
+						UserID='".(int)$UserID."',
 						Amount='".(float)$Amount."',
 						Details='".dbinput($Details)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
@@ -53,7 +55,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
         mysql_query("UPDATE users SET
 						DateModified='".DATE_TIME_NOW."',
 						Credit=Credit+".(float)$Amount."
-						WHERE ID=".(int)$_SESSION["ID"]."
+						WHERE ID=".(int)$UserID."
 						") or die(mysql_error());
 
 
@@ -109,7 +111,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Add Payment</title>
+    <title><?php echo SITE_TITLE; ?>- Add Payment to Account</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -173,13 +175,13 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Add Payment
+                Add Payment to Account
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li><a href="payments.php"><i class="fa fa-dollar"></i> Payments</a></li>
-                <li class="active">Add Payment</li>
+                <li class="active">Add Payment to Account</li>
             </ol>
         </section>
 
@@ -211,6 +213,26 @@ desired effect
                                     <div class="col-md-6">
                                         <input type="file" name="File">
                                         <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_PAYMENT_IMAGES.$Image.'" />'; ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="UserID" id="UserID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_SHOP . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Shop Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">

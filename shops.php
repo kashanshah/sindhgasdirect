@@ -130,7 +130,7 @@ desired effect
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
                                         <th>Name</th>
@@ -153,7 +153,7 @@ desired effect
                                     {
                                         ?>
                                         <tr>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <?php } ?>
                                             <td><?php echo $row["Name"]; ?></td>

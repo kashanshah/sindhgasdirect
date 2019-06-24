@@ -129,10 +129,10 @@ desired effect
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                                <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                     <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                                 <?php } ?>
-                                <?php if($_SESSION["RoleID"] == ROLE_ID_SHOP) { ?>
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_SHOP) { ?>
                                     <a style="float:right;margin-right:15px;" class="btn btn-group-vertical btn-success" href="addpayment.php" data-original-title="" title="">Add Payment To Account</a>
                                 <?php } ?>
                             </div>
@@ -142,7 +142,7 @@ desired effect
                                 <table id="paymentmethodple1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                             <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
                                         <th>Amount</th>
@@ -161,7 +161,7 @@ desired effect
                                     {
                                         ?>
                                         <tr>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                                 <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <?php } ?>
                                             <td><?php echo $row["Amount"]; ?></td>

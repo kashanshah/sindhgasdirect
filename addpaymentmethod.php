@@ -1,10 +1,11 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 $msg='';
 $ID = "";
 $Name = "";
+$PlantID = 0;
 $Details = "";
 $Status = 1;
 $DateAdded = "";
@@ -20,12 +21,13 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter The Payment Method Name</div>';
     if($msg=="")
     {
+        $PlantID = ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : $PlantID);
         mysql_query("INSERT into paymentmethods SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
 						Name='".dbinput($Name)."',
 						Details='".dbinput($Details)."',
-						PlantID='".(int)$_SESSION["ID"]."',
+						PlantID='".(int)$PlantID."',
 						Status='".(int)$Status."'
 						") or die(mysql_error());
 
@@ -156,6 +158,26 @@ desired effect
                                     <label class="col-md-3 control-label" for="paymentmethodple-text-input">Details</label>
                                     <div class="col-md-6">
                                         <textarea name="Details" class="form-control" ><?php echo $Details;?></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="PlantID" id="PlantID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_PLANT . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Plant Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
