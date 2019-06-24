@@ -4,7 +4,9 @@
 
 $msg = '';
 $sql = "SELECT ID, Name, Description, Status, UserID, RoleID, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded, DATE_FORMAT(DateModified, '%D %b, %Y %h:%i:%p ') AS DateModified FROM notifications
-WHERE ID<>0 AND (UserID = " . (int)$_SESSION["ID"] . " OR RoleID = " . (int)$_SESSION["RoleID"] . ") ORDER BY Priority, ID DESC ";
+WHERE  " .
+    ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : "(UserID = " . (int)$_SESSION["ID"] . " OR RoleID = " . (int)$_SESSION["RoleID"] . ") AND ") .
+    " ID<>0  ORDER BY Priority, ID DESC ";
 $resource = mysql_query($sql) or die(mysql_error());
 ?>
 <!DOCTYPE html>
@@ -46,12 +48,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .all_notification_wrap .notification-menu {
             margin: auto;
             padding: 0;
-            box-shadow: 0 2px 4px 0 rgba(186,202,210,.2);
-            -webkit-box-shadow: 0 2px 4px 0 rgba(186,202,210,.2);
-            -moz-box-shadow: 0 2px 4px 0 rgba(186,202,210,.2);
+            box-shadow: 0 2px 4px 0 rgba(186, 202, 210, .2);
+            -webkit-box-shadow: 0 2px 4px 0 rgba(186, 202, 210, .2);
+            -moz-box-shadow: 0 2px 4px 0 rgba(186, 202, 210, .2);
             background: #fff;
             border-radius: 3px;
         }
+
         .notification-menu li {
             list-style: none;
             border-top: 1px solid #dcdcdc;
@@ -60,26 +63,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
             max-height: 100%;
             padding: 0;
         }
+
         .all_notification_wrap .notification-menu li:first-child {
             border-top: 0;
         }
-        .all_notification_wrap .notification-menu li>a {
+
+        .all_notification_wrap .notification-menu li > a {
             white-space: normal;
             position: relative;
             padding: 12px 15px;
         }
+
         .all_notification_wrap .notification-menu li a {
             display: block;
         }
+
         .notification-menu li > a, .notification-menu li > a:hover {
             color: #b8c7ce;
         }
+
         .notification-menu li .noti-image {
             font-size: 16px;
         }
+
         .all_notification_wrap .notification-menu li .noti-content {
             position: static;
         }
+
         .notification-menu li .noti-content > .noti-para {
             font-size: 16px;
             color: #696969;
@@ -87,6 +97,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             display: block;
             padding-right: 30px;
         }
+
         .notification-menu li .noti-content .noti-time {
             font-size: 11px;
             color: #b8c7ce;
@@ -153,19 +164,21 @@ desired effect
                             <div class="all_notification_wrap row">
                                 <ul class="notification-menu notification-list">
                                     <?php
-                                    while($row = mysql_fetch_array($resource)){
+                                    while ($row = mysql_fetch_array($resource)) {
                                         ?>
-                                        <li class="read" <?php echo $row["Status"] == 0 ? 'style="background:#ecf0f2;"' : ''; ?>  onclick='markReadAndAction(<?php echo $row["ID"]; ?>, "<?php echo $row["Link"]; ?>")'>
+                                        <li class="read" <?php echo $row["Status"] == 0 ? 'style="background:#ecf0f2;"' : ''; ?>
+                                            onclick='markReadAndAction(<?php echo $row["ID"]; ?>, "<?php echo $row["Link"]; ?>", <?php echo ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 'false' : 'true'); ?>)'>
                                             <button class="close-notification hidden"
                                                     data-id="Ym8vZkFscllWR1JyS0JXZDBNWkhnUT09" data-condition="false"><i
                                                         class="fa fa-times-circle" aria-hidden="true"></i></button>
                                             <a class="">
                                                 <div class="noti-content">
                                                     <span class="noti-para"><strong><?php echo $row["Name"]; ?></strong><br/><?php echo nl2br(dboutput($row["Description"])); ?></span>
-                                                    <span class="noti-time"><?php echo $row["DateAdded"]; ?></span></div>
+                                                    <span class="noti-time"><?php echo $row["DateAdded"]; ?></span>
+                                                </div>
                                             </a>
                                         </li>
-                                    <?php
+                                        <?php
                                     }
                                     ?>
                                 </ul>

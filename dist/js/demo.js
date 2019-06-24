@@ -706,27 +706,32 @@ function slideToggle(el) {
         register_tab_GUID();
     });
 })(jQuery);
-function markReadAndAction(ID, Link){
-    $('.loading-overlay').show();
-    $.ajax({
-        url: 'ajax.php',
-        type:'POST',
-        data:{action:"markasread",ID:ID},
-        success:function(response){
-            data = JSON.parse(response);
-            if(data.code == 0){
-                window.location.href = Link;
-            }
-            else{
+function markReadAndAction(ID, Link, markRead = true){
+    if(markRead == false){
+        window.location.href = Link;
+    }
+    else{
+        $('.loading-overlay').show();
+        $.ajax({
+            url: 'ajax.php',
+            type:'POST',
+            data:{action:"markasread",ID:ID},
+            success:function(response){
+                data = JSON.parse(response);
+                if(data.code == 0){
+                    window.location.href = Link;
+                }
+                else{
+                    $('.loading-overlay').hide();
+                    alert(data.msg);
+                }
+            },
+            error:function(data){
                 $('.loading-overlay').hide();
-                alert(data.msg);
+                alert(data.error);
             }
-        },
-        error:function(data){
-            $('.loading-overlay').hide();
-            alert(data.error);
-        }
-    });
+        });
+    }
 }
 
 
