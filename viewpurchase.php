@@ -1,95 +1,92 @@
 <?php include("common.php"); ?>
-<?php include("checkadminlogin.php"); 
+<?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
-	$msg='';
-	$ID = $_REQUEST["ID"];
+$msg = '';
+$ID = $_REQUEST["ID"];
 
-	// FOR PRODUCT 
-	$NewOldProduct = 0;
-	$BarCode = "";
-	$OldBarCode = "";
-	$CategoryID="";
-	$ProductID = 0;
-	$ProductName = "";
-	$ShortDescription = "";
-	$Description = "";
-	$WholePrice = 0;
-	$RetailPrice = 0;
-	$CurrentStock = 0;
-	$Stock = 0;
-	$PImage="";
-	$DateAdded = "";
-	$DateModified = "";
+// FOR PRODUCT
+$NewOldProduct = 0;
+$BarCode = "";
+$OldBarCode = "";
+$CategoryID = "";
+$ProductID = 0;
+$ProductName = "";
+$ShortDescription = "";
+$Description = "";
+$WholePrice = 0;
+$RetailPrice = 0;
+$CurrentStock = 0;
+$Stock = 0;
+$PImage = "";
+$DateAdded = "";
+$DateModified = "";
 
 // FOR SUPPLIER
-	$NewOldSupplier = 0;
-	$SupplierName = "";
-	$SupplierID=0;
-	$SImage = "user.jpg";
-	$NIC = "";
-	$Number = "";
-	$Address = "";
-	$Remarks = "";
-	$Email = "";
+$NewOldSupplier = 0;
+$SupplierName = "";
+$SupplierID = 0;
+$SImage = "user.jpg";
+$NIC = "";
+$Number = "";
+$Address = "";
+$Remarks = "";
+$Email = "";
 
 // FOR Amount
-	$Paid = 0;
-	$Discount = 0;
-	$TotalAmount = 0;
-	$Note = '';
+$Paid = 0;
+$Discount = 0;
+$TotalAmount = 0;
+$Note = '';
 
-	
-	$query="SELECT s.ID, u.Name, s.ShopID, s.RefNum, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM purchases s LEFT JOIN users u ON u.ID = s.PerformedBy WHERE s.ID <> 0 AND s.ID = ".(int)$ID;
-	$res = mysql_query($query) or die(mysql_error());
-	$row = mysql_fetch_array($res);
-	foreach($row as $key => $value)
-	{
-		$$key=$value;
-	}
-if(isset($_POST['addpurchase']) && $_POST['addpurchase']=='Save')
-{
-	$msg = "";
-	foreach($_POST as $key => $value)
-	{
-		$$key=$value;
-	}
 
-	if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><i class="fa fa-ban"></i>Incorrect Captcha Code</div>'; }
-	
+$query = "SELECT s.ID, u.Name, s.ShopID, s.RefNum, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM purchases s LEFT JOIN users u ON u.ID = s.ShopID WHERE s.ID <> 0 AND s.ID = " . (int)$ID;
+$res = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($res);
+foreach ($row as $key => $value) {
+    $$key = $value;
+}
+if (isset($_POST['updatepurchase']) && $_POST['updatepurchase'] == 'Save') {
+    $msg = "";
+    foreach ($_POST as $key => $value) {
+        $$key = $value;
+    }
 
-	
-	if($msg == "")
-	{
-		$query3 = "UPDATE purchases SET DateModified = '".DATE_TIME_NOW."',
-				Note='".dbinput($Note)."',
-				DateAdded='".dbinput($DateAdded)."'
-				WHERE ID=".$ID."
+    if (CAPTCHA_VERIFICATION == 1) {
+        if (!isset($_POST["captcha"]) || $_POST["captcha"] == "" || $_SESSION["code"] != $_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><i class="fa fa-ban"></i>Incorrect Captcha Code</div>';
+    }
+
+
+    if ($msg == "") {
+        $query3 = "UPDATE purchases SET DateModified = '" . DATE_TIME_NOW . "',
+				Note='" . dbinput($Note) . "',
+				DateAdded='" . dbinput($DateAdded) . "'
+				WHERE ID=" . $ID . "
 				";
-		mysql_query($query3) or die('a'.mysql_error());
-		
-		$_SESSION["msg"]='<div class="alert alert-success alert-dismissable">
+        mysql_query($query3) or die('a' . mysql_error());
+
+        $_SESSION["msg"] = '<div class="alert alert-success alert-dismissable">
 			<i class="fa fa-check"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 			Purchase Notes has been updated!
 			</div>';
-	}
-	redirect("viewpurchase.php?ID=".$ID);
+    }
+    redirect("viewpurchase.php?ID=" . $ID);
 }
 
 ?>
-	
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?php echo SITE_TITLE; ?>- ViewPurchase</title>
-    <link rel="icon" href="<?php echo DIR_LOGO_IMAGE.SITE_LOGO; ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo DIR_LOGO_IMAGE . SITE_LOGO; ?>" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -115,296 +112,319 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <!--
-  BODY TAG OPTIONS:
-  =================
-  Apply one or more of the following classes to get the
-  desired effect
-  |---------------------------------------------------------|
-  | SKINS         | skin-blue                               |
-  |               | skin-black                              |
-  |               | skin-purple                             |
-  |               | skin-yellow                             |
-  |               | skin-red                                |
-  |               | skin-green                              |
-  |---------------------------------------------------------|
-  |LAYOUT OPTIONS | fixed                                   |
-  |               | layout-boxed                            |
-  |               | layout-top-nav                          |
-  |               | sidebar-collapse                        |
-  |               | sidebar-mini                            |
-  |---------------------------------------------------------|
-  -->
-  <body class="hold-transition skin-blue sidebar-mini">
-    <div class="wrapper">
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |
+|               | layout-boxed                            |
+|               | layout-top-nav                          |
+|               | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
 
-      <!-- Main Header -->
-      <?php include("header.php"); ?>
-      <!-- Left side column. contains the logo and sidebar -->
-      <?php include("leftsidebar.php"); ?>
-      
+    <!-- Main Header -->
+    <?php include("header.php"); ?>
+    <!-- Left side column. contains the logo and sidebar -->
+    <?php include("leftsidebar.php"); ?>
 
-      <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          <h1>
-            ViewPurchase
-            <small></small>
-          </h1>
-          <ol class="breadcrumb">
-            <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="purchases.php"><i class="fa fa-cart-arrow-down"></i> Purchases</a></li>
-            <li class="active">ViewPurchase</li>
-          </ol>
+            <h1>
+                ViewPurchase
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="purchases.php"><i class="fa fa-cart-arrow-down"></i> Purchases</a></li>
+                <li class="active">ViewPurchase</li>
+            </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
-          <div class="row">
-            <div class="col-md-12">
-              <!-- /.box -->
-				<form id="frmPages" action="<?php echo $self.'?ID='.$ID; ?>" class="form-horizontal" method="post" enctype="multipart/form-data">
-              <div class="box ">
-                <div class="box-header">
-                      <div class="btn-group-right">
-                          <?php
-                          if($_SESSION["RoleID"] == ROLE_ID_SHOP){
-                              ?>
-                              <?php echo ($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentpurchase.php?ID='.$ID.'">Add Payment</a>' : ''); ?>
-                              <?php
-                          }
-                          ?>
-                       <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-danger" onClick="location.href='purchases.php'" >Back</button>
-                      </div>
-				</div>
-			  </div>
-			</div>
-            <div class="col-md-12">
-<?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
-            </div>
-            <div class="col-md-9">
-              <div class="box">
-				<div class="box-header with-border">
-				  <h3 class="box-title">Purchase Information</h3>
-				  <div class="box-tools pull-right">
-					<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-				  </div>
-				</div>
-                <div class="box-body">
-					<h3><b>Customer Name: </b><?php echo $row["Name"]; ?></h3>
-					<h3><b>Purchase ID: </b><?php echo $ID; ?></h3>
-					<h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-<!--					<h3><b>Gas Rate: </b>--><?php //$GasRate = $row["GasRate"];echo $GasRate; ?><!--</h3>-->
-					<h3><b>Invoices: </b>
-<?php $pdff = explode(',', $row["RefNum"]);?>
-                        <select id="invoiceid<?php echo $row["ID"]; ?>">
-                            <?php
-                            $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '".(int)$row["ID"]."'") or die(mysql_error());
-                            $n = mysql_num_rows($r);
-                            foreach($pdff as $pdf)
-							{
-							    if(file_exists(dirname(__FILE__).'/'.DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf.".pdf")) {
-                                    ?>
-                                    <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "Invoice # " . $row["ID"]; ?></option>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- /.box -->
+                    <form id="frmPages" action="<?php echo $self . '?ID=' . $ID; ?>" class="form-horizontal"
+                          method="post" enctype="multipart/form-data">
+                        <div class="box ">
+                            <div class="box-header">
+                                <div class="btn-group-right">
                                     <?php
-                                }
-                            }
-                            while($Rs = mysql_fetch_assoc($r)) {
-                                ?>
-                                <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
-                            <?php }
-                            ?>
-                        </select>
-						<input type="button" value="View" style="align:right" onClick="read(<?php echo $row["ID"]; ?>)"/>
-					</h3>
-					<h3><b>Purchase Details:</b></h3>
-					<div class="table-responsive">
-						<table class="table">
-							<tr>
-								<th>SNo.</th>
-								<th>Cylinder Code</th>
-								<th>Tier Weight (KG)</th>
-								<th>Company Weight (KG)</th>
-								<th>Cylinder Weight (KG)</th>
-								<th>Gas Weight (KG)</th>
-								<th>Price (Rs.)</th>
-								<th>Return Status</th>
-							</tr>
-<?php
-$query="SELECT pd.ID, c.BarCode, ct.Name AS CylinderType, pd.CylinderID, pd.TierWeight, pd.CompanyTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID LEFT JOIN cylindertypes ct ON c.CylinderType = ct.ID WHERE pd.PurchaseID=".(int)$ID;
-$resource=mysql_query($query) or die(mysql_error());
-$num = mysql_num_rows($resource);
-$cou2 = 0;
-$__totalGasWeight = 0;
-$__totalPrice = 0;
-while($data = mysql_fetch_array($resource)){
-	$cou2++;
-	$__totalGasWeight += ($data["TotalWeight"] - $data["TierWeight"]);
-	$__totalPrice += ($data["Price"]);
-?>
-							<tr <?php echo $data["CompanyTotalWeight"] == $data["TotalWeight"] ? '' : 'class="bg bg-yellow"'; ?>>
-								<td><?php echo $cou2; ?></td>
-								<td><?php echo $data["BarCode"]; ?><br/><?php echo $data["CylinderType"] ?></td>
-								<td><?php echo financials($data["TierWeight"]); ?>KG</td>
-								<td><?php echo financials($data["CompanyTotalWeight"]); ?>KG</td>
-								<td><?php echo financials($data["TotalWeight"]); ?>KG</td>
-								<td><?php echo financials($data["TotalWeight"] - $data["TierWeight"]); ?>KG</td>
-								<td>Rs. <?php echo financials($data["Price"]); ?></td>
-								<td><?php echo $__RETURNSTATUS[$data["ReturnStatus"]].($data["ReturnStatus"] > 0 ? ' at '.date('H:i A, d M, Y', strtotime($data["ReturnDate"])).' with weight: '.$data["ReturnWeight"].'KG' : ''); ?></td>
-							</tr>
-<?php
-}
-?>					
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td><?php echo financials($__totalGasWeight); ?>KG</td>
-								<td>Rs. <?php echo financials($__totalPrice); ?></td>
-							</tr>
-						</table><!-- /.box-body -->
-					</div><!-- /.box-body -->
-                </div><!-- /.box-body -->
-              </div><!-- /.box-body -->
-              </div><!-- /.box-body -->
-              <div class="col-md-3">
-			  <div class="box">
-				<div class="box-header with-border">
-				  <h3 class="box-title">Payment Information</h3>
-				  <div class="box-tools pull-right">
-					<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-				  </div>
-				</div>
-                <div class="box-body">
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Total Amount</label>
-						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Total Amount" readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>" id="TotalAmount">
-						</div>
-					</div>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Amount Paid</label>
-						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Paid" value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
-						</div>
-					</div>
-                    <?php if($row["Balance"] > 0){ ?>
-                    <div class="form-group">
-                        <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
-                        <div class="col-md-12">
-                            <input type="number" class="form-control" placeholder="" value="<?php echo $row["Balance"] * $GasRate; ?>" name="Balance" readonly="">
-                        </div>
-                    </div>
-                    <?php } ?>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Amount Remaining</label>
-						<div class="col-md-12">
-							<input type="number" class="form-control" placeholder="Enter the Amount Unpaid" value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
-						</div>
-					</div>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Purchase Date</label>
-						<div class="col-md-12">
-                            <input type="date" step="any" class="form-control" placeholder="Enter the Date" value="<?php echo date('Y-m-d', strtotime($row["DateAdded"])); ?>" name="DateAdded" />
-						</div>
-					</div>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Note</label>
-						<div class="col-md-12">
-							<textarea class="form-control" name="Note" ><?php echo $Note;?></textarea>
-						</div>
-					</div>
-                    <?php
-                    if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_SHOP) {
-                        ?>
-                        <div class="form-group">
-                            <label class="col-md-12" for="example-text-input">&nbsp;</label>
-                            <div class="col-md-12 text-right">
-                                <input type="submit" name="addpurchase" class="btn btn-group-vertical btn-success"
-                                       value="Save"/>
+                                    if ($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                                        ?>
+                                        <?php echo($row["Unpaid"] > 0 ? '<a style="float:right;margin-right:15px;" class="btn btn-warning" href="addpaymentpurchase.php?ID=' . $ID . '">Add Payment</a>' : ''); ?>
+                                        <?php
+                                    }
+                                    ?>
+                                    <button style="float:right;margin-right:15px;" type="button"
+                                            class="btn btn-group-vertical btn-danger"
+                                            onClick="location.href='purchases.php'">Back
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <?php
-                    }
-                    ?>
-              <?php if(CAPTCHA_VERIFICATION == 1) { ?>
-                    <div class="form-group">
-						<label class="col-md-12" for="example-text-input">Captcha</label>
-						<div class="col-md-12">
-							<img src="captcha.php" />
-							<input type="text" class="form-control" placeholder="Enter the captcha" name="captcha">
-						</div>
-					</div>
-			  <?php } ?>
-                  </div><!-- /.box-body -->
-                </div><!-- /.box-body --> 
-              </div><!-- /.box -->
-				</form>
-              </div><!-- /.box -->
-            </div><!-- /.col -->
-      <!-- Main Footer -->
-      <?php include("footer.php"); ?>
-          </div><!-- /.row -->
-        </section><!-- /.content -->
+                </div>
+                <div class="col-md-12">
+                    <?php if (isset($_SESSION["msg"]) && $_SESSION["msg"] != "") {
+                        echo $_SESSION["msg"];
+                        $_SESSION["msg"] = "";
+                    } ?>
+                </div>
+                <div class="col-md-9">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Purchase Information</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <h3><b>Store Name: </b><?php echo $row["Name"]; ?></h3>
+                            <h3><b>Purchase ID: </b><?php echo $ID; ?></h3>
+                            <h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
+                            <!--					<h3><b>Gas Rate: </b>-->
+                            <?php //$GasRate = $row["GasRate"];echo $GasRate; ?><!--</h3>-->
+                            <h3><b>Invoices: </b>
+                                <?php $pdff = explode(',', $row["RefNum"]); ?>
+                                <select id="invoiceid<?php echo $row["ID"]; ?>">
+                                    <?php
+                                    $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '" . (int)$row["ID"] . "'") or die(mysql_error());
+                                    $n = mysql_num_rows($r);
+                                    foreach ($pdff as $pdf) {
+                                        if (file_exists(dirname(__FILE__) . '/' . DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf . ".pdf")) {
+                                            ?>
+                                            <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "Invoice # " . $row["ID"]; ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    while ($Rs = mysql_fetch_assoc($r)) {
+                                        ?>
+                                        <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID
+                                            - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
+                                    <?php }
+                                    ?>
+                                </select>
+                                <input type="button" value="View" style="align:right"
+                                       onClick="read(<?php echo $row["ID"]; ?>)"/>
+                            </h3>
+                            <h3><b>Purchase Details:</b></h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Cylinder Code</th>
+                                        <th>Tier Weight (KG)</th>
+                                        <th>Company Weight (KG)</th>
+                                        <th>Cylinder Weight (KG)</th>
+                                        <th>Gas Weight (KG)</th>
+                                        <th>Price (Rs.)</th>
+                                        <th>Return Status</th>
+                                    </tr>
+                                    <?php
+                                    $query = "SELECT pd.ID, c.BarCode, ct.Name AS CylinderType, pd.CylinderID, pd.TierWeight, pd.CompanyTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID LEFT JOIN cylindertypes ct ON c.CylinderType = ct.ID WHERE pd.PurchaseID=" . (int)$ID;
+                                    $resource = mysql_query($query) or die(mysql_error());
+                                    $num = mysql_num_rows($resource);
+                                    $cou2 = 0;
+                                    $__totalGasWeight = 0;
+                                    $__totalPrice = 0;
+                                    while ($data = mysql_fetch_array($resource)) {
+                                        $cou2++;
+                                        $__totalGasWeight += ($data["TotalWeight"] - $data["TierWeight"]);
+                                        $__totalPrice += ($data["Price"]);
+                                        ?>
+                                        <tr <?php echo $data["CompanyTotalWeight"] == $data["TotalWeight"] ? '' : 'class="bg bg-yellow"'; ?>>
+                                            <td><?php echo $cou2; ?></td>
+                                            <td><?php echo $data["BarCode"]; ?><br/><?php echo $data["CylinderType"] ?>
+                                            </td>
+                                            <td><?php echo financials($data["TierWeight"]); ?>KG</td>
+                                            <td><?php echo financials($data["CompanyTotalWeight"]); ?>KG</td>
+                                            <td><?php echo financials($data["TotalWeight"]); ?>KG</td>
+                                            <td><?php echo financials($data["TotalWeight"] - $data["TierWeight"]); ?>
+                                                KG
+                                            </td>
+                                            <td>Rs. <?php echo financials($data["Price"]); ?></td>
+                                            <td><?php echo $__RETURNSTATUS[$data["ReturnStatus"]] . ($data["ReturnStatus"] > 0 ? ' at ' . date('H:i A, d M, Y', strtotime($data["ReturnDate"])) . ' with weight: ' . $data["ReturnWeight"] . 'KG' : ''); ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><?php echo financials($__totalGasWeight); ?>KG</td>
+                                        <td>Rs. <?php echo financials($__totalPrice); ?></td>
+                                    </tr>
+                                </table><!-- /.box-body -->
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box-body -->
+                </div><!-- /.box-body -->
+                <div class="col-md-3">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Payment Information</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-12" for="example-text-input">Total Amount</label>
+                                <div class="col-md-12">
+                                    <input type="number" class="form-control" placeholder="Enter the Total Amount"
+                                           readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>"
+                                           id="TotalAmount">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12" for="example-text-input">Amount Paid</label>
+                                <div class="col-md-12">
+                                    <input type="number" class="form-control" placeholder="Enter the Amount Paid"
+                                           value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
+                                </div>
+                            </div>
+                            <?php if ($row["Balance"] > 0) { ?>
+                                <div class="form-group">
+                                    <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
+                                    <div class="col-md-12">
+                                        <input type="number" class="form-control" placeholder=""
+                                               value="<?php echo $row["Balance"] * $GasRate; ?>" name="Balance"
+                                               readonly="">
+                                    </div>
+                                </div>
+                            <?php } ?>
+                            <div class="form-group">
+                                <label class="col-md-12" for="example-text-input">Amount Remaining</label>
+                                <div class="col-md-12">
+                                    <input type="number" class="form-control" placeholder="Enter the Amount Unpaid"
+                                           value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12" for="example-text-input">Purchase Date</label>
+                                <div class="col-md-12">
+                                    <input type="date" step="any" class="form-control" placeholder="Enter the Date"
+                                           value="<?php echo date('Y-m-d', strtotime($row["DateAdded"])); ?>"
+                                           name="DateAdded"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12" for="example-text-input">Note</label>
+                                <div class="col-md-12">
+                                    <textarea class="form-control" name="Note"><?php echo $Note; ?></textarea>
+                                </div>
+                            </div>
+                            <?php
+                            if ($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                                ?>
+                                <div class="form-group">
+                                    <label class="col-md-12" for="example-text-input">&nbsp;</label>
+                                    <div class="col-md-12 text-right">
+                                        <input type="submit" name="updatepurchase"
+                                               class="btn btn-group-vertical btn-success"
+                                               value="Save"/>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                            <?php if (CAPTCHA_VERIFICATION == 1) { ?>
+                                <div class="form-group">
+                                    <label class="col-md-12" for="example-text-input">Captcha</label>
+                                    <div class="col-md-12">
+                                        <img src="captcha.php"/>
+                                        <input type="text" class="form-control" placeholder="Enter the captcha"
+                                               name="captcha">
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+                </form>
+            </div><!-- /.box -->
+    </div><!-- /.col -->
+    <!-- Main Footer -->
+    <?php include("footer.php"); ?>
+</div><!-- /.row -->
+</section><!-- /.content -->
 
-      
 
-      <!-- Control Sidebar -->
-      <?php include("rightsidebar.php"); ?>
-      <!-- /.control-sidebar -->
-      <!-- Add the sidebar's background. This div must be placed
-           immediately after the control sidebar -->
-      <div class="control-sidebar-bg"></div>
-      </div><!-- /.content-wrapper -->
+<!-- Control Sidebar -->
+<?php include("rightsidebar.php"); ?>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+</div><!-- /.content-wrapper -->
 
-    <!-- REQUIRED JS SCRIPTS -->
+<!-- REQUIRED JS SCRIPTS -->
 
-    <!-- jQuery 2.1.4 -->
-    <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
-    <!-- Bootstrap 3.3.5 -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <!-- DataTables -->
-    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <!-- SlimScroll -->
-    <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <!-- FastClick -->
-    <script src="plugins/fastclick/fastclick.min.js"></script>
-	<!-- Select2 -->
-    <script src="plugins/select2/select2.full.min.js"></script>
-    <!-- Bootstrap WYSIHTML5 -->
-    <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-    <!-- CK Editor -->
-    <script src="https://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/app.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/demo.js"></script>
-    <!-- page script -->
+<!-- jQuery 2.1.4 -->
+<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="plugins/fastclick/fastclick.min.js"></script>
+<!-- Select2 -->
+<script src="plugins/select2/select2.full.min.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- CK Editor -->
+<script src="https://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<!-- page script -->
 <script>
-	function read($ID)
-	{
-		var a = $ID;
-		//alert('invoiceid'+a);
-		window.open(document.getElementById('invoiceid'+a).options[document.getElementById('invoiceid'+a).selectedIndex].value);
-	}
-      $(function () {
+    function read($ID) {
+        var a = $ID;
+        //alert('invoiceid'+a);
+        window.open(document.getElementById('invoiceid' + a).options[document.getElementById('invoiceid' + a).selectedIndex].value);
+    }
+
+    $(function () {
         //Initialize Select2 Elements
         $(".select2").select2();
 
- //       CKEDITOR.replace('Description');
+        //       CKEDITOR.replace('Description');
         //bootstrap WYSIHTML5 - text editor
 //        $(".Description").wysihtml5();
-		});
+    });
 
-		
-    </script>
+
+</script>
 </body>
 </html>

@@ -35,7 +35,7 @@ $TotalAmount = 0;
 $Note = '';
 
 
-$query = "SELECT p.ID, p.ShopID, p.GasRate, p.Total, p.Balance, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p WHERE ID <> 0 " . ($_SESSION["RoleID"] == ROLE_ID_PLANT ? '' : ' AND ShopID = ' . (int)$_SESSION["ID"]) . ' AND p.ID = ' . (int)$ID;
+$query = "SELECT s.ID, u.Name, s.ShopID, s.RefNum, s.GasRate, s.Total, s.Paid, s.Unpaid, s.Balance, s.Note, s.DateAdded, s.DateModified FROM purchases s LEFT JOIN users u ON u.ID = s.ShopID WHERE s.ID <> 0 AND s.ID = " . (int)$ID;
 $res = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($res);
 foreach ($row as $key => $value) {
@@ -55,11 +55,11 @@ if (isset($_POST['addpurchase']) && $_POST['addpurchase'] == 'Save') {
 
 
     if ($msg == "") {
-        if ($NewPayment <= $Credit) {
+        if (ROLE_ID_ADMIN || $NewPayment <= $Credit) {
             mysql_query("UPDATE users SET
-						DateModified='".DATE_TIME_NOW."',
-						Credit=Credit-".(float)$NewPayment."
-						WHERE ID=".(int)$_SESSION["ID"]."
+						DateModified='" . DATE_TIME_NOW . "',
+						Credit=Credit-" . (float)$NewPayment . "
+						WHERE ID=" . (int)getValue('purchases', 'ShopID', 'ID', $ID) . "
 						") or die(mysql_error());
             $query3 = "UPDATE purchases SET DateModified = '" . DATE_TIME_NOW . "',
 				Paid=PAID+" . (float)$NewPayment . ",
@@ -70,14 +70,14 @@ if (isset($_POST['addpurchase']) && $_POST['addpurchase'] == 'Save') {
             mysql_query($query3) or die(mysql_error());
             $RefNumber = generate_refno($ID);
 
-            $query3 = "INSERT INTO purchases_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
-				PerformedBy = '".(int)$_SESSION["ID"]."',
-				Paid='".(float)financials($NewPayment)."',
-				Unpaid='".(float)financials($TotalAmount - ($Paid + $Balance + $NewPayment))."',
-				PurchaseID=".$ID.",
-				Note = '".dbinput($Note)."'
+            $query3 = "INSERT INTO purchases_amount SET DateAdded='" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
+				PerformedBy = '" . (int)$_SESSION["ID"] . "',
+				Paid='" . (float)financials($NewPayment) . "',
+				Unpaid='" . (float)financials($TotalAmount - ($Paid + $Balance + $NewPayment)) . "',
+				PurchaseID=" . $ID . ",
+				Note = '" . dbinput($Note) . "'
 				";
-            mysql_query($query3) or die('b'.mysql_error());
+            mysql_query($query3) or die('b' . mysql_error());
             $PaymentID = mysql_insert_id();
 
             mysql_query("UPDATE purchases SET RefNum=CONCAT(RefNum, '," . dbinput($RefNumber) . "') WHERE ID=" . $ID);
@@ -190,8 +190,8 @@ desired effect
                             <div class="box-header text-right">
                                 <div class="btn-group-right">
                                     <a style="margin-right:15px;"
-                                            class="btn btn-group-vertical btn-danger"
-                                            href="viewpurchase.php?ID=<?php echo $ID; ?>">Back
+                                       class="btn btn-group-vertical btn-danger"
+                                       href="viewpurchase.php?ID=<?php echo $ID; ?>">Back
                                     </a>
                                 </div>
                             </div>
@@ -213,27 +213,28 @@ desired effect
                             </div>
                         </div>
                         <div class="box-body">
-                            <h3><b>Store Name: </b><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></h3>
+                            <h3><b>Store Name: </b><?php echo $row["Name"]; ?></h3>
                             <h3><b>Purchase ID: </b><?php echo $ID; ?></h3>
                             <h3><b>Date: </b><?php echo date('D, M d, Y h:i a', strtotime($row["DateAdded"])); ?></h3>
-                            <h3><b>Gas Rate: </b><?php echo $row["GasRate"]; ?></h3>
+                            <!--                            <h3><b>Gas Rate: </b><?php /*echo $row["GasRate"]; */ ?></h3>
+-->
                             <h3><b>Invoices: </b>
-                                <?php $pdff = explode(',', $row["RefNum"]);?>
+                                <?php $pdff = explode(',', $row["RefNum"]); ?>
                                 <select id="invoiceid<?php echo $row["ID"]; ?>">
                                     <?php
-                                    $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '".(int)$row["ID"]."'") or die(mysql_error());
+                                    $r = mysql_query("SELECT ID FROM purchases_amount WHERE PurchaseID = '" . (int)$row["ID"] . "'") or die(mysql_error());
                                     $n = mysql_num_rows($r);
-                                    foreach($pdff as $pdf)
-                                    {
-                                        if(file_exists(DIR_PURCHASE_INVOICE."pinv".$row["ID"]."-".$pdf)) {
+                                    foreach ($pdff as $pdf) {
+                                        if (file_exists(dirname(__FILE__) . '/' . DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf . ".pdf")) {
                                             ?>
                                             <option value="<?php echo DIR_PURCHASE_INVOICE . "pinv" . $row["ID"] . "-" . $pdf; ?>.pdf"><?php echo "Invoice # " . $row["ID"]; ?></option>
                                             <?php
                                         }
                                     }
-                                    while($Rs = mysql_fetch_assoc($r)) {
+                                    while ($Rs = mysql_fetch_assoc($r)) {
                                         ?>
-                                        <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
+                                        <option value="purchaseaddinvoice.php?ID=<?php echo $Rs['ID']; ?>">PaymentID
+                                            - <?php echo sprintf('%04u', $Rs['ID']); ?></option>
                                     <?php }
                                     ?>
                                 </select>
@@ -247,12 +248,14 @@ desired effect
                                         <th>SNo.</th>
                                         <th>Cylinder Code</th>
                                         <th>Tier Weight (KG)</th>
+                                        <th>Company Weight (KG)</th>
                                         <th>Cylinder Weight (KG)</th>
                                         <th>Gas Weight (KG)</th>
                                         <th>Price (Rs.)</th>
+                                        <th>Return Status</th>
                                     </tr>
                                     <?php
-                                    $query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.PurchaseID=" . (int)$ID;
+                                    $query = "SELECT pd.ID, c.BarCode, ct.Name AS CylinderType, pd.CylinderID, pd.TierWeight, pd.CompanyTotalWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM purchase_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID LEFT JOIN cylindertypes ct ON c.CylinderType = ct.ID WHERE pd.PurchaseID=" . (int)$ID;
                                     $resource = mysql_query($query) or die(mysql_error());
                                     $num = mysql_num_rows($resource);
                                     $cou2 = 0;
@@ -300,7 +303,8 @@ desired effect
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Total Amount</label>
                                 <div class="col-md-12">
-                                    <input type="number" step="any" class="form-control" placeholder="Enter the Total Amount"
+                                    <input type="number" step="any" class="form-control"
+                                           placeholder="Enter the Total Amount"
                                            readonly="" name="TotalAmount" value="<?php echo $row["Total"]; ?>"
                                            id="TotalAmount">
                                 </div>
@@ -308,32 +312,39 @@ desired effect
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Amount Paid</label>
                                 <div class="col-md-12">
-                                    <input type="number" step="any" class="form-control" placeholder="Enter the Amount Paid"
+                                    <input type="number" step="any" class="form-control"
+                                           placeholder="Enter the Amount Paid"
                                            value="<?php echo $row["Paid"]; ?>" name="Paid" readonly="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Balance Adjustment</label>
                                 <div class="col-md-12">
-                                    <input type="number" step="any" class="form-control" placeholder="Enter the Balance Amount"
+                                    <input type="number" step="any" class="form-control"
+                                           placeholder="Enter the Balance Amount"
                                            name="Balance"
-                                           readonly="" name="Balance"
+                                           readonly=""
                                            value="<?php echo $row["Balance"] * $row["GasRate"]; ?>" id="Balance">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">Amount Remaining</label>
                                 <div class="col-md-12">
-                                    <input type="number" step="any" class="form-control" placeholder="Enter the Amount Unpaid"
+                                    <input type="number" step="any" class="form-control"
+                                           placeholder="Enter the Amount Unpaid"
                                            value="<?php echo $row["Unpaid"]; ?>" name="Unpaid" readonly="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12" for="example-text-input">New Payment</label>
                                 <div class="col-md-12">
-                                    <input type="number" step="any" class="form-control" placeholder="Enter the amount paying"
+                                    <input type="number" step="any" class="form-control"
+                                           placeholder="Enter the amount paying"
                                            min="0"
-                                           value="<?php echo $Unpaid < $Credit ? $Unpaid : $Credit; ?>" max="<?php echo $Unpaid < $Credit ? $Unpaid : $Credit; ?>"
+                                           value="<?php echo $row["Unpaid"] < $Credit ? $row["Unpaid"] : $Credit; ?>"
+                                           <?php if($_SESSION["RoleID"] != ROLE_ID_ADMIN){ ?>
+                                           max="<?php echo $row["Unpaid"] < $Credit ? $row["Unpaid"] : $Credit; ?>"
+                                           <?php } ?>
                                            name="NewPayment">
                                 </div>
                             </div>

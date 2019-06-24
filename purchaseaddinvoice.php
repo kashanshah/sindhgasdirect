@@ -5,7 +5,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 $ID = isset($_REQUEST["ID"]) ? $_REQUEST["ID"] : 0;
 	if(isset($_REQUEST["NewPayment"]))
 		$NewPayment=trim($_REQUEST["NewPayment"]);
-$query = "SELECT pa.PurchaseID AS InvoiceID, sh.ID AS ShopID, p.Total, p.Balance, p.GasRate, pa.Paid AS NewPaid, p.Unpaid, pa.Unpaid AS NewUnpaid, p.Paid, sh.Name AS ShopName, c.ID AS CustomerID, c.Name AS CustomerName, date_format(p.DateAdded, '%D %M %Y, %I:%i %p') AS DateAdded, date_format(pa.DateAdded, '%D %M %Y, %I:%i %p') AS saDateAdded, pa.Note FROM purchases_amount pa LEFT JOIN purchases p ON p.ID = pa.PurchaseID LEFT JOIN users sh ON sh.ID = p.ShopID LEFT JOIN users c ON c.ID = p.ShopID WHERE pa.ID=" . $ID;
+$query = "SELECT pa.PurchaseID AS InvoiceID, sh.ID AS ShopID, p.Total, p.Balance, p.GasRate, pa.Paid AS NewPaid, p.Unpaid, pa.Unpaid AS NewUnpaid, p.Paid, sh.Name AS ShopName, date_format(p.DateAdded, '%D %M %Y, %I:%i %p') AS DateAdded, date_format(pa.DateAdded, '%D %M %Y, %I:%i %p') AS saDateAdded, pa.Note FROM purchases_amount pa LEFT JOIN purchases p ON p.ID = pa.PurchaseID LEFT JOIN users sh ON sh.ID = p.ShopID WHERE pa.ID=" . $ID;
 $resource=mysql_query($query) or die(mysql_error());
 $num = mysql_num_rows($resource);
 if($num == 0)
@@ -117,7 +117,7 @@ $receive = '
 						<td ><h3>Gas Rate: </h3></td>
 						<td ><h3>'.financials($row["GasRate"]). '/-</h3></td>
 						<td ><h3>Store Name:</h3></td>
-						<td ><h3>'.$_SESSION["Name"].'</h3></td>
+						<td ><h3>'.$row["ShopName"].'</h3></td>
 	</tr>
 </table>
 <h2 align="center">Purchase Details</h2>
