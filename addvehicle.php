@@ -1,10 +1,11 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_PLANT));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 $msg='';
 $ID = "";
 $Name = "";
+$PlantID = 0;
 $Details = "";
 $RegistrationNo = "";
 $DateAdded = "";
@@ -13,10 +14,8 @@ $DateModified = "";
 
 if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 {
-    if(isset($_POST['Name'])) 					$Name = trim($_POST['Name']);
-
-    if(isset($_POST['Details']))				$Details = trim($_POST['Details']);
-    if(isset($_POST['RegistrationNo']))				$RegistrationNo = trim($_POST['RegistrationNo']);
+    foreach($_POST as $key => $val)
+        $$key = $val;
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
     else if(trim($Name) == "") $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><i class="fa fa-ban"></i> Please enter name</div>';
@@ -24,13 +23,14 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 
     if($msg=="")
     {
+        $PlantID = ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : $PlantID);
         mysql_query("INSERT into vehicles SET
 						DateAdded='".DATE_TIME_NOW."',
 						DateModified='".DATE_TIME_NOW."',
 						Name='".dbinput($Name)."',
 						Details='".dbinput($Details)."',
 						RegistrationNo='".dbinput($RegistrationNo)."',
-						PlantID='".(int)$_SESSION["ID"]."',
+						PlantID='".(int)$PlantID."',
 						PerformedBy = '".(int)$_SESSION["ID"]."'") or die(mysql_error());
 
         $VehicleID = mysql_insert_id();
@@ -159,12 +159,31 @@ desired effect
                                         <input type="text" class="form-control" id="Name" value="<?php echo $Name;?>" placeholder="" name="Name" required>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="RegistrationNo">Registration No*</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="RegistrationNo" value="<?php echo $RegistrationNo;?>" placeholder="Enter Registration No" name="RegistrationNo" required>
 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="PlantID" id="PlantID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_PLANT . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Plant Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">

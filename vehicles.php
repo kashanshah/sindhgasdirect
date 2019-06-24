@@ -116,7 +116,7 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
-                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT){?>
+                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){?>
                             <div class="box-header">
                                 <div class="btn-group-right">
                                     <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
@@ -149,7 +149,7 @@ desired effect
                                             <td><?php echo $row["Name"]; ?></td>
                                             <td><?php echo $row["RegistrationNo"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                                <td><?php echo getValue('vehicles', 'Name', 'ID', $row["PlantID"]); ?></td>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["DateAdded"]; ?></td>
 
