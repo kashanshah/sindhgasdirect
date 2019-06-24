@@ -124,7 +124,7 @@
                       <!-- Menu toggle button -->
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                          <?php /*echo $NotifCount == 0 ? '' : '<span class="label label-danger">'.$NotifCount.'</span>'; */?>
+                          <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($NotifCount == 0 ? '' : '<span class="label label-danger">'.$NotifCount.'</span>'); ?>
                       </a>
                       <ul class="dropdown-menu">
                         <li class="header">You have <?php echo $NotifCount; ?> new notifications</li>
