@@ -3,6 +3,12 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 $msg='';
+$DateAddedFrom = date('Y-m-d', ( time() - (60 * 60 * 1 * 24)));
+$DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
+
+foreach($_REQUEST as $key => $val)
+    $$key = $val;
+
 $sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User, ct.Wastage FROM 
 cylinder_savings cs LEFT JOIN 
 users p ON p.ID=cs.UserID LEFT JOIN 
@@ -10,6 +16,8 @@ cylinders c ON c.ID=cs.CylinderID LEFT JOIN
 cylindertypes ct ON ct.ID=c.ID LEFT JOIN 
 roles r ON r.ID=p.RoleID 
 WHERE cs.ID<>0 
+AND cs.DateAdded > '".$DateAddedFrom." 00:00:00'
+AND cs.DateAdded < '".$DateAddedTo." 23:23:59'
 ".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' AND cs.SaleID = 0' :
         ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND cs.SaleID = 0 AND p.PlantID='".$_SESSION["ID"]."'" :
             ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND cs.PurchaseID = 0 AND p.ShopID='".$_SESSION["ID"]."'" :
@@ -107,7 +115,22 @@ desired effect
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
                         <div class="box-body table-responsive">
-                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
+                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="get">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">From Date</label>
+                                    <div class="col-md-3">
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">Till Date</label>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="FilterResults" value="FILTER RESULT" id="FilterResults" class="form-control col-md-7 col-xs-12 btn btn-success" type="submit" />
+                                    </div>
+                                </div>
+
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
