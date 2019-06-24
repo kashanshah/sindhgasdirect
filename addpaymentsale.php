@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php"); 
-get_right(array(3));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 
 	$msg='';
 	$ID = $_REQUEST["ID"];
@@ -309,7 +309,9 @@ while($data = mysql_fetch_array($resource)){
                     <div class="form-group">
 						<label class="col-md-12" for="example-text-input">Note</label>
 						<div class="col-md-12">
-							<textarea class="form-control" name="Note"><?php echo $Note;?></textarea>
+							<textarea class="form-control" name="Note"><?php echo $Note.($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '
+
+By '.$_SESSION["Username"] : '');?></textarea>
 						</div>
 					</div>
                     <div class="form-group">
