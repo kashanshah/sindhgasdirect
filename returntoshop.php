@@ -85,13 +85,16 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				Weight='".(float)$CurrentCylinderWeight[$i]."',
 				PerformedBy = '".(int)$CustomerID[$i]."'
 			") or die(mysql_error());
-            $tmpSaving = (float)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID);
+            $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
+            $Wastage = (int)getValue('cylindertypes', 'Wastage', 'ID', $CType);
+            $tmpSaving = (float)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID) - $Wastage;
             $totaltmpSaving = $totaltmpSaving + $tmpSaving;
             if((float)$tmpSaving > 0){
                 mysql_query("INSERT INTO cylinder_savings SET 
                   CylinderID='".(int)$CID."',
                   UserID='".(int)$CustomerID[$i]."',
                   Savings = '".(float)$tmpSaving."',
+                  Wastage = '".(float)$Wastage."',
                   SaleID = '".$InvoiceID[$i]."',
                   DateAdded = '".DATE_TIME_NOW."',
                   DateModified = '".DATE_TIME_NOW."',

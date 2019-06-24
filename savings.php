@@ -9,11 +9,10 @@ $DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
 foreach($_REQUEST as $key => $val)
     $$key = $val;
 
-$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User, ct.Wastage FROM 
+$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, cs.Wastage, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User FROM 
 cylinder_savings cs LEFT JOIN 
 users p ON p.ID=cs.UserID LEFT JOIN 
 cylinders c ON c.ID=cs.CylinderID LEFT JOIN 
-cylindertypes ct ON ct.ID=c.ID LEFT JOIN 
 roles r ON r.ID=p.RoleID 
 WHERE cs.ID<>0 
 AND cs.DateAdded > '".$DateAddedFrom." 00:00:00'
@@ -154,8 +153,8 @@ desired effect
                                     $TotalWastage = 0;
                                     while($row=mysql_fetch_array($resource))
                                     {
-                                        $CurSav = (float)$row["Savings"] - (float)$row["Wastage"];
-                                        $TotalGas += (float)$row["Savings"];
+                                        $CurSav = (float)$row["Savings"] + (float)$row["Wastage"];
+                                        $TotalGas += ((float)$row["Savings"] + (float)$row["Wastage"]);
                                         $TotalWastage += (float)$row["Wastage"];
                                         $TotalGasSaved = $TotalGasSaved + $CurSav;
                                         ?>
@@ -167,9 +166,9 @@ desired effect
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["Plant"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["UserRole"]. ': ' . $row["User"]; ?></td>
-                                            <td><?php echo financials($row["Savings"]); ?> KG</td>
-                                            <td><?php echo financials($row["Wastage"]); ?> KG</td>
                                             <td><?php echo financials($CurSav); ?> KG</td>
+                                            <td><?php echo financials($row["Wastage"]); ?> KG</td>
+                                            <td><?php echo financials($CurSav - $row["Wastage"]); ?> KG</td>
 <!--                                            <td>--><?php //echo $row["PurchaseID"] == 0 ? '<a href="viewsale.php?ID='.$row["SaleID"].'">Sale#'.$row["SaleID"].'</a>' : '<a href="viewpurchase.php?ID='.$row["PurchaseID"].'">Purchase#'.$row["PurchaseID"].'</a>'; ?><!--</td>-->
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                         </tr>
@@ -180,7 +179,7 @@ desired effect
                                 </table>
                                 <h3>Total Savings: <?php echo financials($TotalGas); ?> KG</h3>
                                 <h3>Total Wastage: <?php echo financials($TotalWastage); ?> KG</h3>
-                                <h3>Net Saving: <?php echo financials($TotalGasSaved); ?> KG</h3>
+                                <h3>Net Saving: <?php echo financials($TotalGasSaved - $TotalWastage); ?> KG</h3>
                             </form>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
