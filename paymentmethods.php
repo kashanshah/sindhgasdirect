@@ -120,7 +120,7 @@ desired effect
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                                <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                     <button style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" onClick="location.href='addpaymentmethod.php'" data-original-title="" title="">Add New</button>
                                     <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                                 <?php } ?>
@@ -131,7 +131,7 @@ desired effect
                                 <table id="paymentmethodple1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
                                         <th>Name</th>
@@ -142,7 +142,7 @@ desired effect
                                         <th>Status</th>
                                         <th>Date Added</th>
                                         <th>Date Modified</th>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                         <th></th>
                                         <?php } ?>
                                     </tr>
@@ -152,7 +152,7 @@ desired effect
                                     {
                                         ?>
                                         <tr>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <?php } ?>
                                             <td><?php echo $row["Name"]; ?></td>
@@ -163,7 +163,7 @@ desired effect
                                             <td><?php echo $row["Status"] ? '<span class="badge bg-green">Enabled</span>' : '<span class="badge bg-red">Disabled</span>'; ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                             <td><?php echo $row["DateModified"]; ?></td>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
                                             <td>
                                                 <div class="btn-group">
                                                         <a class="btn btn-xs btn-warning" href="editpaymentmethod.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-edit"></i></a>
