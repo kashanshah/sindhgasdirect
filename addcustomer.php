@@ -1,10 +1,11 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg='';
 $Username = time();			$Password = "";			    $Email = "";			$Image="";
 $Name = "";				    $Number = "";				$SendSMS = 1;			$Commercial = 0;
+$ShopID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 0 : $_SESSION["ID"]);
 $CreditLimit = 1000;        $SecurityDeposite = 0;      $Address = "";
 $Status = 1;			    $Remarks = "";			    $DateAdded = ""; 		$DateModified = "";
 
@@ -43,12 +44,14 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     if($msg=="")
     {
 
+        $ShopID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? $ShopID : $_SESSION["ID"]);
+        $PlantID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? getValue('users', 'PlantID', 'ID', $ShopID) : $_SESSION["PlantID"]);
         mysql_query("INSERT into users SET
 						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)ROLE_ID_CUSTOMER."',
 						Username='".dbinput($Username)."',
-						ShopID='".(int)$_SESSION["ID"]."',
-						PlantID='".(int)$_SESSION["PlantID"]."',
+						ShopID='".$ShopID."',
+						PlantID='".(int)$PlantID."',
 						Password = '".generate_refno(rand()).generate_refno(time())."',
 						Email='".dbinput($Email)."',
 						Name='".dbinput($Name)."',
@@ -218,6 +221,26 @@ desired effect
                                     <div class="col-md-6">
                                         <input type="file" name="File">
                                         <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="ShopID">Shop</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="ShopID" id="ShopID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_SHOP . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Shop Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($ShopID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
