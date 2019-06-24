@@ -5,6 +5,7 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_SHOP));
 $msg='';
 $Username = time();			$Password = "";			$Email = "";			$Image="";
 $Name = "";				$Number = "";				$SendSMS = 1;
+$ShopID = ($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : 0);
 $Address = "";
 $Status = 1;			$Remarks = "";			$DateAdded = ""; 		$DateModified = "";
 
@@ -42,12 +43,13 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     }
     if($msg=="")
     {
-
+        $ShopID = ($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $ShopID);
+        $PlantID = ($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["PlantID"] : getValue('users', 'PlantID', 'ID', $ShopID));
         mysql_query("INSERT into users SET
 						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)ROLE_ID_SALES."',
-						ShopID='".($_SESSION["RoleID"] == ROLE_ID_SHOP ? $_SESSION["ID"] : $ShopID)."',
-						PlantID='".(int)$_SESSION["PlantID"]."',
+						ShopID='".$ShopID."',
+						PlantID='".(int)$PlantID."',
 						Username = '".dbinput($Username)."',
 						Password = '".dbinput($Password)."',
 						Email='".dbinput($Email)."',
@@ -231,6 +233,26 @@ desired effect
                                     <label class="col-md-3 control-label" for="Password">Password</label>
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" id="Password" value="<?php echo $Password;?>" name="Password" required min="3" max="20">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="ShopID">Shop</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="ShopID" id="ShopID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_SHOP . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Shop Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($ShopID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
