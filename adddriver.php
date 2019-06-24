@@ -42,11 +42,11 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
     }
     if($msg=="")
     {
-
+        $PlantID = ($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : $PlantID);
         mysql_query("INSERT into users SET
 						Status='".(int)$Status."', DateAdded='".DATE_TIME_NOW."',
 						RoleID='".(int)ROLE_ID_DRIVER."',
-						PlantID='".($_SESSION["RoleID"] == ROLE_ID_PLANT ? $_SESSION["ID"] : $PlantID)."',
+						PlantID='".(int)$PlantID."',
 						Username = '".dbinput($Username)."',
 						Password = '".dbinput($Password)."',
 						Email='".dbinput($Email)."',
@@ -217,6 +217,26 @@ desired effect
                                     <div class="col-md-6">
                                         <input type="file" name="File">
                                         <?php if(isset($Image) && $Image!="") echo '<img style="max-width:100px;max-height:150px;" src="'.DIR_USER_IMAGES.$Image.'" />'; ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="PlantID" id="PlantID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_PLANT . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Plant Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
