@@ -133,6 +133,10 @@ desired effect
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <?php } ?>
+                                        <th>Username</th>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <th>Password</th>
+                                        <?php } ?>
                                         <th>Name</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
@@ -155,6 +159,10 @@ desired effect
                                         <tr>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                            <?php } ?>
+                                            <td><?php echo $row["Username"]; ?></td>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                                <td><?php echo $row["Password"]; ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
