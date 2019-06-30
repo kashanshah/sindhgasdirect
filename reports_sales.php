@@ -313,7 +313,7 @@ desired effect
                                     $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo sprintf('%05d', $i); ?></td>
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>

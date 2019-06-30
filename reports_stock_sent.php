@@ -299,7 +299,7 @@ desired effect
                                         $TotalCylinderWeight += $row["Weight"];
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                            <td><?php echo $i; ?></td>
+                                            <td><?php echo sprintf('%05d', $i); ?></td>
                                             <td><?php echo $row["BarCode"]; ?></td>
                                             <td><?php echo $row["CylinderType"]; ?></td>
                                             <td><?php echo $row["PerformedByRole"] . ': ' . $row["PerformedByName"]; ?></td>

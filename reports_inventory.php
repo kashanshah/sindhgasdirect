@@ -302,7 +302,7 @@ desired effect
                                     if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"])) {
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                            <td><?php echo $i; ?></td>
+                                            <td><?php echo sprintf('%05d', $i); ?></td>
                                             <!--<td><?php /*echo $row["ID"]; */?></td>-->
                                             <td><?php echo $row["BarCode"]; ?></td>
                                             <td><?php echo $row["CylinderTypeName"]; ?></td>

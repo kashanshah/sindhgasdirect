@@ -359,7 +359,7 @@ desired effect
                                         $totalDomestic++;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo sprintf('%05d', $i); ?></td>
                                     <td><?php echo $row["Username"]; ?></td>
                                     <td><?php echo $row["Role"]; ?></td>
                                     <td><?php echo $row["Name"]; ?></td>

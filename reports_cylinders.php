@@ -295,7 +295,7 @@ desired effect
                                 while ($row = mysql_fetch_array($resource)) {
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo sprintf('%05d', $i); ?></td>
                                     <td><?php echo $row["BarCode"]; ?></td>
                                     <td><?php echo $row["Description"]; ?></td>
                                     <td><?php echo $row["ShortDescription"]; ?></td>
