@@ -288,6 +288,10 @@ desired effect
                                     <th>Shop</th>
                                     <th>Customer</th>
                                     <th>No. of Cylinders</th>
+                                    <th>Gas Returned</th>
+                                    <th>Wastage</th>
+                                    <th>Adjusted Gas</th>
+                                    <th>Adjusted Amount</th>
                                     <th>Total Price (PKR)</th>
                                     <th>Amount Paid (PKR)</th>
                                     <th>Remaining Payment (PKR)</th>
@@ -331,6 +335,10 @@ desired effect
                                         }
                                         ?>
                                     </td>
+                                    <td><?php echo @mysql_result(mysql_query("SELECT SUM(Savings + Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"])); ?></td>
+                                    <td><?php echo @mysql_result(mysql_query("SELECT SUM(Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"])); ?></td>
+                                    <td><?php echo financials($row["Balance"]); ?></td>
+                                    <td><?php echo financials($row["Balance"] * $row["GasRate"]); ?></td>
                                     <td><?php echo financials($row["Total"]); ?></td>
                                     <td><?php echo financials($row["Paid"]); ?></td>
                                     <td><?php echo financials($row["Unpaid"]); ?></td>
@@ -357,6 +365,10 @@ desired effect
                                         }
 
                                         ?></th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
