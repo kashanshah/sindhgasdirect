@@ -216,7 +216,7 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <label class="col-md-3 control-label" for="ShopID">Shop</label>
                                     <div class="col-md-6">
                                         <select class="form-control" required name="UserID" id="UserID" style="width: 100%;">
                                             <?php
@@ -226,7 +226,7 @@ desired effect
                                                 echo '<option value="0">No Shop Added</option>';
                                             } else {
                                                 while ($Rs = mysql_fetch_assoc($r)) { ?>
-                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($ShopID == $Rs['ID']) {
                                                         echo 'selected=""';
                                                     } ?>><?php echo $Rs['Name']; ?></option>
                                                 <?php }
