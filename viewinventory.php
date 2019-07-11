@@ -241,6 +241,8 @@ desired effect
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!-- page script -->
+<link rel="stylesheet" href="dist/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="dist/css/buttons.dataTables.min.css">
 <script src="dist/js/dataTables.buttons.min.js"></script>
 <script src="dist/js/buttons.flash.min.js"></script>
 <script src="dist/js/jszip.min.js"></script>
