@@ -3,6 +3,12 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 
 $msg = '';
+$DateAddedFrom = date('Y-m-d', ( time() - (60 * 60 * 1 * 24)));
+$DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
+
+foreach($_REQUEST as $key => $val)
+    $$key = $val;
+
 if (isset($_REQUEST['DID'])) {
     if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
 
@@ -16,7 +22,7 @@ if (isset($_REQUEST['DID'])) {
                     <i class="icon fa fa-ban"></i> Sale Deleted!
                   </div>';
         redirect($self);
-    }else{
+    } else {
         $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
 			<i class="fa fa-ban"></i>
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -25,7 +31,10 @@ if (isset($_REQUEST['DID'])) {
         redirect("sales.php");
     }
 }
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND p.ShopID = ' . (int)$_SESSION["ID"]);
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 
+AND p.DateAdded > '".$DateAddedFrom." 00:00:00'
+AND p.DateAdded < '".$DateAddedTo." 23:23:59'
+" . (($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) ? '' : ' AND p.ShopID = ' . (int)$_SESSION["ID"]);
 $resource = mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -145,7 +154,22 @@ desired effect
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
-                                  method="post">
+                                  method="get">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">From Date</label>
+                                    <div class="col-md-3">
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">Till Date</label>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="FilterResults" value="FILTER RESULT" id="FilterResults" class="form-control col-md-7 col-xs-12 btn btn-success" type="submit" />
+                                    </div>
+                                </div>
+
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
@@ -202,13 +226,14 @@ desired effect
                                                 <a class="btn btn-primary btn-xs"
                                                    href="viewsale.php?ID=<?php echo $row["ID"]; ?>">View Details</a>
                                                 <?php
-                                                $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=" . (int)$row["ID"]." AND pd.ReturnStatus=1";
+                                                $inn1query = "SELECT pd.ID, c.BarCode, pd.CylinderID, pd.TierWeight, pd.TotalWeight, pd.Price, pd.ReturnStatus, pd.ReturnWeight, pd.ReturnDate, pd.GasRate, DATE_FORMAT(pd.DateAdded, '%D %b %Y %r') AS DateAdded FROM sale_details pd LEFT JOIN cylinders c ON c.ID = pd.CylinderID WHERE pd.SaleID=" . (int)$row["ID"] . " AND pd.ReturnStatus=1";
                                                 $inn1numres = mysql_query($inn1query) or die(mysql_error());
                                                 $inn1numrow = mysql_num_rows($inn1numres);
                                                 if ($inn1numrow == 0) {
                                                     ?>
                                                     <a class="btn btn-danger btn-sm"
-                                                       href="sales.php?DID=<?php echo $row["ID"]; ?>&Balance=<?php echo $row["Balance"]; ?>">Delete Invoice</a>
+                                                       href="sales.php?DID=<?php echo $row["ID"]; ?>&Balance=<?php echo $row["Balance"]; ?>">Delete
+                                                        Invoice</a>
                                                     <?php
                                                 }
                                                 ?>
