@@ -21,7 +21,7 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.GasRate, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
     ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
     ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
     ($DateAddedFrom != "" ? " AND p.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
@@ -335,8 +335,8 @@ desired effect
                                         }
                                         ?>
                                     </td>
-                                    <td><?php echo @mysql_result(mysql_query("SELECT SUM(Savings + Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"])); ?></td>
-                                    <td><?php echo @mysql_result(mysql_query("SELECT SUM(Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"])); ?></td>
+                                    <td><?php echo financials(@mysql_result(mysql_query("SELECT SUM(Savings + Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"]))); ?></td>
+                                    <td><?php echo financials(@mysql_result(mysql_query("SELECT SUM(Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"]))); ?></td>
                                     <td><?php echo financials($row["Balance"]); ?></td>
                                     <td><?php echo financials($row["Balance"] * $row["GasRate"]); ?></td>
                                     <td><?php echo financials($row["Total"]); ?></td>
