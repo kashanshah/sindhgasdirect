@@ -77,7 +77,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				Note = '".dbinput($Note)."'") or die(mysql_error());
 
             $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
-            $Wastage = (int)getValue('cylindertypes', 'Wastage', 'ID', $CType);
+            $Wastage = (float)getValue('cylindertypes', 'Wastage', 'ID', $CType);
             $Saving = (float)$CurrentCylinderWeight[$i] - (float)$CylinderWeight[$i] - $Wastage;
             if(($Saving) > 0){
                 mysql_query("UPDATE users SET 
