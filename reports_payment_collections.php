@@ -1,23 +1,31 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$ReportName = "Sales Report";
 $TotalFrom = "";
 $TotalTo = "";
-$DateAddedFrom = date("Y-m-d");
-$DateAddedTo = date("Y-m-d");
+$DateAdded = date('Y-m-d');
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
 $ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 $CustomerID = array();
+$Headings = "";
+$HeadID = array();
+$SortBy = "p.ID";
 
 foreach ($_REQUEST AS $key => $val)
     $$key = $val;
 
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.GasRate, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
+$ReportName = "Daily Sales Report " . $DateAdded;
+
+if (isset($_REQUEST["Headings"])) {
+    $Headings = implode(',', $_REQUEST['Headings']);
+    $HeadID = $_REQUEST['Headings'];
+}
+
+$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
     ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
     ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
-    ($DateAddedFrom != "" ? " AND p.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
-    ($DateAddedTo != "" ? " AND p.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
+    ($DateAdded != "" ? " AND p.DateAdded >= '" . $DateAdded. " 00:00:00' " : " ") .
+    ($DateAdded != "" ? " AND p.DateAdded <= '" . $DateAdded. " 23:59:59' " : " ") .
     (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
     (!empty($ShopID) ? " AND p.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
     (!empty($CustomerID) ? " AND p.CustomerID IN (" . implode(",", $CustomerID) . ") " : " ") .
@@ -244,18 +252,10 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Sales Date From</label>
+                                    <label class="control-label">Sales Date</label>
                                     <div class="">
-                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
-                                               id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
-                                               type="date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Sales Date Till</label>
-                                    <div class="">
-                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
-                                               id="DateAddedTo" class="form-control col-md-7 col-xs-12"
+                                        <input name="DateAdded" value="<?php echo $DateAdded; ?>"
+                                               id="DateAdded" class="form-control col-md-7 col-xs-12"
                                                type="date">
                                     </div>
                                 </div>
@@ -274,16 +274,14 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>S No.</th>
+
+                                                            <th>S No.</th>
+
                                     <th>Invoice ID</th>
                                     <th>Plant</th>
                                     <th>Shop</th>
                                     <th>Customer</th>
                                     <th>No. of Cylinders</th>
-                                    <th>Gas Returned</th>
-                                    <th>Wastage</th>
-                                    <th>Adjusted Gas</th>
-                                    <th>Adjusted Amount</th>
                                     <th>Total Price (PKR)</th>
                                     <th>Amount Paid (PKR)</th>
                                     <th>Remaining Payment (PKR)</th>
@@ -296,11 +294,6 @@ desired effect
                                 $TotalCylinders = 0;
                                 $TotalAmountPaid = 0;
                                 $TotalAmountUnpaid = 0;
-                                $ctqr = mysql_query("SELECT ID FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
-                                $count0 = 0;
-                                while($ctqrow = mysql_fetch_array($ctqr)){
-                                    ${'count'.$ctqrow["ID"]} = 0;
-                                }
                                 while ($row = mysql_fetch_array($resource)) {
                                     $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"]));
                                     $TotalAmount += $row["Total"];
@@ -309,33 +302,52 @@ desired effect
                                     $TotalCylinders += (int)$CylinderCount;
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+
                                     <td><?php echo sprintf('%05d', $i); ?></td>
+
                                     <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
                                     <td><?php echo getValue('users', 'Name', 'ID', $row["CustomerID"]); ?></td>
                                     <td>
-                                        Total Cylinders: <?php echo @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"])); ?>
+                                        Total Cylinders: <?php echo $CylinderCount; ?>
                                         <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
-                                        while($cyltrow = mysql_fetch_array($cquer)){
-                                            $countCyl = @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'"));
-                                            ${'count'.$cyltrow["ID"]} = ${'count'.$cyltrow["ID"]} + $countCyl;
-                                            ?>
+                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
                                             <br/>
-                                            <?php echo $cyltrow["Name"]; ?>: <?php echo $countCyl; ?>
+                                            <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'")); ?>
                                             <?php
                                         }
                                         ?>
                                     </td>
-                                    <td><?php echo financials(@mysql_result(mysql_query("SELECT SUM(Savings + Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"]))); ?></td>
-                                    <td><?php echo financials(@mysql_result(mysql_query("SELECT SUM(Wastage) FROM cylinder_savings WHERE SaleID = ".(int)$row["ID"]))); ?></td>
-                                    <td><?php echo financials($row["Balance"]); ?></td>
-                                    <td><?php echo financials($row["Balance"] * $row["GasRate"]); ?></td>
                                     <td><?php echo financials($row["Total"]); ?></td>
                                     <td><?php echo financials($row["Paid"]); ?></td>
                                     <td><?php echo financials($row["Unpaid"]); ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
+                                    <?php
+                                    $i2 = 0;
+                                    $innQuer = mysql_query("SELECT sd.ID, sd.CylinderID, c.Barcode, ct.Name AS CylinderType, ct.Capacity, sd.Price FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE sd.SaleID = ".$row["ID"]) or die(mysql_error());
+                                    while($innRow = mysql_fetch_array($innQuer)){
+                                        $i2++;
+                                        ?>
+                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
+
+						  <td><?php echo $i; ?></td>
+
+                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
+                                    <td><?php echo $i2; ?></td>
+                                    <th>Cylinder</th>
+                                    <td><?php echo $innRow["Barcode"]; ?><br/><?php echo $innRow["CylinderType"]; ?></td>
+                                    <th>Price</th>
+                                    <td><?php echo financials($innRow["Price"]); ?></td>
+                                    <th>Capacity</th>
+                                    <td><?php echo financials($innRow["Capacity"]); ?>KG</td>
+                                    <td></td>
+                                </tr>
+                                        <?php
+                                    }
+                                    ?>
+
                                 <?php
                                     $i++;
 
@@ -347,20 +359,7 @@ desired effect
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <th>Total Cylinders Sold: <?php echo $TotalCylinders; ?><br/>
-                                        <?php
-
-                                        $ctqr = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
-                                        $count0 = 0;
-                                        while($ctqrow = mysql_fetch_array($ctqr)){
-                                            echo $ctqrow["Name"] . ': '.${'count'.$ctqrow["ID"]}.'<br/>';
-                                        }
-
-                                        ?></th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <th><?php echo $TotalCylinders; ?></th>
                                     <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
@@ -432,7 +431,7 @@ desired effect
                 }
             ],
             "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-            //            "lengthChange": false,
+//            "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,
