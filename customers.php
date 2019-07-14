@@ -131,6 +131,7 @@ desired effect
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
+                                        <th>ID</th>
                                         <th>Name</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Shop</th>
@@ -153,6 +154,7 @@ desired effect
                                         ?>
                                         <tr>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
+                                            <td><?php echo sprintf('%05u', $row["ID"]); ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
