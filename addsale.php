@@ -495,7 +495,7 @@ desired effect
                                                 <label class="col-md-3 control-label"
                                                        for="example-text-input">Customer</label>
                                                 <div class="col-md-8">
-                                                    <select class="form-control" name="CustomerID" style="width: 100%;">
+                                                    <select class="form-control select2" name="CustomerID" style="width: 100%;">
                                                         <?php
                                                         $r = mysql_query("SELECT ID, Name, CreditLimit, Commercial FROM users WHERE RoleID=" . ROLE_ID_CUSTOMER." AND ShopID = ".(int)$_SESSION["ID"]) or die(mysql_error());
                                                         $n = mysql_num_rows($r);
@@ -871,7 +871,7 @@ desired effect
 
     $(function () {
         //Initialize Select2 Elements
-        $(".select2").select2();
+        $(".select2").select2({    dropdownParent: $("#myModal")});
 
         //       CKEDITOR.replace('Description');
         //bootstrap WYSIHTML5 - text editor
