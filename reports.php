@@ -170,6 +170,17 @@ desired effect
                             </div>
                         </a>
                     </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <a href="reports_payment_collections.php">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-aqua"><i class="fa fa-money"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-number">Payments Collections</span>
+                                    <span class="info-box-text">View Payment Collection Report</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                     <?php
                     if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
                         ?>

@@ -1,35 +1,33 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
-$TotalFrom = "";
-$TotalTo = "";
-$DateAdded = date('Y-m-d');
+$ReportName = "Payment Collection Report";
+$PaidFrom = "";
+$PaidTo = "";
+$DateAddedFrom = date("Y-m-d");
+$DateAddedTo = date("Y-m-d");
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
 $ShopID = $_SESSION["RoleID"] == ROLE_ID_SHOP ? array($_SESSION["ID"]) : array();
 $CustomerID = array();
-$Headings = "";
 $HeadID = array();
 $SortBy = "p.ID";
 
 foreach ($_REQUEST AS $key => $val)
     $$key = $val;
 
-$ReportName = "Daily Sales Report " . $DateAdded;
-
-if (isset($_REQUEST["Headings"])) {
-    $Headings = implode(',', $_REQUEST['Headings']);
-    $HeadID = $_REQUEST['Headings'];
-}
-
-$sql = "SELECT p.ID, u.Name AS CustomerName, u.PlantID, p.ShopID, u.ID AS CustomerID, u.Number AS CustomerMobile, p.Total, p.Balance, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p LEFT JOIN users u ON u.ID = p.CustomerID WHERE p.ID <> 0 " .
-    ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
-    ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
-    ($DateAdded != "" ? " AND p.DateAdded >= '" . $DateAdded. " 00:00:00' " : " ") .
-    ($DateAdded != "" ? " AND p.DateAdded <= '" . $DateAdded. " 23:59:59' " : " ") .
-    (!empty($PlantID) ? " AND u.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
-    (!empty($ShopID) ? " AND p.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
-    (!empty($CustomerID) ? " AND p.CustomerID IN (" . implode(",", $CustomerID) . ") " : " ") .
-    ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND p.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
+$sql = "SELECT sa.ID, sa.SaleID, sa.Paid, sa.Unpaid, s.CustomerID, sa.Note, sa.DateAdded, s.ShopID, shop.PlantID
+FROM sales_amount sa
+LEFT JOIN sales s ON s.ID=sa.SaleID
+LEFT JOIN users shop ON shop.ID=s.ShopID
+WHERE sa.ID<>0 " .
+    ($PaidFrom != "" ? " AND sa.Paid >= " . $PaidFrom : " ") .
+    ($PaidTo != "" ? " AND sa.Paid <= " . $PaidTo : " ") .
+    ($DateAddedFrom != "" ? " AND sa.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
+    ($DateAddedTo != "" ? " AND sa.DateAdded <= '" . $DateAddedTo. " 23:59:59' " : " ") .
+    (!empty($PlantID) ? " AND shop.PlantID IN (" . implode(",", $PlantID) . ") " : " ") .
+    (!empty($ShopID) ? " AND s.ShopID IN (" . implode(",", $ShopID) . ") " : " ") .
+    (!empty($CustomerID) ? " AND s.CustomerID IN (" . implode(",", $CustomerID) . ") " : " ") .
+    ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND s.ShopID = '" . $_SESSION["ID"]. "' " : " ") .
     " ";
 $resource = mysql_query($sql) or die(mysql_error());
 
@@ -179,16 +177,16 @@ desired effect
                                 <div class="col-md-3">
                                     <label class="control-label">From Amount</label>
                                     <div class="">
-                                        <input name="TotalFrom" value="<?php echo $TotalFrom; ?>"
-                                               id="TotalFrom" class="form-control col-md-7 col-xs-12"
+                                        <input name="PaidFrom" value="<?php echo $PaidFrom; ?>"
+                                               id="PaidFrom" class="form-control col-md-7 col-xs-12"
                                                type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">To Amount</label>
                                     <div class="">
-                                        <input name="TotalTo" value="<?php echo $TotalTo; ?>"
-                                               id="TotalTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
+                                        <input name="PaidTo" value="<?php echo $PaidTo; ?>"
+                                               id="PaidTo" class="form-control col-md-7 col-xs-12" type="number" step="any" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : 'hidden'; ?>">
@@ -252,10 +250,18 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="control-label">Sales Date</label>
+                                    <label class="control-label">Sales Date From</label>
                                     <div class="">
-                                        <input name="DateAdded" value="<?php echo $DateAdded; ?>"
-                                               id="DateAdded" class="form-control col-md-7 col-xs-12"
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
+                                               id="DateAddedFrom" class="form-control col-md-7 col-xs-12"
+                                               type="date">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Sales Date Till</label>
+                                    <div class="">
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>"
+                                               id="DateAddedTo" class="form-control col-md-7 col-xs-12"
                                                type="date">
                                     </div>
                                 </div>
@@ -274,97 +280,41 @@ desired effect
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-
-                                                            <th>S No.</th>
-
-                                    <th>Invoice ID</th>
-                                    <th>Plant</th>
-                                    <th>Shop</th>
+                                    <th>S No.</th>
+                                    <th>Amount</th>
+                                    <th>Details</th>
+                                    <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                        <th>Plant</th>
+                                    <?php } ?>
+                                    <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                        <th>Shop</th>
+                                    <?php } ?>
                                     <th>Customer</th>
-                                    <th>No. of Cylinders</th>
-                                    <th>Total Price (PKR)</th>
-                                    <th>Amount Paid (PKR)</th>
-                                    <th>Remaining Payment (PKR)</th>
                                     <th>Date Added</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php $i = 1;
-                                $TotalAmount = 0;
-                                $TotalCylinders = 0;
-                                $TotalAmountPaid = 0;
-                                $TotalAmountUnpaid = 0;
-                                while ($row = mysql_fetch_array($resource)) {
-                                    $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"]));
-                                    $TotalAmount += $row["Total"];
-                                    $TotalAmountPaid += $row["Paid"];
-                                    $TotalAmountUnpaid += $row["Unpaid"];
-                                    $TotalCylinders += (int)$CylinderCount;
-                                ?>
-                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-
-                                    <td><?php echo sprintf('%05d', $i); ?></td>
-
-                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
-                                    <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
-                                    <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
-                                    <td><?php echo getValue('users', 'Name', 'ID', $row["CustomerID"]); ?></td>
-                                    <td>
-                                        Total Cylinders: <?php echo $CylinderCount; ?>
-                                        <?php $cquer = mysql_query("SELECT ID, Name FROM cylindertypes WHERE ID<>0");
-                                        while($cyltrow = mysql_fetch_array($cquer)){ ?>
-                                            <br/>
-                                            <?php echo $cyltrow["Name"]; ?>: <?php echo @mysql_result(mysql_query("SELECT COUNT(sd.ID) FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID WHERE sd.SaleID = ".(int)$row["ID"] . " AND c.CylinderType = '".(int)$cyltrow["ID"]."'")); ?>
-                                            <?php
-                                        }
-                                        ?>
-                                    </td>
-                                    <td><?php echo financials($row["Total"]); ?></td>
-                                    <td><?php echo financials($row["Paid"]); ?></td>
-                                    <td><?php echo financials($row["Unpaid"]); ?></td>
-                                    <td><?php echo $row["DateAdded"]; ?></td>
-                                </tr>
-                                    <?php
-                                    $i2 = 0;
-                                    $innQuer = mysql_query("SELECT sd.ID, sd.CylinderID, c.Barcode, ct.Name AS CylinderType, ct.Capacity, sd.Price FROM sale_details sd LEFT JOIN cylinders c ON c.ID=sd.CylinderID LEFT JOIN cylindertypes ct ON ct.ID=c.CylinderType WHERE sd.SaleID = ".$row["ID"]) or die(mysql_error());
-                                    while($innRow = mysql_fetch_array($innQuer)){
-                                        $i2++;
-                                        ?>
-                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-
-						  <td><?php echo $i; ?></td>
-
-                                    <td><a href="viewsale.php?ID=<?php echo $row["ID"]; ?>"><?php echo sprintf('%04u', $row["ID"]); ?></a></td>
-                                    <td><?php echo $i2; ?></td>
-                                    <th>Cylinder</th>
-                                    <td><?php echo $innRow["Barcode"]; ?><br/><?php echo $innRow["CylinderType"]; ?></td>
-                                    <th>Price</th>
-                                    <td><?php echo financials($innRow["Price"]); ?></td>
-                                    <th>Capacity</th>
-                                    <td><?php echo financials($innRow["Capacity"]); ?>KG</td>
-                                    <td></td>
-                                </tr>
-                                        <?php
-                                    }
-                                    ?>
-
                                 <?php
+                                $i = 0;
+                                while($row=mysql_fetch_array($resource))
+                                {
                                     $i++;
-
-                                }
+                                    ?>
+                                    <tr>
+                                        <td><?php echo sprintf('%04u', $i); ?></td>
+                                        <td>Rs. <?php echo financials($row["Paid"]); ?></td>
+                                        <td><?php echo nl2br($row["Note"]); ?></td>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
+                                        <?php } ?>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                            <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                        <?php } ?>
+                                        <td><?php echo getValue('users', 'Name', 'ID', $row["CustomerID"]); ?></td>
+                                        <td><?php echo $row["DateAdded"]; ?></td>
+                                    </tr>
+                                <?php }
                                 ?>
-                                <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
-                                    <td><h3 style="margin:auto;">SUMMARY</h3></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <th><?php echo $TotalCylinders; ?></th>
-                                    <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
-                                    <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
-                                    <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>
-                                    <td><?php echo $row["DateAdded"]; ?></td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -431,7 +381,7 @@ desired effect
                 }
             ],
             "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-//            "lengthChange": false,
+            //            "lengthChange": false,
         });
         // $('.example2').DataTable({
         // "paging": false,

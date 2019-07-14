@@ -3,40 +3,13 @@
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
 $msg='';
-if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
-{
-    foreach($_REQUEST['ids'] as $CID)
-    {
-        //echo $CID;exit();
-        $query = "UPDATE users SET Credit=Credit-".getValue('payments', 'Amount', 'ID', $CID)." WHERE ID = ".getValue('payments', 'UserID', 'ID', $CID)."";
-        mysql_query($query) or die(mysql_error());
-        $query = "DELETE FROM payments WHERE ID = ".(int)$CID."";
-        mysql_query($query) or die(mysql_error());
-        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> Payment deleted and user credit adjusted!</h4>
-                  </div>';
-    }
-}
-if(isset($_REQUEST['DID']))
-{
-    $CID = $_REQUEST['DID'];
-    //echo $CID;exit();
-    $query = "UPDATE users SET Credit=Credit-".getValue('payments', 'Amount', 'ID', $CID)." WHERE ID = ".getValue('payments', 'UserID', 'ID', $CID)."";
-    mysql_query($query) or die(mysql_error());
-    $query = "DELETE FROM payments WHERE ID = ".(int)$_REQUEST['DID']."";
-    mysql_query($query);
-    $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> Payment deleted and user credit adjusted!</h4>
-                  </div>';
-    redirect($self);
-}
 
-$sql="SELECT p.ID, p.Amount, p.Details, p.MethodID, p.UserID, p.DateAdded, p.DateModified FROM 
-payments p 
-LEFT JOIN users u ON u.ID=p.UserID
-WHERE p.ID<>0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND u.PlantID='".(int)$_SESSION["ID"]."'" : " AND p.UserID = '".(int)$_SESSION["ID"]."'") );
+$sql="SELECT sa.ID, sa.SaleID, sa.Paid, sa.Unpaid, s.CustomerID, sa.Note, sa.DateAdded, s.ShopID, shop.PlantID
+FROM sales_amount sa
+LEFT JOIN sales s ON s.ID=sa.SaleID
+LEFT JOIN users shop ON shop.ID=s.ShopID
+WHERE sa.ID<>0 
+" . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND shop.PlantID='".(int)$_SESSION["ID"]."'" : " AND s.ShopID = '".(int)$_SESSION["ID"]."'") );
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -126,60 +99,43 @@ desired effect
                     <!-- /.box -->
                     <?php if(isset($_SESSION["msg"]) && $_SESSION["msg"] != "")  { echo $_SESSION["msg"]; $_SESSION["msg"]=""; } ?>
                     <div class="box">
-                        <div class="box-header">
-                            <div class="btn-group-right">
-                                <button style="float:right;" type="button" class="btn btn-group-vertical btn-info" onClick="location.href='dashboard.php'" >Back</button>
-                                <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                    <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
-                                <?php } ?>
-                                <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_SHOP) { ?>
-                                    <a style="float:right;margin-right:15px;" class="btn btn-group-vertical btn-success" href="addpayment.php" data-original-title="" title="">Add Payment To Account</a>
-                                <?php } ?>
-                            </div>
-                        </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
                                 <table id="paymentmethodple1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                            <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-                                        <?php } ?>
+                                        <th>S No.</th>
                                         <th>Amount</th>
                                         <th>Details</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Plant</th>
                                         <?php } ?>
-                                        <th>Payment Method</th>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                            <th>Shop</th>
+                                        <?php } ?>
+                                        <th>Customer</th>
                                         <th>Date Added</th>
-                                        <th>Date Modified</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php while($row=mysql_fetch_array($resource))
+                                    <?php
+                                    $i = 0;
+                                    while($row=mysql_fetch_array($resource))
                                     {
+                                        $i++;
                                         ?>
                                         <tr>
-                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                                <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
-                                            <?php } ?>
-                                            <td><?php echo $row["Amount"]; ?></td>
-                                            <td><?php echo nl2br($row["Details"]); ?></td>
+                                            <td><?php echo sprintf('%04u', $i); ?></td>
+                                            <td>Rs. <?php echo financials($row["Paid"]); ?></td>
+                                            <td><?php echo nl2br($row["Note"]); ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
-                                                <td><?php echo getValue('users', 'Name', 'ID', $row["UserID"]); ?></td>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
-                                            <td><?php echo getValue('paymentmethods', 'Name', 'ID', $row["MethodID"]); ?></td>
+                                            <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT){ ?>
+                                                <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
+                                            <?php } ?>
+                                            <td><?php echo getValue('users', 'Name', 'ID', $row["CustomerID"]); ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
-                                            <td><?php echo $row["DateModified"]; ?></td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a class="btn btn-xs btn-primary" href="viewpayment.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
-                                                        <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
-                                                        <a class="btn btn-xs btn-danger" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
                                         </tr>
                                     <?php }
                                     ?>
