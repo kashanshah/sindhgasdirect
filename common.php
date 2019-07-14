@@ -46,7 +46,7 @@ define("ROLE_ID_PLANT", 6);
 define("ROLE_ID_USER", 7);
 define("GAS_DIFFERENCE_NOTIFICATION", "Gas Difference");
 define("FULL_NAME", dboutput($settingRecordSet["FullName"]));
-define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]).' '.date('h:i:s'));
+define("DATE_TIME_NOW", dboutput($settingRecordSet["DropboxEmail"]) . ' ' . date('h:i:s'));
 define("COMPANY_NAME", dboutput($settingRecordSet["CompanyName"]));
 define("SITE_TITLE", dboutput($settingRecordSet["SiteTitle"]));
 define("ADDRESS", dboutput($settingRecordSet["Address"]));
@@ -213,10 +213,10 @@ function backup_tables($filename = "")
     //save file
     if ($filename != "") {
         $filename = ($filename == "" ? "dbbackup_" . date('DMY') . (date('G') + 3) . date('ia') : $filename);
-        $handle = fopen($filename.'.sql', 'w+');
+        $handle = fopen($filename . '.sql', 'w+');
         fwrite($handle, $return);
         fclose($handle);
-        return $filename.'.sql';
+        return $filename . '.sql';
     } else {
 //	header('Pragma: anytextexeptno-cache', true);
 //	header("Pragma: public");
@@ -805,11 +805,10 @@ function getCurrentStatus($ID)
     if (mysql_num_rows($res) == 0) {
         $ret = -1;
     } else {
-        $r = mysql_query("SELECT Status FROM cylinders WHERE Status = 1 AND ID = '".$ID."'") or die(mysql_error());
-        if(mysql_num_rows($r) == 0){
+        $r = mysql_query("SELECT Status FROM cylinders WHERE Status = 1 AND ID = '" . $ID . "'") or die(mysql_error());
+        if (mysql_num_rows($r) == 0) {
             $ret = -1;
-        }
-        else{
+        } else {
             $Rs = mysql_fetch_assoc($res);
             $ret = $Rs['RoleID'];
         }
@@ -817,7 +816,8 @@ function getCurrentStatus($ID)
     return $ret;
 }
 
-function getCylinderGasRate($ID){
+function getCylinderGasRate($ID)
+{
     $res = mysql_query("SELECT cs.*, sd.GasRate FROM cylinderstatus cs LEFT JOIN sale_details sd ON cs.InvoiceID=sd.SaleID WHERE cs.CylinderID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
@@ -829,7 +829,8 @@ function getCylinderGasRate($ID){
     return $ret;
 }
 
-function isCommercialUser($ID){
+function isCommercialUser($ID)
+{
     $res = mysql_query("SELECT Commercial FROM users WHERE ID = " . (int)$ID . " ORDER BY ID DESC LIMIT 1") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
@@ -920,25 +921,25 @@ function getCylinderPurchaseRate($ID)
     return $ret;
 }
 
-function getUserBalance($ID, $AddBalance=false){
+function getUserBalance($ID, $AddBalance = false)
+{
     $TotalUnpaid = 0;
-    if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_SHOP){
-        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =".(int)$ID;
+    if (getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_SHOP) {
+        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM purchases p LEFT JOIN users u ON u.ID=p.ShopID WHERE p.ShopID =" . (int)$ID;
         $r = mysql_query($q) or die(mysql_error());
         $d = mysql_fetch_array($r);
         $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
         $TotalUnpaid = -$Unpaid;
-        if($AddBalance){
+        if ($AddBalance) {
             $TotalUnpaid = $TotalUnpaid + ($d["Balance"] * GAS_RATE);
         }
-    }
-    else if(getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_CUSTOMER){
-        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM sales p LEFT JOIN users u ON u.ID=p.CustomerID WHERE p.CustomerID =".(int)$ID;
+    } else if (getValue('users', 'RoleID', 'ID', $ID) == ROLE_ID_CUSTOMER) {
+        $q = "SELECT SUM(p.Total - (p.Balance * p.GasRate) - p.Paid) AS Unpaid, u.Balance FROM sales p LEFT JOIN users u ON u.ID=p.CustomerID WHERE p.CustomerID =" . (int)$ID;
         $r = mysql_query($q) or die(mysql_error());
         $d = mysql_fetch_array($r);
         $Unpaid = $d["Unpaid"] == "" ? 0 : $d["Unpaid"];
         $TotalUnpaid = -$Unpaid;
-        if($AddBalance){
+        if ($AddBalance) {
             $TotalUnpaid = $TotalUnpaid + ($d["Balance"] * GAS_RATE);
         }
     }
@@ -972,34 +973,34 @@ function getCurrentWeight($ID)
     return (float)$ret;
 }
 
-function getGasRate($ID, $SpecialRate = 0){
+function getGasRate($ID, $SpecialRate = 0)
+{
     $res = mysql_query("SELECT Capacity, Rate FROM cylindertypes WHERE ID = " . (int)$ID . " ") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
         $ret = 0;
     } else {
         $Rs = mysql_fetch_assoc($res);
-        if($SpecialRate == 0){
+        if ($SpecialRate == 0) {
             $ret = $Rs['Rate'];
-        }
-        else{
+        } else {
             $ret = $SpecialRate;
         }
     }
     return $ret;
 }
 
-function getCylinderRate($ID, $SpecialRate = 0){
+function getCylinderRate($ID, $SpecialRate = 0)
+{
     $res = mysql_query("SELECT Capacity, Rate FROM cylindertypes WHERE ID = " . (int)$ID . " ") or die(mysql_error());
     $ret = 0;
     if (mysql_num_rows($res) == 0) {
         $ret = 0;
     } else {
         $Rs = mysql_fetch_assoc($res);
-        if($SpecialRate == 0){
+        if ($SpecialRate == 0) {
             $ret = $Rs['Rate'] * $Rs['Capacity'];
-        }
-        else{
+        } else {
             $ret = $SpecialRate * $Rs['Capacity'];
         }
     }
@@ -1032,26 +1033,29 @@ function getRetailPrice($ID)
     return $ret;
 }
 
-function financials($Number = 0){
+function financials($Number = 0)
+{
     return number_format((float)$Number, "2", ".", "");
 }
 
-function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0){
-    $query4 = "INSERT INTO notifications SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
-        Name='".dbinput($Name)."',
-        Description='".dbinput($Description)."',
-        Link='".dbinput($Link)."',
-        UserID=".(int)$UserID.",
-        RoleID=".(int)$RoleID.",
-        Priority=".(int)$Priority.",
+function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0)
+{
+    $query4 = "INSERT INTO notifications SET DateAdded = '" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
+        Name='" . dbinput($Name) . "',
+        Description='" . dbinput($Description) . "',
+        Link='" . dbinput($Link) . "',
+        UserID=" . (int)$UserID . ",
+        RoleID=" . (int)$RoleID . ",
+        Priority=" . (int)$Priority . ",
         Status=0
         ";
     mysql_query($query4) or die(mysql_error());
     return mysql_insert_id();
 }
 
-function getNotificationCount($ID = 0, $RoleID = 0){
-    $q = "SELECT COUNT(ID) AS Count from notifications WHERE Status = 0 AND (UserID = ". (int)$ID." OR RoleID = ".(int)$RoleID.")";
+function getNotificationCount($ID = 0, $RoleID = 0)
+{
+    $q = "SELECT COUNT(ID) AS Count from notifications WHERE Status = 0 AND (UserID = " . (int)$ID . " OR RoleID = " . (int)$RoleID . ")";
     $r = mysql_query($q) or die(mysql_error());
     return (int)mysql_result($r, 0, 0);
 }
@@ -1062,6 +1066,40 @@ function dumpArray($RoleID = array())
     print_r($RoleID);
     echo '<pre>';
 }
+
+define(
+    "CYLINDER_STATUSES",
+    array(
+        array(
+            "ID" => -1,
+            "Name" => "Empty Cylinder"
+        ),
+        array(
+            "ID" => ROLE_ID_PLANT,
+            "Name" => "Filled at Plant"
+        ),
+        array(
+            "ID" => 0,
+            "Name" => "Empty at plant"
+        ),
+        array(
+            "ID" => ROLE_ID_DRIVER,
+            "Name" => "Dispatched to driver"
+        ),
+        array(
+            "ID" => ROLE_ID_SHOP,
+            "Name" => "At shop"
+        ),
+        array(
+            "ID" => ROLE_ID_CUSTOMER,
+            "Name" => "Dispatched to customer"
+        ),
+        array(
+            "ID" => -99,
+            "Name" => "Status not found"
+        )
+    )
+);
 
 function getCylinderStatus($RoleID = 0)
 {
@@ -1284,58 +1322,62 @@ function convertDigit($digit)
     }
 }
 
-function getCustomerDues($ID){
-    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+function getCustomerDues($ID)
+{
+    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = " . (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
     return number_format((int)mysql_result($r, 0, 0), 2);
 }
 
-function getShopDues($ID){
-    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = ". (int)$ID;
+function getShopDues($ID)
+{
+    $q = "SELECT SUM(Total-Paid) AS Unpaid from sales WHERE CustomerID = " . (int)$ID;
     $r = mysql_query($q) or die(mysql_error());
     return number_format((int)mysql_result($r, 0, 0), 2);
 }
 
-function sendSMS($to = '', $message, $check = false){
+function sendSMS($to = '', $message, $check = false)
+{
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;
     $to = $to;
     $from = 'SindhGasDIR';
-    $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
-        "&mobile=" .$to. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
+    $url = "http://api.m4sms.com/api/Sendsms?id=" . $username . "&pass=" . $password .
+        "&mobile=" . $to . "&brandname=" . urlencode($from) . "&msg=" . urlencode($message) . "";
     //Curl Start
 
     $ch = curl_init();
     $timeout = 30;
-    curl_setopt ($ch,CURLOPT_URL, $url) ;
-    curl_setopt ($ch,CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
-    $response = curl_exec($ch) ;
-    curl_close($ch) ;
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+    $response = curl_exec($ch);
+    curl_close($ch);
 }
 
-function sendUserSMS($to = 0, $message = '', $check = true){
+function sendUserSMS($to = 0, $message = '', $check = true)
+{
     $response = '';
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;
     $to = mysql_query("SELECT ID, Number, SendSMS FROM users WHERE ID = " . $to) or die(mysql_error('Error in sending message'));
-    if(mysql_num_rows($to) == 1){
+    if (mysql_num_rows($to) == 1) {
         $r = mysql_fetch_array($to);
         $send = true;
-        if($check){
+        if ($check) {
             $send = $r["SendSMS"];
         }
-        if($send){
+        if ($send) {
             $from = 'SindhGasDIR';
-            $url = "http://api.m4sms.com/api/Sendsms?id=".$username."&pass=" .$password.
-                "&mobile=" .$r["Number"]. "&brandname=" .urlencode($from)."&msg=" .urlencode($message)."";
+            $url = "http://api.m4sms.com/api/Sendsms?id=" . $username . "&pass=" . $password .
+                "&mobile=" . $r["Number"] . "&brandname=" . urlencode($from) . "&msg=" . urlencode($message) . "";
             $ch = curl_init();
             $timeout = 30;
-            curl_setopt ($ch,CURLOPT_URL, $url) ;
-            curl_setopt ($ch,CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt ($ch,CURLOPT_CONNECTTIMEOUT, $timeout) ;
-            $response = curl_exec($ch) ;
-            curl_close($ch) ;
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+            $response = curl_exec($ch);
+            curl_close($ch);
         }
     }
     //return $response;
@@ -1363,7 +1405,7 @@ function emaildbbackup($to)
 //			$mail->addBCC('bcc@example.com');
 
         //Attachments
-        $filename = 'emailbackups/EMAILBACKUP'.time();
+        $filename = 'emailbackups/EMAILBACKUP' . time();
         $attPath = backup_tables($filename);
 
         $mail->addAttachment($attPath);         // Add attachments
@@ -1371,19 +1413,19 @@ function emaildbbackup($to)
 
         //Content
         $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = SITE_TITLE. ' | DB Backup';
-        $mail->Body = 'Attached is the db backup of ' . SITE_TITLE . ' taken on '. date('d-m-Y H:i:s');
-        $mail->AltBody = 'Attached is the db backup of ' . SITE_TITLE . ' taken on '. date('d-m-Y H:i:s');
+        $mail->Subject = SITE_TITLE . ' | DB Backup';
+        $mail->Body = 'Attached is the db backup of ' . SITE_TITLE . ' taken on ' . date('d-m-Y H:i:s');
+        $mail->AltBody = 'Attached is the db backup of ' . SITE_TITLE . ' taken on ' . date('d-m-Y H:i:s');
 
         $mail->send();
         echo json_encode(array(
-            "message"=>"Message has been sent",
-            "code"=>0
+            "message" => "Message has been sent",
+            "code" => 0
         ));
     } catch (Exception $e) {
         echo json_encode(array(
-            "message"=>$mail->ErrorInfo,
-            "code"=>-1
+            "message" => $mail->ErrorInfo,
+            "code" => -1
         ));
     }
 }

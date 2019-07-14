@@ -5,6 +5,7 @@ $ReportName = "Inventory Report";
 $TierWeightFrom = "";
 $TierWeightTo = "";
 $CylinderType = array();
+$CylinderStatus = array();
 $DateAddedFrom = "";
 $DateAddedTo = "";
 $CapacityFrom = "";
@@ -234,6 +235,25 @@ desired effect
                                     </div>
                                 </div>
                                 <div class="col-md-3">
+                                    <label class="control-label">Cylinder Status</label>
+                                    <div class="">
+                                        <select name="CylinderStatus[]" id="CylinderStatus" class="form-control select2"
+                                                multiple
+                                                data-placeholder="All">
+                                            <?php
+                                            foreach (CYLINDER_STATUSES as $Rs) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $CylinderStatus)) {
+                                                    echo 'selected=""';
+                                                } ?>><?php echo $Rs['Name']; ?>
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <label class="control-label">Added Date From</label>
                                     <div class="">
                                         <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>"
@@ -299,11 +319,13 @@ desired effect
                                 $DriverCylinders = 0;
                                 $CustomerCylinders = 0;
                                 while ($row = mysql_fetch_array($resource)) {
-                                    if ((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"])) {
+                                   if (((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]))
+&& in_array(getCurrentStatus($row["ID"]), $CylinderStatus)
+                                    ) {
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                             <td><?php echo sprintf('%05d', $i); ?></td>
-                                            <!--<td><?php /*echo $row["ID"]; */?></td>-->
+                                            <!--<td><?php /*echo $row["ID"]; */ ?></td>-->
                                             <td><?php echo $row["BarCode"]; ?></td>
                                             <td><?php echo $row["CylinderTypeName"]; ?></td>
                                             <td><?php echo financials($row["TierWeight"]); ?></td>
@@ -312,21 +334,17 @@ desired effect
                                             <td><?php echo $row["DateAdded"]; ?></td>
                                         </tr>
                                         <?php
-                                        if(getCurrentStatus($row["ID"]) == ROLE_ID_PLANT){
+                                        if (getCurrentStatus($row["ID"]) == ROLE_ID_PLANT) {
                                             $PlantCylinders++;
                                             $FilledCylinders++;
-                                        }
-                                        elseif(getCurrentStatus($row["ID"]) == -1){
+                                        } elseif (getCurrentStatus($row["ID"]) == -1) {
                                             $PlantCylinders++;
                                             $UnfilledCylinders++;
-                                        }
-                                        elseif(getCurrentStatus($row["ID"]) == ROLE_ID_SHOP){
+                                        } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_SHOP) {
                                             $ShopCylinders++;
-                                        }
-                                        elseif(getCurrentStatus($row["ID"]) == ROLE_ID_CUSTOMER){
+                                        } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_CUSTOMER) {
                                             $CustomerCylinders++;
-                                        }
-                                        elseif(getCurrentStatus($row["ID"]) == ROLE_ID_DRIVER){
+                                        } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_DRIVER) {
                                             $DriverCylinders++;
                                         }
                                         $i++;
@@ -335,7 +353,8 @@ desired effect
                                 ?>
                                 <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
                                     <!--<th>SUMMARY</th>-->
-                                    <th>Total Cylinders:<br/><?php echo $i-1; ?></td>
+                                    <th>Total Cylinders:<br/>
+                                    <?php echo $i - 1; ?></td>
                                     <th>Cylinders at Plant:<br/><?php echo $PlantCylinders; ?></th>
                                     <th>Filled Cylinders:<br/><?php echo $FilledCylinders; ?></th>
                                     <th>Unfilled Cylinders:<br/><?php echo $UnfilledCylinders; ?></th>
@@ -408,7 +427,7 @@ desired effect
                     pageSize: 'LEGAL'
                 }
             ],
-            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             //            "lengthChange": false,
         });
         // $('.example2').DataTable({
