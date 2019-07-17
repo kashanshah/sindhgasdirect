@@ -97,7 +97,6 @@ desired effect
                             <div class="btn-group-right">
                                 <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
                                 <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="adddeposite.php" data-original-title="" title="">Add New</a>
-                                <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                             </div>
                         </div><!-- /.box-header -->
                         <?php } ?>

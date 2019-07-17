@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d23109a9-8739-4d7f-be36-b768877471ed" name="Default Changelist" comment="process update&#10;storage&#10;gas against gas&#10;Send SMS option for all users&#10;function for SendSMS">
-      <change afterPath="$PROJECT_DIR$/adddeposite.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/deposites.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addcustomer.php" beforeDir="false" afterPath="$PROJECT_DIR$/addcustomer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common.php" beforeDir="false" afterPath="$PROJECT_DIR$/common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customers.php" beforeDir="false" afterPath="$PROJECT_DIR$/customers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editcustomer.php" beforeDir="false" afterPath="$PROJECT_DIR$/editcustomer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports_users.php" beforeDir="false" afterPath="$PROJECT_DIR$/reports_users.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/viewcustomer.php" beforeDir="false" afterPath="$PROJECT_DIR$/viewcustomer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leftsidebar.php" beforeDir="false" afterPath="$PROJECT_DIR$/leftsidebar.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,20 +71,29 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/deposites.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+            <state relative-caret-position="130">
+              <caret line="99" selection-start-line="99" selection-end-line="99" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/customers.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="250">
               <caret line="199" column="55" lean-forward="true" selection-start-line="199" selection-start-column="55" selection-end-line="199" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/leftsidebar.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="130">
+              <caret line="45" column="318" lean-forward="true" selection-start-line="45" selection-start-column="318" selection-end-line="45" selection-end-column="318" />
             </state>
           </provider>
         </entry>
@@ -110,8 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Headings</find>
-      <find>HeadID</find>
       <find>$SortBy</find>
       <find>p.</find>
       <find>sa.s</find>
@@ -138,8 +137,10 @@
       <find>checkbox</find>
       <find>Deposite</find>
       <find>get</find>
-      <find>mysql_</find>
       <find>SecurityDeposite</find>
+      <find>mysql_</find>
+      <find>Payment Collections</find>
+      <find>delete</find>
     </findStrings>
     <replaceStrings>
       <replace>purchase</replace>
@@ -217,20 +218,20 @@
         <option value="$PROJECT_DIR$/sales.php" />
         <option value="$PROJECT_DIR$/viewinventory.php" />
         <option value="$PROJECT_DIR$/reports_inventory.php" />
-        <option value="$PROJECT_DIR$/leftsidebar.php" />
         <option value="$PROJECT_DIR$/addsale.php" />
         <option value="$PROJECT_DIR$/reports.php" />
         <option value="$PROJECT_DIR$/reports_sales.php" />
         <option value="$PROJECT_DIR$/paymentcollections.php" />
         <option value="$PROJECT_DIR$/reports_payment_collections.php" />
         <option value="$PROJECT_DIR$/adddeposite.php" />
-        <option value="$PROJECT_DIR$/deposites.php" />
         <option value="$PROJECT_DIR$/common.php" />
         <option value="$PROJECT_DIR$/customers.php" />
         <option value="$PROJECT_DIR$/addcustomer.php" />
         <option value="$PROJECT_DIR$/editcustomer.php" />
         <option value="$PROJECT_DIR$/reports_users.php" />
         <option value="$PROJECT_DIR$/viewcustomer.php" />
+        <option value="$PROJECT_DIR$/leftsidebar.php" />
+        <option value="$PROJECT_DIR$/deposites.php" />
       </list>
     </option>
   </component>
@@ -392,7 +393,7 @@
       <workItem from="1562873188059" duration="9881000" />
       <workItem from="1563132293241" duration="932000" />
       <workItem from="1563133648826" duration="9291000" />
-      <workItem from="1563402993879" duration="1291000" />
+      <workItem from="1563402993879" duration="1414000" />
     </task>
     <task id="LOCAL-00001" summary="Error log error removed&#10;Driver menu added&#10;indenting">
       <created>1551041815514</created>
@@ -461,7 +462,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="369475000" />
+    <option name="totallyTimeSpent" value="369598000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
@@ -480,7 +481,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.36482084" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.36970684" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.36970684" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -750,13 +751,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/leftsidebar.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="44" column="307" selection-start-line="44" selection-start-column="307" selection-end-line="44" selection-end-column="307" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addpaymentsale.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -876,13 +870,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/deposites.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -894,6 +881,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="199" column="55" lean-forward="true" selection-start-line="199" selection-start-column="55" selection-end-line="199" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/leftsidebar.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="45" column="318" lean-forward="true" selection-start-line="45" selection-start-column="318" selection-end-line="45" selection-end-column="318" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deposites.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="99" selection-start-line="99" selection-end-line="99" />
         </state>
       </provider>
     </entry>
