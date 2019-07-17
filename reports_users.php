@@ -27,7 +27,7 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT u.ID, u.Username, u.Password, u.RoleID, r.Name AS Role, u.Name, u.Number, u.Email, u.Address, u.Commercial, u.Balance, u.Credit, u.ShopID, s.Name AS Shop, u.PlantID, p.Name AS Plant, u.CreditLimit, u.SendSMS, u.Remarks, u.SecurityDeposite, u.Status, u.DateAdded FROM users u LEFT JOIN roles r ON r.ID = u.RoleID LEFT JOIN users p ON p.ID = u.PlantID LEFT JOIN users s ON s.ID = u.ShopID WHERE u.ID <> 0 " .
+$sql = "SELECT u.ID, u.Username, u.Password, u.RoleID, r.Name AS Role, u.Name, u.Number, u.Email, u.Address, u.Commercial, u.Balance, u.Credit, u.ShopID, s.Name AS Shop, u.PlantID, p.Name AS Plant, u.CreditLimit, u.SendSMS, u.Remarks, u.Status, u.DateAdded FROM users u LEFT JOIN roles r ON r.ID = u.RoleID LEFT JOIN users p ON p.ID = u.PlantID LEFT JOIN users s ON s.ID = u.ShopID WHERE u.ID <> 0 " .
     ($BalanceFrom != "" ? " AND u.Balance >= " . $BalanceFrom : " ") .
     ($BalanceTo != "" ? " AND u.Balance <= " . $BalanceTo : " ") .
     (!empty($RoleID) ? " AND u.RoleID IN (" . implode(",", $RoleID) . ") " : " ") .
@@ -344,7 +344,7 @@ desired effect
                                     <th>Plant</th>
                                     <th>CreditLimit</th>
                                     <th>Remarks</th>
-                                    <th>SecurityDeposite</th>
+                                    <th>Security Deposite</th>
                                     <th>DateAdded</th>
                                 </tr>
                                 </thead>
@@ -373,7 +373,7 @@ desired effect
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_SHOP || $row["RoleID"] == ROLE_ID_CUSTOMER) ? $row["Plant"] : 'N/A'; ?></td>
                                     <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? financials($row["CreditLimit"]) : 'N/A'; ?></td>
                                     <td><?php echo $row["Remarks"]; ?></td>
-                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? financials($row["SecurityDeposite"]) : 'N/A'; ?></td>
+                                    <td><?php echo ($row["RoleID"] == ROLE_ID_CUSTOMER) ? financials(getSecurityDeposite($row["ID"])) : 'N/A'; ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>
                                 </tr>
                                 <?php

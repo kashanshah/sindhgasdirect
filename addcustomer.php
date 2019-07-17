@@ -6,7 +6,7 @@ $msg='';
 $Username = time();			$Password = "";			    $Email = "";			$Image="";
 $Name = "";				    $Number = "";				$SendSMS = 1;			$Commercial = 0;
 $ShopID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 0 : $_SESSION["ID"]);
-$CreditLimit = 1000;        $SecurityDeposite = 0;      $Address = "";
+$CreditLimit = 1000;        $Address = "";
 $Status = 1;			    $Remarks = "";			    $DateAdded = ""; 		$DateModified = "";
 
 if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
@@ -59,7 +59,6 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 						SendSMS='".(int)$SendSMS."',
 						Commercial='".(int)$Commercial."',
 						CreditLimit='".(float)$CreditLimit."',
-						SecurityDeposite='".(float)$SecurityDeposite."',
 						Address='".dbinput($Address)."',
 						PerformedBy = '".(int)$_SESSION["ID"]."',
 						Remarks='".dbinput($Remarks)."'
@@ -279,12 +278,6 @@ desired effect
                                     <label class="col-md-3 control-label" for="CreditLimit">Credit Limit</label>
                                     <div class="col-md-6">
                                         <input type="number" step="any" class="form-control" id="CreditLimit" value="<?php echo $CreditLimit;?>" placeholder="Enter Credit Limit" name="CreditLimit" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="SecurityDeposite">Security Deposite</label>
-                                    <div class="col-md-6">
-                                        <input type="number" step="any" class="form-control" id="SecurityDeposite" value="<?php echo $SecurityDeposite;?>" placeholder="Enter Security Deposite Amount" name="SecurityDeposite" required>
                                     </div>
                                 </div>
                                 <div class="form-group">

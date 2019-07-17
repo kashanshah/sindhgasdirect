@@ -1101,6 +1101,17 @@ define(
     )
 );
 
+function getSecurityDeposite($ID = 0){
+    $q = "SELECT SUM(Amount) AS SecurityDeposite from deposites WHERE CustomerID = " . (int)$ID;
+    $r = mysql_query($q) or die(mysql_error());
+    if(mysql_num_rows($r) > 0){
+        return financials(mysql_result($r, 0, 0), 2);
+    }
+    else{
+        return 0;
+    }
+}
+
 function getCylinderStatus($RoleID = 0)
 {
     if ($RoleID == -1) {

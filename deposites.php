@@ -2,31 +2,7 @@
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
 $msg='';
-if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
-{
-    foreach($_REQUEST['ids'] as $CID)
-    {
-        //echo $CID;exit();
-        $query = "DELETE FROM users WHERE ID = ".$CID."";
-        mysql_query($query);
-        $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="icon fa fa-ban"></i> Customer(s) Deleted!
-                  </div>';
-    }
-}
-if(isset($_REQUEST['DID']))
-{
-    $query = "DELETE FROM users WHERE ID = ".$_REQUEST['DID']."";
-    mysql_query($query);
-    $_SESSION["msg"] = '<div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="icon fa fa-ban"></i> Customer Deleted!
-                  </div>';
-    redirect($self);
-}
-
-$sql="SELECT u.ID, u.Username, u.Password, u.CreditLimit, u.Balance, u.SendSMS, u.Commercial, u.Remarks, u.ShopID, r.Name AS Role, u.Address, u.Number, u.Name FROM users u LEFT JOIN roles r ON r.ID = u.RoleID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " u.ShopID = ".$_SESSION["ID"]." AND ") ."  u.RoleID = ".(ROLE_ID_CUSTOMER)." AND u.ID<>0";
+$sql="SELECT d.*, u.ID, u.Username, u.Name AS CustomerName, s.Name AS ShopName FROM deposites d LEFT JOIN users u ON u.ID=d.CustomerID LEFT JOIN users s ON s.ID = d.ShopID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " d.ShopID = ".$_SESSION["ID"]." AND ") ."  d.ID<>0";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -39,7 +15,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo SITE_TITLE; ?>- Customers Management</title>
+    <title><?php echo SITE_TITLE; ?>- Deposites Management</title>
     <link rel='shortcut icon' href='<?php echo DIR_LOGO_IMAGE.SITE_LOGO ?>' type='image/x-icon' >
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -100,12 +76,12 @@ desired effect
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Customers Management
-                <small>View All Customers</small>
+                Deposites Management
+                <small>View All Deposites</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Customers</li>
+                <li class="active">Deposites</li>
             </ol>
         </section>
 
@@ -120,7 +96,7 @@ desired effect
                         <div class="box-header">
                             <div class="btn-group-right">
                                 <a style="float:right;" type="button" class="btn btn-group-vertical btn-info" href="dashboard.php" >Back</a>
-                                <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="addcustomer.php" data-original-title="" title="">Add New</a>
+                                <a style="float:right;margin-right:15px;" type="button" class="btn btn-group-vertical btn-success" href="adddeposite.php" data-original-title="" title="">Add New</a>
                                 <button style="float:right;margin-right:15px;" type="button" onClick="doDelete()" class="btn btn-group-vertical btn-danger" data-original-title="" title="">Delete</button>
                             </div>
                         </div><!-- /.box-header -->
@@ -130,80 +106,38 @@ desired effect
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
                                         <th>ID</th>
-                                        <th>Name</th>
+                                        <th>Customer</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                             <th>Shop</th>
                                         <?php } ?>
-                                        <th>Address</th>
-                                        <th>Contact Number</th>
-                                        <th>Commercial</th>
-                                        <th>Alerts</th>
-                                        <th>Unpaid</th>
-                                        <th>Gas Balance</th>
-                                        <th>Credit Limit</th>
-                                        <th>Security Deposite</th>
-<!--                                        <th>Remarks</th>-->
-                                        <th></th>
-                                    </tr>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Date Added</th>
+<!--                                        <th></th>
+-->                                    </tr>
                                     </thead>
                                     <tbody>
                                     <?php while($row=mysql_fetch_array($resource))
                                     {
                                         ?>
                                         <tr>
-                                            <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
                                             <td><?php echo sprintf('%05u', $row["ID"]); ?></td>
-                                            <td><?php echo $row["Name"]; ?></td>
+                                            <td><?php echo $row["CustomerName"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["ShopID"]); ?></td>
                                             <?php } ?>
-                                            <td><?php echo $row["Address"]; ?></td>
-                                            <td><?php echo $row["Number"]; ?></td>
-                                            <td><?php echo $row["Commercial"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
-                                            <td><?php echo $row["SendSMS"] ? '<span class="badge bg-green">YES</span>' : '<span class="badge bg-red">NO</span>'; ?></td>
-                                            <td>
-                                                Rs. <?php $Bal = getUserBalance($row["ID"], false); echo financials($Bal).'/-'; ?>
-                                                <?php
-                                                if($Bal < 0){
-                                                    $osisql="SELECT p.ID, p.Total, p.Paid, p.Unpaid, p.Note, p.DateAdded, p.DateModified FROM sales p WHERE p.CustomerID = ".$row["ID"]." AND p.Unpaid > 0 ";
-                                                    $osiresource=mysql_query($osisql) or die(mysql_error());
-                                                    ?>
-                                                    <div  style="max-height:100px;overflow:auto;">
-                                                        <?php
-                                                        if(mysql_num_rows($osiresource) > 0){
-                                                            ?>
-                                                            <a onClick='slideToggle("#invoices<?php echo $row["ID"]; ?>")'>View Invoices</a>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                        <div id="invoices<?php echo $row["ID"]; ?>" style="display: none;">
-                                                        <?php
-                                                        while($oisrow = mysql_fetch_array($osiresource)){
-                                                            ?>
-                                                                <a href="viewsale.php?ID=<?php echo $oisrow["ID"]; ?>" target="_blank">Invoice # <?php echo sprintf('%04u', $oisrow["ID"]); ?></a>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                        </div>
-                                                    </div>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td><?php echo financials($row["Balance"]); ?>KG Gas</td>
-                                            <td>Rs. <?php echo financials($row["CreditLimit"]); ?></td>
-                                            <td>Rs. <?php echo financials(getSecurityDeposite($row["ID"])); ?></td>
-<!--                                            <td>--><?php //echo $row["Remarks"]; ?><!--</td>-->
-                                            <td>
+                                            <td><?php echo financials($row["Amount"]); ?></td>
+                                            <td><?php echo $row["Description"]; ?></td>
+                                            <td><?php echo $row["DateAdded"]; ?></td>
+<!--                                            <td>
                                                 <div class="btn-group">
-                                                    <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-pencil"></i></a>
-                                                    <a class="btn btn-info btn-xs" title="View" href="viewcustomer.php?ID=<?php echo $row["ID"]; ?>"><i class="fa fa-eye"></i></a>
-                                                    <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php echo $row["ID"]; ?>)"><i class="fa fa-trash"></i></a>
+                                                    <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-info btn-xs" title="View" href="viewcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-eye"></i></a>
+                                                    <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php /*echo $row["ID"]; */?>)"><i class="fa fa-trash"></i></a>
                                                 </div>
                                             </td>
-                                        </tr>
+-->                                        </tr>
                                     <?php }
                                     ?>
                                     </tbody>
