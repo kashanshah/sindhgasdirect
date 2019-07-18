@@ -9,7 +9,7 @@ $DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
 foreach($_REQUEST as $key => $val)
     $$key = $val;
 
-$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, cs.Wastage, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User FROM 
+$sql="SELECT cs.ID, cs.DateAdded, cs.SaleID, cs.PurchaseID, cs.UserID, cs.Wastage, c.PlantID AS Plant, c.BarCode, cs.Savings, r.Name AS UserRole, p.Name AS User FROM 
 cylinder_savings cs LEFT JOIN 
 users p ON p.ID=cs.UserID LEFT JOIN 
 cylinders c ON c.ID=cs.CylinderID LEFT JOIN 
@@ -17,8 +17,8 @@ roles r ON r.ID=p.RoleID
 WHERE cs.ID<>0 
 AND cs.DateAdded >= '".$DateAddedFrom." 00:00:00'
 AND cs.DateAdded < '".$DateAddedTo." 23:23:59'
-".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' AND cs.SaleID = 0' :
-        ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND cs.SaleID = 0 AND p.PlantID='".$_SESSION["ID"]."'" :
+".(($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? ' AND cs.PurchaseID = 0' :
+        ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND cs.PurchaseID = 0 AND p.PlantID='".$_SESSION["ID"]."'" :
             ($_SESSION["RoleID"] == ROLE_ID_SHOP ? " AND cs.PurchaseID = 0 AND p.ShopID='".$_SESSION["ID"]."'" :
                 ' AND cs.UserID="'.(int)$_SESSION["ID"].'" '
             )
@@ -139,7 +139,7 @@ desired effect
                                             <th>Plant</th>
                                         <?php } ?>
                                         <th>Saved By</th>
-                                        <th>Gas Saved</th>
+                                        <th>Gas Returned</th>
                                         <th>Wastage</th>
                                         <th>Net Saving</th>
 <!--                                        <th>Invoice #</th>-->
@@ -150,11 +150,13 @@ desired effect
                                     <?php
                                     $TotalGasSaved = 0;
                                     $TotalGas = 0;
+                                    $TotalAdjusted = 0;
                                     $TotalWastage = 0;
                                     while($row=mysql_fetch_array($resource))
                                     {
                                         $CurSav = (float)$row["Savings"] + (float)$row["Wastage"];
                                         $TotalGas += ((float)$row["Savings"] + (float)$row["Wastage"]);
+                                        $TotalAdjusted += isCommercialUser($row["UserID"]) ? $row["Savings"] : 0;
                                         $TotalWastage += (float)$row["Wastage"];
                                         $TotalGasSaved = $TotalGasSaved + $CurSav;
                                         ?>
@@ -177,9 +179,10 @@ desired effect
                                     ?>
                                     </tbody>
                                 </table>
-                                <h3>Total Savings: <?php echo financials($TotalGas); ?> KG</h3>
+                                <h3>Total Returned: <?php echo financials($TotalGas); ?> KG</h3>
                                 <h3>Total Wastage: <?php echo financials($TotalWastage); ?> KG</h3>
-                                <h3>Net Saving: <?php echo financials($TotalGasSaved - $TotalWastage); ?> KG</h3>
+                                <h3>Total Adjusted: <?php echo financials($TotalAdjusted); ?> KG</h3>
+                                <h3>Total Recover: <?php echo financials($TotalGasSaved - $TotalWastage - $TotalAdjusted); ?> KG</h3>
                             </form>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->

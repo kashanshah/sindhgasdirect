@@ -294,6 +294,8 @@ desired effect
                                 <?php $i = 1;
                                 $TotalAmount = 0;
                                 $TotalCylinders = 0;
+                                $TotalGasAdjusted = 0;
+                                $TotalAmountAdjusted = 0;
                                 $TotalAmountPaid = 0;
                                 $TotalAmountUnpaid = 0;
                                 $ctqr = mysql_query("SELECT ID FROM cylindertypes WHERE ID <> 0") or die(mysql_error());
@@ -304,6 +306,8 @@ desired effect
                                 while ($row = mysql_fetch_array($resource)) {
                                     $CylinderCount = @mysql_result(mysql_query("SELECT COUNT(ID) FROM sale_details WHERE SaleID = ".(int)$row["ID"]));
                                     $TotalAmount += $row["Total"];
+                                    $TotalGasAdjusted += financials($row["Balance"]);
+                                    $TotalAmountAdjusted += financials($row["Balance"] * $row["GasRate"]);
                                     $TotalAmountPaid += $row["Paid"];
                                     $TotalAmountUnpaid += $row["Unpaid"];
                                     $TotalCylinders += (int)$CylinderCount;
@@ -359,8 +363,8 @@ desired effect
                                         ?></th>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <th><?php echo financials($TotalGasAdjusted); ?>KG</th>
+                                    <th>Rs. <?php echo financials($TotalAmountAdjusted); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmount); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountPaid); ?>/-</th>
                                     <th>Rs. <?php echo financials($TotalAmountUnpaid); ?>/-</th>

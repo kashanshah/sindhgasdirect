@@ -320,7 +320,7 @@ desired effect
                                 $CustomerCylinders = 0;
                                 while ($row = mysql_fetch_array($resource)) {
                                    if (((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]))
-&& in_array(getCurrentStatus($row["ID"]), $CylinderStatus)
+|| (!empty($CylinderStatus) && in_array(getCurrentStatus($row["ID"]), $CylinderStatus))
                                     ) {
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
