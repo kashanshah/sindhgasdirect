@@ -86,7 +86,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				PerformedBy = '".(int)$CustomerID[$i]."'
 			") or die(mysql_error());
             $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
-            $Wastage = (int)getValue('cylindertypes', 'Wastage', 'ID', $CType);
+            $Wastage = (float)getValue('cylindertypes', 'Wastage', 'ID', $CType);
             $tmpSaving = (float)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID) - $Wastage;
             $totaltmpSaving = $totaltmpSaving + $tmpSaving;
             if((float)$tmpSaving > 0){
