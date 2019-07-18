@@ -1,6 +1,6 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
-get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
+get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 
 $msg='';
 $DateAddedFrom = date('Y-m-d', ( time() - (60 * 60 * 1 * 24)));
