@@ -58,12 +58,12 @@ if (isset($_POST['addpurchase']) && $_POST['addpurchase'] == 'Save') {
         if (ROLE_ID_ADMIN || $NewPayment <= $Credit) {
             mysql_query("UPDATE users SET
 						DateModified='" . DATE_TIME_NOW . "',
-						Credit=Credit-" . (float)$NewPayment . "
+						Credit=Credit-" . (float)financials($NewPayment) . "
 						WHERE ID=" . (int)getValue('purchases', 'ShopID', 'ID', $ID) . "
 						") or die(mysql_error());
             $query3 = "UPDATE purchases SET DateModified = '" . DATE_TIME_NOW . "',
-				Paid=PAID+" . (float)$NewPayment . ",
-				Unpaid=Unpaid-" . (float)($NewPayment) . ",
+				Paid=PAID+" . (float)financials($NewPayment) . ",
+				Unpaid=Unpaid-" . (float)financials($NewPayment) . ",
 				Note='" . dbinput($Note) . "'
 				WHERE ID=" . $ID . "
 				";

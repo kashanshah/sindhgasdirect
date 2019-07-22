@@ -135,15 +135,15 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $query4 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "',
 				SaleID=" . $SaleID . ",
-				Paid='" . (float)$Paid . "',
-				Unpaid='" . (float)$Unpaid . "',
+				Paid='" . (float)financials($Paid) . "',
+				Unpaid='" . (float)financials($Unpaid) . "',
 				Note = '" . dbinput($Note) . "'";
         mysql_query($query4) or die('a'.mysql_error());
         $SaleAmountID = mysql_insert_id();
 
         $i = 0;
         foreach ($CylinderID as $CID) {
-            if((float)$ShopTotalWeight[$i] != (float)$CurrentCylinderWeight[$i]){
+            if((float)financials($ShopTotalWeight[$i]) != (float)financials($CurrentCylinderWeight[$i])){
                 createNotification(
                     GAS_DIFFERENCE_NOTIFICATION,
                     "Shopkeeper: ".getValue('users', 'Name', 'ID', $_SESSION["ID"]) .' ('. getValue('users', 'Name', 'ID', $_SESSION["ID"]) . ")
@@ -163,11 +163,11 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				ReturnStatus=0,
 				ReturnWeight=0,
 				ReturnDate='1970-01-01',
-				TierWeight='" . (float)$CylinderWeight[$i] . "',
-				ShopTotalWeight='".(float)$ShopTotalWeight[$i]."',
-				TotalWeight='" . (float)$CurrentCylinderWeight[$i] . "',
-				Price='" . (float)$SalePrice[$i] . "',
-				GasRate='" . (float)($SalePrice[$i] / ($CurrentCylinderWeight[$i] - $CylinderWeight[$i])) . "',
+				TierWeight='" . (float)financials($CylinderWeight[$i]) . "',
+				ShopTotalWeight='".(float)financials($ShopTotalWeight[$i])."',
+				TotalWeight='" . (float)financials($CurrentCylinderWeight[$i]) . "',
+				Price='" . (float)financials($SalePrice[$i]) . "',
+				GasRate='" . (float)financials(($SalePrice[$i] / ($CurrentCylinderWeight[$i] - $CylinderWeight[$i]))) . "',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 				";
             mysql_query($query4) or die('c'.mysql_error());
@@ -179,21 +179,21 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				InvoiceID='" . (int)$SaleID . "',
 				CylinderID='" . (int)$CID . "',
 				HandedTo='" . (int)$CustomerID . "',
-				Weight='" . (float)$CurrentCylinderWeight[$i] . "',
+				Weight='" . (float)financials($CurrentCylinderWeight[$i]) . "',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "'
 			";
             mysql_query($query2) or die('d'.mysql_error());
             $i++;
         }
         $CylinderCount = $i;
-        $TempGasRate = (float)$GrandTotalRates/$GrandTotalGasCapacity;
+        $TempGasRate = (float)financials($GrandTotalRates/$GrandTotalGasCapacity);
 
         mysql_query("UPDATE sales SET 
             GasRate = '".$TempGasRate."',
-            Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
+            Unpaid='" . (float)financials($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
             WHERE ID = '".(int)$SaleID."'") or die('e'.mysql_error());
         mysql_query("UPDATE sales_amount SET 
-            Unpaid='" . (float)($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
+            Unpaid='" . (float)financials($TotalAmount - ($Balance * $TempGasRate) - $Paid) . "'
             WHERE ID = '".(int)$SaleAmountID."'") or die('e'.mysql_error());
 
         sendUserSMS($CustomerID, 'Dear '. getValue('users', 'Name', 'ID', $CustomerID).', \n' .$CylinderCount . ' cylinder(s) have been delivered to you with total weight: '.$GrandTotalGasWeight.'KG. \nTotal Payable Amount: '.$TotalAmount.'. \nAmount Paid: '.$Paid.'. \nBalance Amount: '.financials($Unpaid).' at '.date('h:iA d-m-Y'));

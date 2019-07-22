@@ -20,7 +20,7 @@ if (isset($_REQUEST["Headings"])) {
     $HeadID = $_REQUEST['Headings'];
 }
 
-$sql = "SELECT p.ID, p.ShopID, s.Name AS ShopName, s.PlantID, p.Total, p.Balance, p.ShopID, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p LEFT JOIN users s ON p.ShopID=s.ID WHERE p.ID <> 0 " .
+$sql = "SELECT p.ID, p.ShopID, s.Name AS ShopName, s.PlantID, p.Total, p.GasRate, p.Balance, p.ShopID, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p LEFT JOIN users s ON p.ShopID=s.ID WHERE p.ID <> 0 " .
     ($TotalFrom != "" ? " AND p.Total >= " . $TotalFrom : " ") .
     ($TotalTo != "" ? " AND p.Total <= " . $TotalTo : " ") .
     ($DateAddedFrom != "" ? " AND p.DateAdded >= '" . $DateAddedFrom. " 00:00:00' " : " ") .
@@ -266,6 +266,7 @@ desired effect
                                     <th>Shop</th>
                                     <th>No. of cylinders</th>
                                     <th>Total Price (PKR)</th>
+                                    <th>Adjusted Amount (PKR)</th>
                                     <th>Amount Paid (PKR)</th>
                                     <th>Remaining Payment (PKR)</th>
                                     <th>Date Added</th>
@@ -308,6 +309,7 @@ desired effect
                                         ?>
                                     </td>
                                     <td><?php echo financials($row["Total"]); ?></td>
+                                    <td><?php echo financials($row["Balance"] * $row["GasRate"]); ?></td>
                                     <td><?php echo financials($row["Paid"]); ?></td>
                                     <td><?php echo financials($row["Unpaid"]); ?></td>
                                     <td><?php echo $row["DateAdded"]; ?></td>

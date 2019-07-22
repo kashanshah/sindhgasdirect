@@ -24,7 +24,7 @@ if(isset($_REQUEST['DID']))
         redirect("purchases.php");
     }
 }
-$sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, s.Name AS Shop, pl.Name AS Plant, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
+$sql="SELECT p.ID, p.Total, p.GasRate, p.Balance, p.ShopID, s.Name AS Shop, pl.Name AS Plant, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
 LEFT JOIN users s ON p.ShopID=s.ID LEFT JOIN users pl ON s.PlantID=pl.ID WHERE p.ID <> 0 " .(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ' AND p.ShopID='.$_SESSION["ID"]) .' ORDER BY p.ID DESC';
 $resource=mysql_query($sql) or die(mysql_error());
 
@@ -149,6 +149,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                               <th>Shop</th>
                           <?php } ?>
                         <th>Total Price</th>
+                        <th>Amount Adjusted</th>
                         <th>Amount Paid</th>
                         <th>Remaining Payment</th>
                         <th>Date Added</th>
@@ -170,6 +171,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                               <td><?php echo $row["Shop"]; ?></td>
                           <?php } ?>
                         <td><?php echo financials($row["Total"]); ?></td>
+                          <td><?php echo financials($row["Balance"] * $row["GasRate"]); ?></td>
                         <td><?php echo financials($row["Paid"]); ?></td>
                         <td><?php echo financials($row["Unpaid"]); ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
