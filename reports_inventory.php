@@ -312,15 +312,15 @@ desired effect
                                 </thead>
                                 <tbody>
                                 <?php $i = 1;
-                                $PlantCylinders = 0;
-                                $FilledCylinders = 0;
-                                $UnfilledCylinders = 0;
-                                $ShopCylinders = 0;
-                                $DriverCylinders = 0;
-                                $CustomerCylinders = 0;
+                                $PlantCylinders = array();
+                                $FilledCylinders = array();
+                                $UnfilledCylinders = array();
+                                $ShopCylinders = array();
+                                $DriverCylinders = array();
+                                $CustomerCylinders = array();
                                 while ($row = mysql_fetch_array($resource)) {
-                                   if (((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]))
-|| (!empty($CylinderStatus) && in_array(getCurrentStatus($row["ID"]), $CylinderStatus))
+                                    if (((getCurrentHandedTo($row["ID"]) == $_SESSION["ID"] || ($_SESSION["RoleID"] == ROLE_ID_ADMIN)) || (getValue('users', 'ShopID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]) || (getValue('users', 'PlantID', 'ID', getCurrentHandedTo($row["ID"])) == $_SESSION["ID"]))
+                                        || (!empty($CylinderStatus) && in_array(getCurrentStatus($row["ID"]), $CylinderStatus))
                                     ) {
                                         ?>
                                         <tr style="background-color: <?php echo $i % 2 == 0 ? '#eee' : '#ccc'; ?>">
@@ -335,17 +335,17 @@ desired effect
                                         </tr>
                                         <?php
                                         if (getCurrentStatus($row["ID"]) == ROLE_ID_PLANT) {
-                                            $PlantCylinders++;
-                                            $FilledCylinders++;
+                                            array_push($PlantCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
+                                            array_push($FilledCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
                                         } elseif (getCurrentStatus($row["ID"]) == -1) {
-                                            $PlantCylinders++;
-                                            $UnfilledCylinders++;
+                                            array_push($PlantCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
+                                            array_push($UnfilledCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
                                         } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_SHOP) {
-                                            $ShopCylinders++;
+                                            array_push($ShopCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
                                         } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_CUSTOMER) {
-                                            $CustomerCylinders++;
+                                            array_push($CustomerCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
                                         } elseif (getCurrentStatus($row["ID"]) == ROLE_ID_DRIVER) {
-                                            $DriverCylinders++;
+                                            array_push($DriverCylinders, array("ID" => $row["ID"], "CylinderType" => $row["CylinderType"]));
                                         }
                                         $i++;
                                     }
@@ -355,12 +355,96 @@ desired effect
                                     <!--<th>SUMMARY</th>-->
                                     <th>Total Cylinders:<br/>
                                     <?php echo $i - 1; ?></td>
-                                    <th>Cylinders at Plant:<br/><?php echo $PlantCylinders; ?></th>
-                                    <th>Filled Cylinders:<br/><?php echo $FilledCylinders; ?></th>
-                                    <th>Unfilled Cylinders:<br/><?php echo $UnfilledCylinders; ?></th>
-                                    <th>Cylinders at Shops:<br/><?php echo $ShopCylinders; ?></th>
-                                    <th>Cylinders at Drivers:<br/><?php echo $DriverCylinders; ?></th>
-                                    <th>Cylinders at Customer:<br/><?php echo $CustomerCylinders; ?></th>
+                                    <th>
+                                        Cylinders at Plant:<br/><?php echo sizeof($PlantCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
+                                    <th>
+                                        Filled Cylinders:<br/><?php echo sizeof($FilledCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
+                                    <th>
+                                        Unfilled Cylinders:<br/><?php echo sizeof($UnfilledCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
+                                    <th>
+                                        Cylinders at Shops:<br/><?php echo sizeof($ShopCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
+                                    <th>
+                                        Cylinders at Drivers:<br/><?php echo sizeof($DriverCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
+                                    <th>
+                                        Cylinders at Customer:<br/><?php echo sizeof($CustomerCylinders); ?>
+                                        <?php
+                                        $r = mysql_query("SELECT ID, Name, Capacity FROM cylindertypes WHERE ID<>0") or die(mysql_error());
+                                        while ($Rs = mysql_fetch_assoc($r)) {
+                                            echo '<br/>' . $Rs["Name"] . ': ';
+                                            $tempCount = 0;
+                                            foreach($PlantCylinders as $arr){
+                                                if($arr["CylinderType"] == $Rs["ID"])
+                                                    $tempCount++;
+                                            }
+                                            echo (int)$tempCount;
+                                        }
+                                        ?>
+                                    </th>
                                 </tr>
                                 </tbody>
                             </table>
