@@ -25,7 +25,7 @@ if(isset($_REQUEST['DID']))
     }
 }
 $sql="SELECT p.ID, p.Total, p.Balance, p.ShopID, s.Name AS Shop, pl.Name AS Plant, p.Paid, p.Unpaid, p.RefNum, p.Note, p.DateAdded, p.DateModified FROM purchases p 
-LEFT JOIN users s ON p.ShopID=s.ID LEFT JOIN users pl ON s.PlantID=pl.ID WHERE p.ID <> 0 " .(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ' AND p.ShopID='.$_SESSION["ID"]);
+LEFT JOIN users s ON p.ShopID=s.ID LEFT JOIN users pl ON s.PlantID=pl.ID WHERE p.ID <> 0 " .(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : ' AND p.ShopID='.$_SESSION["ID"]) .' ORDER BY p.ID DESC';
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>

@@ -6,6 +6,7 @@ $msg='';
 $Name = "";
 $Details = "";
 $Status = 0;
+$PlantID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 0 : $_SESSION["ID"]);
 $DateAdded = "";
 $DateModified = "";
 if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
@@ -13,15 +14,17 @@ if(isset($_POST['editstd']) && $_POST['editstd']=='Update')
     $ID = $_REQUEST["ID"];
     $Name = $_REQUEST["Name"];
     $Details = $_REQUEST["Details"];
+    $PlantID = $_REQUEST["PlantID"];
     $Status = $_REQUEST["Status"];
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
     else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter The Name</div>';
+    else if($PlantID == 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Select A Plant</div>';
     if($msg=="")
     {
         mysql_query("UPDATE paymentmethods SET DateModified='".DATE_TIME_NOW."',
 					Name='".dbinput($Name)."',
 					Details='".dbinput($Details)."',
-					PlantID='".(int)$_SESSION["ID"]."',
+                    PlantID='".(int)$PlantID."',
 					Status='".(int)$Status."'
 					WHERE ID=".(int)$ID."
 					") or die(mysql_error());
@@ -45,13 +48,14 @@ else
 				</div>';
         redirect("classes.php");
     }
-    $sql="SELECT Name, Details, Status FROM paymentmethods where ID=".$ID;
+    $sql="SELECT Name, Details, PlantID, Status FROM paymentmethods where ID=".$ID;
     $resource=mysql_query($sql) or die(mysql_error());
     if(mysql_num_rows($resource) > 0)
     {
         $row=mysql_fetch_array($resource);
         $Name = $row["Name"];
         $Details = $row["Details"];
+        $PlantID = $row["PlantID"];
         $Status = $row["Status"];
     }
     else
@@ -181,6 +185,26 @@ desired effect
                                     <label class="col-md-3 control-label" for="eventple-text-input">Details</label>
                                     <div class="col-md-6">
                                         <textarea class="form-control" name="Details"><?php echo $Details ;?></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="PlantID">Plant</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" required name="PlantID" id="PlantID" style="width: 100%;">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE RoleID = " . ROLE_ID_PLANT . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : " AND ID= " . (int)$_SESSION["ID"])) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            if ($n == 0) {
+                                                echo '<option value="0">No Plant Added</option>';
+                                            } else {
+                                                while ($Rs = mysql_fetch_assoc($r)) { ?>
+                                                    <option value="<?php echo $Rs['ID']; ?>" <?php if ($PlantID == $Rs['ID']) {
+                                                        echo 'selected=""';
+                                                    } ?>><?php echo $Rs['Name']; ?></option>
+                                                <?php }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">

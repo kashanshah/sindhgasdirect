@@ -47,14 +47,14 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save'){
 						DateModified='".DATE_TIME_NOW."',
 						MethodID='".(int)$MethodID."',
 						UserID='".(int)$UserID."',
-						Amount='".(float)$Amount."',
+						Amount='".(float)financials($Amount)."',
 						Details='".dbinput($Details)."',
 						PerformedBy='".(int)$_SESSION["ID"]."'
 						") or die(mysql_error());
         $PaymentID = mysql_insert_id();
         mysql_query("UPDATE users SET
 						DateModified='".DATE_TIME_NOW."',
-						Credit=Credit+".(float)$Amount."
+						Credit=Credit+".(float)financials($Amount)."
 						WHERE ID=".(int)$UserID."
 						") or die(mysql_error());
 

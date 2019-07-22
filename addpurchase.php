@@ -69,11 +69,11 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
         $query3 = "INSERT INTO purchases SET DateAdded = '" . DATE_TIME_NOW . "', DateModified = '" . DATE_TIME_NOW . "',
 				ShopID='" . (int)($_SESSION["ID"]) . "',
 				RefNum='',
-				GasRate='" . (float)GAS_RATE . "',
-				Total='" . (float)($TotalAmount) . "',
-				Balance = '" . (int)($Balance) . "',
-				Paid='" . (float)$Paid . "',
-				Unpaid='" . (float)($Unpaid) . "',
+				GasRate='" . (float)financials(GAS_RATE) . "',
+				Total='" . (float)financials($TotalAmount) . "',
+				Balance = '" . (float)financials($Balance) . "',
+				Paid='" . (float)financials($Paid) . "',
+				Unpaid='" . (float)financials($Unpaid) . "',
 				PerformedBy = '" . (int)$_SESSION["ID"] . "',
 				Note='" . dbinput($Note) . "'
 				";

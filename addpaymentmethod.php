@@ -5,8 +5,8 @@ get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT));
 $msg='';
 $ID = "";
 $Name = "";
-$PlantID = 0;
 $Details = "";
+$PlantID = ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 0 : $_SESSION["ID"]);
 $Status = 1;
 $DateAdded = "";
 $DateModified = "";
@@ -15,6 +15,7 @@ if(isset($_POST['addstd']) && $_POST['addstd']=='Save')
 {
     if(isset($_POST['Name'])) 						$Name = trim($_POST['Name']);
     if(isset($_POST['Details'])) 					$Details = trim($_POST['Details']);
+    if(isset($_POST['PlantID'])) 					$PlantID = trim($_POST['PlantID']);
     if(isset($_POST['Status'])) 					$Status = trim($_POST['Status']);
 
     if(CAPTCHA_VERIFICATION == 1) { if(!isset($_POST["captcha"]) || $_POST["captcha"]=="" || $_SESSION["code"]!=$_POST["captcha"]) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Incorrect Captcha Code</div>'; }
