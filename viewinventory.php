@@ -109,6 +109,10 @@ desired effect
                                        href="cylindershoptodriver.php" data-original-title="" title="">Return Back To Driver
                                     </a>
                                     <a style="float:right;margin-right:15px;" type="button"
+                                       class="btn btn-group-vertical btn-danger"
+                                       href="returntoshop_adjustment.php" data-original-title="" title="">Refund Cylinder From Customer
+                                    </a>
+                                    <a style="float:right;margin-right:15px;" type="button"
                                             class="btn btn-group-vertical btn-primary"
                                             href="addpurchase.php" data-original-title="" title="">Recieve Cylinder From Driver
                                     </a>
