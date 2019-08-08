@@ -2,6 +2,12 @@
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP));
 
+$DateAddedFrom = date('Y-m-d', ( time() - (60 * 60 * 1 * 24)));
+$DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
+
+foreach($_REQUEST as $key => $val)
+    $$key = $val;
+
 $msg='';
 if(isset($_REQUEST['ids']) && is_array($_REQUEST['ids']))
 {
@@ -36,7 +42,10 @@ if(isset($_REQUEST['DID']))
 $sql="SELECT p.ID, p.Amount, p.Details, p.MethodID, p.UserID, p.DateAdded, p.DateModified FROM 
 payments p 
 LEFT JOIN users u ON u.ID=p.UserID
-WHERE p.ID<>0 " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND u.PlantID='".(int)$_SESSION["ID"]."'" : " AND p.UserID = '".(int)$_SESSION["ID"]."'") );
+WHERE p.ID<>0
+AND p.DateAdded > '".$DateAddedFrom." 00:00:00'
+AND p.DateAdded < '".$DateAddedTo." 23:23:59'
+ " . ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? "" : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? " AND u.PlantID='".(int)$_SESSION["ID"]."'" : " AND p.UserID = '".(int)$_SESSION["ID"]."'") );
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -139,6 +148,19 @@ desired effect
                         </div><!-- /.box-header -->
                         <div class="box-body table-responsive">
                             <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
+                                <div class="form-group">
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">From Date</label>
+                                    <div class="col-md-3">
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">Till Date</label>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="FilterResults" value="FILTER RESULT" id="FilterResults" class="form-control col-md-7 col-xs-12 btn btn-success" type="submit" />
+                                    </div>
+                                </div>
                                 <table id="paymentmethodple1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
