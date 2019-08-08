@@ -348,6 +348,46 @@ desired effect
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box-body -->
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Security Deposite</h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <?php
+                                    $sql="SELECT d.*, u.ID, u.Username, u.Name AS CustomerName, s.Name AS ShopName FROM deposites d LEFT JOIN users u ON u.ID=d.CustomerID LEFT JOIN users s ON s.ID = d.ShopID where d.CustomerID = ".$ID ." AND d.ID<>0";
+                                    $resource=mysql_query($sql) or die(mysql_error());
+                                    ?>
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>S No.</th>
+                                            <th>Amount</th>
+                                            <th>Description</th>
+                                            <th>Date Added</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php while($row=mysql_fetch_array($resource))
+                                        {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo sprintf('%05u', $row["ID"]); ?></td>
+                                                <td><?php echo financials($row["Amount"]); ?></td>
+                                                <td><?php echo $row["Description"]; ?></td>
+                                                <td><?php echo $row["DateAdded"]; ?></td>
+                                            </td>
+                                        </tr>
+                                        <?php }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box-body -->
                         <?php if(CAPTCHA_VERIFICATION == 1) { ?>
                             <div class="box box-default">
                                 <div class="box-header with-border">
