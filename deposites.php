@@ -1,8 +1,19 @@
 <?php include("common.php"); ?>
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_PLANT, ROLE_ID_SHOP, ROLE_ID_SALES));
+
+$DateAddedFrom = date('Y-m-d', ( time() - (60 * 60 * 1 * 24)));
+$DateAddedTo = date('Y-m-d', ( time() - (60 * 60 * 0 * 24)));
+
+foreach($_REQUEST as $key => $val)
+    $$key = $val;
+
 $msg='';
-$sql="SELECT d.*, u.ID, u.Username, u.Name AS CustomerName, s.Name AS ShopName FROM deposites d LEFT JOIN users u ON u.ID=d.CustomerID LEFT JOIN users s ON s.ID = d.ShopID where ".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " d.ShopID = ".$_SESSION["ID"]." AND ") ."  d.ID<>0";
+$sql="SELECT d.*, u.ID, u.Username, u.Name AS CustomerName, s.Name AS ShopName FROM deposites d LEFT JOIN users u ON u.ID=d.CustomerID LEFT JOIN users s ON s.ID = d.ShopID where 
+".(($_SESSION["RoleID"] == ROLE_ID_PLANT || $_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " d.ShopID = ".$_SESSION["ID"]." AND ") ."  d.ID<>0
+AND d.DateAdded > '".$DateAddedFrom." 00:00:00'
+AND d.DateAdded < '".$DateAddedTo." 23:23:59'
+";
 $resource=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -101,7 +112,22 @@ desired effect
                         </div><!-- /.box-header -->
                         <?php } ?>
                         <div class="box-body table-responsive">
-                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin" method="post">
+                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
+                                  method="get">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">From Date</label>
+                                    <div class="col-md-3">
+                                        <input name="DateAddedFrom" value="<?php echo $DateAddedFrom; ?>" id="DateAddedFrom" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-6">Till Date</label>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="DateAddedTo" value="<?php echo $DateAddedTo; ?>" id="DateAddedTo" class="form-control col-md-7 col-xs-12" type="date">
+                                    </div>
+                                    <div class="col-md-3 col-sm-5 col-xs-6">
+                                        <input name="FilterResults" value="FILTER RESULT" id="FilterResults" class="form-control col-md-7 col-xs-12 btn btn-success" type="submit" />
+                                    </div>
+                                </div>
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
@@ -113,8 +139,8 @@ desired effect
                                         <th>Amount</th>
                                         <th>Description</th>
                                         <th>Date Added</th>
-<!--                                        <th></th>
--->                                    </tr>
+                                        <!--                                        <th></th>
+                                        -->                                    </tr>
                                     </thead>
                                     <tbody>
                                     <?php while($row=mysql_fetch_array($resource))
@@ -129,13 +155,13 @@ desired effect
                                             <td><?php echo financials($row["Amount"]); ?></td>
                                             <td><?php echo $row["Description"]; ?></td>
                                             <td><?php echo $row["DateAdded"]; ?></td>
-<!--                                            <td>
-                                                <div class="btn-group">
-                                                    <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-pencil"></i></a>
-                                                    <a class="btn btn-info btn-xs" title="View" href="viewcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-eye"></i></a>
-                                                    <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php /*echo $row["ID"]; */?>)"><i class="fa fa-trash"></i></a>
-                                                </div>
-                                            </td>
+                                            <!--                                            <td>
+                                            <div class="btn-group">
+                                                <a class="btn btn-primary btn-xs" title="Edit" href="editcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-info btn-xs" title="View" href="viewcustomer.php?ID=<?php /*echo $row["ID"]; */?>"><i class="fa fa-eye"></i></a>
+                                                <a class="btn btn-danger btn-xs" title="Delete" href="javascript:;" onclick="doSingleDelete(<?php /*echo $row["ID"]; */?>)"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
 -->                                        </tr>
                                     <?php }
                                     ?>
