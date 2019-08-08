@@ -14,7 +14,7 @@ get_right(array(ROLE_ID_SHOP, ROLE_ID_SALES));
 	$OldBarCode = "";
 	$CategoryID="";
 	$CylinderID = array();
-	$CurrentCylinderWeight = array();
+	$CylinderWeight = array();
 	$InvoiceID = array();
 	$HandedTo = $_SESSION["ID"];
 	$CylinderName = "";
@@ -59,8 +59,6 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 	{
 		$i = 0;
         $totaltmpSaving=0;
-        dumpArray($_POST);
-        exit();
 
         foreach($CylinderID as $CID){
             mysql_query("INSERT INTO invoices SET DateAdded = '".DATE_TIME_NOW."', DateModified = '".DATE_TIME_NOW."',
@@ -70,7 +68,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 			mysql_query("UPDATE sale_details SET
 				ReturnDate = '".DATE_TIME_NOW."',
 				ReturnStatus = 1,
-				ReturnWeight='".financials($CurrentCylinderWeight[$i])."'
+				ReturnWeight='".financials($CylinderWeight[$i])."'
 				WHERE SaleID = '".(int)$InvoiceID[$i]."' AND CylinderID = '".(int)$CID."' ") or die(mysql_error());
 
 
@@ -79,7 +77,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				InvoiceID='".(int)$InvoiceID[$i]."',
 				CylinderID='".(int)$CID."',
 				HandedTo='".(int)$_SESSION["ID"]."',
-				Weight='".(float)$CurrentCylinderWeight[$i]."',
+				Weight='".(float)$CylinderWeight[$i]."',
 				PerformedBy = '".(int)$CustomerID[$i]."'
 			") or die(mysql_error());
 
@@ -88,22 +86,47 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
             $query3 = "INSERT INTO sales SET DateAdded = '".DATE_TIME_NOW."',DateModified='".DATE_TIME_NOW."',
 			ShopID='" . (int)($_SESSION["ID"]) . "',
 			CustomerID='" . (int)($CustomerID[$i]) . "',
-			GasRate='" . (float)financials($GasRate) . "',
-			Total='" . (float)financials($TotalAmount) . "',
-			Balance='" . (float)financials($Balance) . "',
-			Paid='" . (float)financials($Paid) . "',
-			Unpaid='" . ((float)$Unpaid < 0 ? 0 : financials($Unpaid)) . "',
+			GasRate='-" . (float)financials($Amount[$i] / $CylinderGasWeight[$i]) . "',
+			Total='-" . (float)financials($Amount[$i]) . "',
+			Balance='0',
+			Paid='-" . (float)financials($Amount[$i]) . "',
+			Unpaid='0',
 			PerformedBy = '" . (int)$_SESSION["ID"] . "',
 			Note='" . dbinput($Note) . "'
 			";
             mysql_query($query3) or die('b'.mysql_error());
             $SaleID = mysql_insert_id();
 
+			$query4 = "INSERT INTO sales_amount SET DateAdded='".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
+					PerformedBy = '" . (int)$_SESSION["ID"] . "',
+					SaleID=" . $SaleID . ",
+					Paid='-" . (float)financials($Amount[$i]) . "',
+					Unpaid='0',
+					Note = '" . dbinput($Note) . "'";
+			mysql_query($query4) or die('a'.mysql_error());
+			$SaleAmountID = mysql_insert_id();
+
+            $query4 = "INSERT INTO sale_details SET DateAdded = '".DATE_TIME_NOW."', DateModified='".DATE_TIME_NOW."',
+				SaleID='" . (int)$SaleID . "',
+				CylinderID='" . (int)$CylinderID[$i] . "',
+				ReturnStatus=1,
+				ReturnWeight=" . (float)financials($CylinderWeight[$i]) . ",
+				ReturnDate='".DATE_TIME_NOW."',
+				TierWeight='" . (float)financials($CylinderTierWeight[$i]) . "',
+				ShopTotalWeight='".(float)financials($CylinderWeight[$i])."',
+				TotalWeight='" . (float)financials($CylinderWeight[$i]) . "',
+				Price='-" . (float)financials($Amount[$i]) . "',
+				GasRate='" . (float)financials($Amount[$i] / $CylinderGasWeight[$i]) . "',
+				PerformedBy = '" . (int)$_SESSION["ID"] . "'
+				";
+            mysql_query($query4) or die('c'.mysql_error());
+
+
 
 
             $CType = (int)getValue('cylinders', 'CylinderType', 'ID', $CID);
             $Wastage = (int)getValue('cylindertypes', 'Wastage', 'ID', $CType);
-            $tmpSaving = (float)$CurrentCylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID) - $Wastage;
+            $tmpSaving = (float)$CylinderWeight[$i] - getValue('cylinders', 'TierWeight', 'ID', $CID) - $Wastage;
             $totaltmpSaving = $totaltmpSaving + $tmpSaving;
 			$i++;
 		}
@@ -463,10 +486,10 @@ $(document).ready(function() {
 				gettotal();
 			}
 	});
-	$(document).on('change', '.CurrentCylinderWeight', function() {
+	$(document).on('change', '.CylinderWeight', function() {
 		var parEl = $(this).closest("tr");
 		var cylWeight = financial(parEl.find(".CylinderTierWeight").text());
-		var newCylWeight = financial(parEl.find(".CurrentCylinderWeight").val());
+		var newCylWeight = financial(parEl.find(".CylinderWeight").val());
 		if(parEl.find(".CurrentCylinderGasWeight").data("commercialcylinder") == 1){
             parEl.find(".Balance").text(((newCylWeight - cylWeight)).toFixed(2));
         }
@@ -493,9 +516,9 @@ $(document).ready(function() {
 			$(".cart_table").append('<tr class="DivCartCylinder'+$("[name='CylinderID']").val()+'">');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td style="width:5%"><input type="hidden" name="CylinderID[]" value="'+$("[name='CylinderID']").val()+'" /><span class="SerialNo" >'+$("[name='CylinderID']").val()+'</span></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderCartName'+i+'" >'+$("[name='CylinderID'] option:selected").text()+'</span><br/>Returning from: '+$("[name='CylinderID'] option:selected").data('customername')+'<input type="hidden" name="CustomerID[]" value="'+$("[name='CylinderID'] option:selected").data('customerid')+'" /><input type="hidden" name="InvoiceID[]" value="'+$("[name='CylinderID'] option:selected").data('invoiceid')+'" /></td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span>KG</td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
-			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="GasWeight[]" value="'+financial(gasWeight)+'" /><span class="CurrentCylinderGasWeight" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" id="CurrentCylinderGasWeight'+i+'" >'+financial(gasWeight)+'</span>KG</td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderTierWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('tierweight') + '" /><span class="CylinderTierWeight" id="CylinderTierWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('tierweight')+'</span>KG</td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderWeight[]" required="" value="' + $("[name='CylinderID'] option:selected").data('weight') + '" /><span id="CylinderGasWeight'+i+'">'+$("[name='CylinderID'] option:selected").data('weight')+'</span>KG</td>');
+			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><input type="hidden" name="CylinderGasWeight[]" value="'+financial(gasWeight)+'" /><span class="CylinderGasWeight" data-commercialcylinder="'+$("[name='CylinderID'] option:selected").data('commercial')+'" id="CylinderGasWeight'+i+'" >'+financial(gasWeight)+'</span>KG</td>');
             $(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><span class="Balance Balance'+i+'"><input type="hidden" name="Amount[]" value="' + financial(gasWeight * $("[name='CylinderID'] option:selected").data('gasrate')) + '" />' + financial(gasWeight * $("[name='CylinderID'] option:selected").data('gasrate')) + '</span></td>');
 			$(".cart_table .DivCartCylinder"+$("[name='CylinderID']").val()+"").append('	<td><div class="btn-group"><a class="btn btn-danger btn-xs dropdown-toggle" onclick="deletethisrow(\'.DivCartCylinder'+$("[name='CylinderID']").val()+'\');"><i class="fa fa-times"></i></a></div></td>');
 			$(".cart_table").append('</tr>');
