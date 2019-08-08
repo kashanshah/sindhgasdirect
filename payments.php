@@ -179,8 +179,11 @@ desired effect
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php while($row=mysql_fetch_array($resource))
+                                    <?php
+                                    $TotalAmountPaid = 0;
+                                    while($row=mysql_fetch_array($resource))
                                     {
+                                        $TotalAmountPaid += $row["Amount"];
                                         ?>
                                         <tr>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
@@ -203,8 +206,25 @@ desired effect
                                                     </div>
                                                 </td>
                                         </tr>
-                                    <?php }
+                                    <?php
+
+                                    }
                                     ?>
+
+                                    <tr>
+                                        <td><h4>SUMMARY</h4></td>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_PLANT) { ?>
+                                            <td style="width:5%"></td>
+                                        <?php } ?>
+                                        <td></td>
+                                        <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <td>Total Payment Made: <br/><strong><?php echo financials($TotalAmountPaid); ?></strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </form>
