@@ -2,8 +2,13 @@
 <?php include("checkadminlogin.php");
 get_right(array(ROLE_ID_ADMIN, ROLE_ID_DRIVER, ROLE_ID_SHOP, ROLE_ID_PLANT));
 
+$limit = isset($_REQUEST["limit"]) ? $_REQUEST["limit"] : 10;
+$page = isset($_REQUEST["page"]) ? $_REQUEST["page"] : 1;
+
 $msg = '';
-$sql = "SELECT * FROM cylinders WHERE ID<>0 ".($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND PlantID='.$_SESSION["ID"] : ' AND PlantID='.$_SESSION["PlantID"]))." order by ID DESC";
+$sql = "SELECT * FROM cylinders WHERE ID<>0 ".($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? ' AND PlantID='.$_SESSION["ID"] : ' AND PlantID='.$_SESSION["PlantID"]))." order by ID DESC ";
+$totalNum = mysql_num_rows(mysql_query($sql));
+$sql .= " LIMIT ".(int)$limit . " OFFSET ".(int)($page-1) * $limit . " ";
 $resource = mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -95,6 +100,42 @@ desired effect
                         echo $_SESSION["msg"];
                         $_SESSION["msg"] = "";
                     } ?>
+					<div class="box">
+                        <div class="box-body">
+                            <form id="frmPages" action="<?php echo $self; ?>" class="form-horizontal no-margin"
+                                  method="GET">
+                                <div class="col-md-4">
+                                    <label class="control-label">Page</label>
+                                    <div class="">
+                                        <select name="page" id="page" class="form-control">
+                                            <?php
+                                            for ($i = 1;$i <= (($totalNum/$limit)+1); $i++) {
+                                                ?>
+                                                <option value="<?php echo $i; ?>" <?php if ($i == $page) echo 'selected=""'; ?>><?php echo $i; ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Show</label>
+                                    <div class="">
+                                        <input name="limit" value="<?php echo $limit; ?>"
+                                               id="limit" class="form-control col-md-7 col-xs-12"
+                                               type="number" min="1" >
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="">
+                                        <input name="FilterResults" value="FILTER RESULT" id="FilterResults"
+                                               class="form-control col-md-7 col-xs-12 btn btn-success" type="submit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
                     <div class="box">
                         <div class="box-header">
                             <div class="btn-group-right">
