@@ -1387,7 +1387,6 @@ function sendSMS($to = '', $message, $check = false)
 
 function sendUserSMS($to = 0, $message = '', $check = true)
 {
-    return false;
     $response = '';
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;
