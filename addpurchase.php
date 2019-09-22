@@ -95,7 +95,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				    Weight when received: " . financials($CurrentCylinderWeight[$i]) . "KG",
                     'viewpurchase.php?ID=' . (int)$InvoiceID,
                     (int)$_SESSION["PlantID"],
-                    0,
+                    ROLE_ID_ADMIN,
                     100
                 );
             }

@@ -1040,7 +1040,7 @@ function financials($Number = 0)
 
 function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0){
     if($RoleID != 0){
-        $u = mysql_query("SELECT ID FROM users WHERE RoleDI = '".(int)$RoleID."'");
+        $u = mysql_query("SELECT ID FROM users WHERE RoleID = '".(int)$RoleID."'");
         while($r = mysql_fetch_array($u)){
             $query4 = "INSERT INTO notifications SET DateAdded = '" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
             Name='" . dbinput($Name) . "',

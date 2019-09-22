@@ -80,7 +80,7 @@ if(isset($_POST['addsale']) && $_POST['addsale']=='Save changes')
 				    Weight when dispatched to driver: " .financials($CylinderWeight[$i])."KG",
                     'viewpurchase.php?ID='.getCurrentPurchaseInvoiceID($CID),
                     (int)$_SESSION["ShopID"],
-                    0,
+                    ROLE_ID_ADMIN,
                     100
                 );
             }

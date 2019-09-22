@@ -152,7 +152,7 @@ if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
 				    Weight when sold: " .financials($CurrentCylinderWeight[$i])."KG",
                     'viewsale.php?ID='.(int)$SaleID,
                     (int)$_SESSION["ShopID"],
-                    0,
+                    ROLE_ID_ADMIN,
                     100
                 );
             }

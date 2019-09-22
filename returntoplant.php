@@ -66,7 +66,7 @@ if(isset($_POST['returntoshop']) && $_POST['returntoshop']=='Save changes')
 				    Weight when dispatched from shop: " .financials($ShopTotalWeight[$i])."KG",
                     'viewpurchase.php?ID='.getCurrentPurchaseInvoiceID($CID),
                     (int)$_SESSION["PlantID"],
-                    0,
+                    ROLE_ID_ADMIN,
                     100
                 );
             }
