@@ -43,6 +43,7 @@ $TotalAmount = 0;
 $Balance = getValue('users', 'Balance', 'ID', $_SESSION["ID"]);
 $Note = "";
 $CylinderWeight = array();
+$CompanyTotalWeight = array();
 
 if (isset($_POST['addsale']) && $_POST['addsale'] == 'Save changes') {
     $msg = "";
