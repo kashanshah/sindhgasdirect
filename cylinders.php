@@ -148,6 +148,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <th>Current Gas Weight (KG)</th>
                         <th>Cylinder Type</th>
                         <th>Current Status</th>
+                        <th>Enabled</th>
                         <th>Date Manufacturing</th>
                         <th>Date Added</th>
                           <?php
@@ -182,6 +183,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td><?php echo getCurrentWeight($row["ID"]) - $row["TierWeight"]; ?></td>
                         <td><?php echo getValue('cylindertypes', 'Name', 'ID', $row["CylinderType"]),'<br/>Capacity: '.getValue('cylindertypes', 'Capacity', 'ID', $row["CylinderType"]).'KG'; ?></td>
                         <td><?php echo date('Y-m-d') >= $row["ExpiryDate"] ? 'Expired' : getCylinderStatus(getCurrentStatus($row["ID"])).'<br/>'.getValue('users', 'Name', 'ID', getCurrentHandedTo($row["ID"])); ?></td>
+                        <td><?php echo $row["Enabled"] ? 'YES' : 'NO'; ?></td>
                         <td><?php echo $row["ManufacturingDate"]; ?></td>
                         <td><?php echo $row["DateAdded"]; ?></td>
                           <?php

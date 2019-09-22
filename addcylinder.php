@@ -9,6 +9,7 @@ $Description = "";
 $ShortDescription = "";
 $TierWeight = "";
 $CylinderType = 0;
+$Enabled = 1;
 $Image = "";
 $ManufacturingDate = date('Y-m-d');
 $ExpiryDate = "";
@@ -23,6 +24,7 @@ if (isset($_POST['addstd']) && $_POST['addstd'] == 'Save') {
     if (isset($_POST['ShortDescription'])) $ShortDescription = trim($_POST['ShortDescription']);
     if (isset($_POST['TierWeight'])) $TierWeight = trim($_POST['TierWeight']);
     if (isset($_POST['CylinderType'])) $CylinderType = trim($_POST['CylinderType']);
+    if (isset($_POST['Enabled'])) $Enabled = trim($_POST['Enabled']);
     if (isset($_POST['Image'])) $Image = trim($_POST['Image']);
 
     if (isset($_POST['ManufacturingDate'])) $ManufacturingDate = trim($_POST['ManufacturingDate']);
@@ -66,6 +68,7 @@ if (isset($_POST['addstd']) && $_POST['addstd'] == 'Save') {
 						ShortDescription='" . dbinput($ShortDescription) . "',
 						TierWeight='" . (float)$TierWeight . "',
 						CylinderType='" . (int)$CylinderType . "',
+						Enabled='" . (int)$Enabled . "',
 						PlantID='" . (int)$_SESSION["ID"] . "',
 						PerformedBy = '" . (int)$_SESSION["ID"] . "'") or die(mysql_error());
 
@@ -276,6 +279,14 @@ desired effect
                                     <div class="col-md-6">
                                         <textarea class="form-control" id="Description" placeholder="Enter Description"
                                                   name="Description"><?php echo $Description; ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="Enabled">Enabled?</label>
+                                    <div class="col-md-6">
+                                        <input type="radio" value="1" name="Enabled" <?php echo ($Enabled == "1" ? 'checked=""' : '') ?>> Yes
+                                        <input type="radio" value="0" name="Enabled" <?php echo ($Enabled == "0" ? 'checked=""' : '') ?>> No
                                     </div>
                                 </div>
 
