@@ -17,8 +17,7 @@ get_right(array(ROLE_ID_ADMIN));
 		else if($Name == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter Name</div>';
 		else if($Username == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Username</div>';
         else if(checkavailability('users', 'Username', $Username) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Username not available choose another!</div>';
-        else if(checkavailability('users', 'Number', $Number) > 0) $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Phone number is already registered with a user!</div>';
-		else if($Password == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Password</div>';
+        else if($Password == '') $msg = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>Please Enter A Password</div>';
 		else if(isset($_FILES["File"]) && $_FILES["File"]['name'] != "")
 		{
 			$filenamearray2=explode(".", $_FILES["File"]['name']);
