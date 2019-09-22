@@ -344,7 +344,7 @@ desired effect
                                     <div class="col-md-12">
                                         <select name="CylinderID" id="CylinderID" class="form-control">
                                             <?php
-                                            $r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE ExpiryDate > '" . date('Y-m-d h:i:s') . "'") or die(mysql_error());
+                                            $r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE Enabled=1 AND ExpiryDate > '" . date('Y-m-d h:i:s') . "'") or die(mysql_error());
                                             $n = mysql_num_rows($r);
                                             if ($n == 0) {
 //                                                echo '<option value="0">No Cylinder Added</option>';

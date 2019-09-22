@@ -272,7 +272,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-12">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-									$r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders") or die(mysql_error());
+									$r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE Enabled=1") or die(mysql_error());
 									$n = mysql_num_rows($r);
 									if($n == 0)
 									{
