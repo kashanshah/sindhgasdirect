@@ -84,7 +84,7 @@ define("MANDATORY", "<span class=\"mandatory noPrint\">*</span>");
 define("THUMB_WIDTH", 72); //In Pixel
 define("THUMB_HEIGHT", 72); //In Pixel
 define("INDENT", "&nbsp;&nbsp;&nbsp;");
-define("MAX_IMAGE_SIZE", 5120); //In KB
+define("MAX_IMAGE_SIZE", 20480); //In KB
 
 define("DIR_PAYMENT_IMAGES", "assets/payments/");
 define("DIR_USER_IMAGES", "assets/users/");
@@ -1038,26 +1038,45 @@ function financials($Number = 0)
     return number_format((float)$Number, "2", ".", "");
 }
 
-function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0)
-{
-    $query4 = "INSERT INTO notifications SET DateAdded = '" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
+function createNotification($Name = '', $Description = '', $Link = '', $UserID = 0, $RoleID = 0, $Priority = 0){
+    if($RoleID != 0){
+        $u = mysql_query("SELECT ID FROM users WHERE RoleDI = '".(int)$RoleID."'");
+        while($r = mysql_fetch_array($u)){
+            $query4 = "INSERT INTO notifications SET DateAdded = '" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
+            Name='" . dbinput($Name) . "',
+            Description='" . dbinput($Description) . "',
+            Link='" . dbinput($Link) . "',
+            UserID=" . (int)$r["ID"] . ",
+            RoleID=0,
+            Priority=" . (int)$Priority . ",
+            Status=0
+            ";
+            mysql_query($query4) or die(mysql_error());
+        }
+    }
+    if($UserID != 0){
+        $query4 = "INSERT INTO notifications SET DateAdded = '" . DATE_TIME_NOW . "', DateModified='" . DATE_TIME_NOW . "',
         Name='" . dbinput($Name) . "',
         Description='" . dbinput($Description) . "',
         Link='" . dbinput($Link) . "',
         UserID=" . (int)$UserID . ",
-        RoleID=" . (int)$RoleID . ",
+        RoleID=0,
         Priority=" . (int)$Priority . ",
         Status=0
         ";
-    mysql_query($query4) or die(mysql_error());
+        mysql_query($query4) or die(mysql_error());
+    }
     return mysql_insert_id();
 }
 
 function getNotificationCount($ID = 0, $RoleID = 0)
 {
-    $q = "SELECT COUNT(ID) AS Count from notifications WHERE Status = 0 AND (UserID = " . (int)$ID . " OR RoleID = " . (int)$RoleID . ")";
+    $q = "SELECT ID, Name, Description, Status, UserID, RoleID, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded, DATE_FORMAT(DateModified, '%D %b, %Y %h:%i:%p ') AS DateModified FROM notifications
+WHERE Status=0 AND UserID = " . (int)$_SESSION["ID"] . " AND ID<>0 ORDER BY Priority, ID DESC ";
     $r = mysql_query($q) or die(mysql_error());
-    return (int)mysql_result($r, 0, 0);
+    if($r){
+        return mysql_num_rows($r);
+    }
 }
 
 function dumpArray($RoleID = array())
@@ -1368,6 +1387,7 @@ function sendSMS($to = '', $message, $check = false)
 
 function sendUserSMS($to = 0, $message = '', $check = true)
 {
+    return false;
     $response = '';
     $username = SMS_USERNAME;
     $password = SMS_PASSWORD;

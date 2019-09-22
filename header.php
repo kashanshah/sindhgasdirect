@@ -124,14 +124,15 @@
                       <!-- Menu toggle button -->
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                          <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : ($NotifCount == 0 ? '' : '<span class="label label-danger">'.$NotifCount.'</span>'); ?>
+                          <?php echo ($NotifCount == 0 ? '' : '<span class="label label-danger">'.$NotifCount.'</span>'); ?>
                       </a>
                       <ul class="dropdown-menu">
                         <li class="header">You have <?php echo $NotifCount; ?> new notifications</li>
                         <li>
                           <ul class="menu">
                               <?php
-                              $hQuer = "SELECT ID, Name, Description, Status, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded from notifications WHERE Status = 0 AND (UserID = ". (int)$_SESSION["ID"]." OR RoleID = ".(int)$_SESSION["RoleID"].") ORDER BY Priority, ID DESC ";
+                              $hQuer = "SELECT ID, Name, Description, Status, UserID, RoleID, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded, DATE_FORMAT(DateModified, '%D %b, %Y %h:%i:%p ') AS DateModified FROM notifications
+WHERE Status=0 AND UserID = " . (int)$_SESSION["ID"] . " AND  ID<>0 ORDER BY Priority, ID DESC ";
                               $hQuerRes = mysql_query($hQuer) or die(mysql_error());
                               while($hNotif = mysql_fetch_assoc($hQuerRes)){
                                   ?>

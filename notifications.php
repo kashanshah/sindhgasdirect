@@ -4,9 +4,7 @@
 
 $msg = '';
 $sql = "SELECT ID, Name, Description, Status, UserID, RoleID, Link, DATE_FORMAT(DateAdded, '%D %b, %Y %h:%i:%p ') AS DateAdded, DATE_FORMAT(DateModified, '%D %b, %Y %h:%i:%p ') AS DateModified FROM notifications
-WHERE  " .
-    ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : "(UserID = " . (int)$_SESSION["ID"] . " OR RoleID = " . (int)$_SESSION["RoleID"] . ") AND ") .
-    " ID<>0  ORDER BY Priority, ID DESC ";
+WHERE UserID = " . (int)$_SESSION["ID"] . " AND ID<>0 ORDER BY Priority, ID DESC ";
 $resource = mysql_query($sql) or die(mysql_error());
 ?>
 <!DOCTYPE html>
@@ -167,7 +165,7 @@ desired effect
                                     while ($row = mysql_fetch_array($resource)) {
                                         ?>
                                         <li class="read" <?php echo $row["Status"] == 0 ? 'style="background:#ecf0f2;"' : ''; ?>
-                                            onclick='markReadAndAction(<?php echo $row["ID"]; ?>, "<?php echo $row["Link"]; ?>", <?php echo ($_SESSION["RoleID"] == ROLE_ID_ADMIN ? 'false' : 'true'); ?>)'>
+                                            onclick='markReadAndAction(<?php echo $row["ID"]; ?>, "<?php echo $row["Link"]; ?>", true)'>
                                             <button class="close-notification hidden"
                                                     data-id="Ym8vZkFscllWR1JyS0JXZDBNWkhnUT09" data-condition="false"><i
                                                         class="fa fa-times-circle" aria-hidden="true"></i></button>
