@@ -182,7 +182,7 @@ desired effect
                         </a>
                     </div>
                     <?php
-                    if ($_SESSION["RoleID"] == ROLE_ID_SHOP) {
+                    if ($_SESSION["RoleID"] == ROLE_ID_ADMIN || $_SESSION["RoleID"] == ROLE_ID_SHOP) {
                         ?>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <a href="reports_stock_received.php">

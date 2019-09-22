@@ -10,6 +10,7 @@ $DateAddedTo = date('Y-m-d');
 $WeightFrom = "";
 $WeightTo = "";
 $PlantID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : ($_SESSION["RoleID"] == ROLE_ID_PLANT ? array($_SESSION["ID"]) : array($_SESSION["PlantID"]));
+$ShopID = $_SESSION["RoleID"] == ROLE_ID_ADMIN ? array() : array($_SESSION["ID"]);
 $Headings = "";
 $HeadID = array();
 $SortBy = "p.ID";
@@ -23,7 +24,7 @@ if (isset($_REQUEST["Headings"])) {
 }
 
 $sql = "SELECT cs.ID, cs.InvoiceID, cs.HandedTo, ht.Name AS HandedToName, htr.ID AS HandedToRoleID, htr.Name AS HandedToRole, cs.Weight, c.TierWeight, ct.Name AS CylinderType, ct.Capacity, c.BarCode AS BarCode, c.PerformedBy, p.Name AS PerformedByName, pr.Name AS PerformedByRole, pr.ID AS PerformedByRoleID, cs.DateAdded FROM cylinderstatus cs LEFT JOIN cylinders c ON c.ID = cs.CylinderID LEFT JOIN cylindertypes ct ON ct.ID = c.CylinderType LEFT JOIN users p ON p.ID = cs.PerformedBy LEFT JOIN roles pr ON pr.ID = p.RoleID LEFT JOIN users ht ON ht.ID = cs.HandedTo LEFT JOIN roles htr ON htr.ID = ht.RoleID WHERE cs.ID <> 0 " .
-    " AND cs.PerformedBy = '" . $_SESSION["ID"] . "' " .
+    (!empty($ShopID) ? " AND cs.PerformedBy IN (" . implode(",", $ShopID) . ") " : " ") .
     ($TierWeightFrom != "" ? " AND c.TierWeight >= '" . $TierWeightFrom."'" : " ") .
     ($TierWeightTo != "" ? " AND c.TierWeight <= '" . $TierWeightTo."'" : " ") .
     (!empty($CylinderType) ? " AND c.CylinderType IN (" . implode(",", $CylinderType) . ") " : " ") .
@@ -224,6 +225,26 @@ desired effect
                                             while ($Rs = mysql_fetch_assoc($r)) {
                                                 ?>
                                                 <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $PlantID)) {
+                                                    echo 'selected=""';
+                                                } ?>><?php echo $Rs['Name']; ?>
+                                                </option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 <?php echo $_SESSION["RoleID"] == ROLE_ID_ADMIN ? '' : 'hidden'; ?>">
+                                    <label class="control-label">Shop(s)</label>
+                                    <div class="">
+                                        <select name="ShopID[]" id="ShopID" class="form-control select2" multiple
+                                                data-placeholder="All Shops">
+                                            <?php
+                                            $r = mysql_query("SELECT ID, Name FROM users WHERE ID<>0 AND RoleID=" . (int)ROLE_ID_SHOP) or die(mysql_error());
+                                            $n = mysql_num_rows($r);
+                                            while ($Rs = mysql_fetch_assoc($r)) {
+                                                ?>
+                                                <option value="<?php echo $Rs['ID']; ?>" <?php if (in_array($Rs['ID'], $ShopID)) {
                                                     echo 'selected=""';
                                                 } ?>><?php echo $Rs['Name']; ?>
                                                 </option>
