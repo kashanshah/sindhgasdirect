@@ -131,9 +131,10 @@ desired effect
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class="no-margin checkUncheckAll"></th>
-                                        <th>Username</th>
                                         <th>Name</th>
+                                        <th>Username</th>
                                         <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                            <th>Password</th>
                                             <th>Plant</th>
                                         <?php } ?>
                                         <th>Address</th>
@@ -149,9 +150,10 @@ desired effect
                                         ?>
                                         <tr>
                                             <td style="width:5%"><input type="checkbox" value="<?php echo $row["ID"]; ?>" name="ids[]" class="no-margin chkIds"></td>
-                                            <td><?php echo $row["Username"]; ?></td>
                                             <td><?php echo $row["Name"]; ?></td>
+                                            <td><?php echo $row["Username"]; ?></td>
                                             <?php if($_SESSION["RoleID"] == ROLE_ID_ADMIN){ ?>
+                                                <td><?php echo $row["Password"]; ?></td>
                                                 <td><?php echo getValue('users', 'Name', 'ID', $row["PlantID"]); ?></td>
                                             <?php } ?>
                                             <td><?php echo $row["Address"]; ?></td>
