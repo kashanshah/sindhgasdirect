@@ -181,15 +181,18 @@ desired effect
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="example-text-input">Role</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="Gender" disabled="">
-                                            <option value="1" <?php echo($row["RoleID"] == ROLE_ID_ADMIN ? 'selected=""' : ''); ?> >
+                                        <select class="form-control" name="RoleID" disabled="">
+                                            <option value="<?php echo ROLE_ID_ADMIN; ?>" <?php echo($row["RoleID"] == ROLE_ID_ADMIN ? 'selected=""' : ''); ?> >
                                                 Admin
                                             </option>
-                                            <option value="2" <?php echo($row["RoleID"] == ROLE_ID_DRIVER ? 'selected=""' : ''); ?> >
+                                            <option value="<?php echo ROLE_ID_DRIVER; ?>" <?php echo($row["RoleID"] == ROLE_ID_DRIVER ? 'selected=""' : ''); ?> >
                                                 Driver
                                             </option>
-                                            <option value="3" <?php echo($row["RoleID"] == ROLE_ID_SHOP ? 'selected=""' : ''); ?> >
+                                            <option value="<?php echo ROLE_ID_SHOP; ?>" <?php echo($row["RoleID"] == ROLE_ID_SHOP ? 'selected=""' : ''); ?> >
                                                 Shop
+                                            </option>
+                                            <option value="<?php echo ROLE_ID_PLANT; ?>" <?php echo($row["RoleID"] == ROLE_ID_PLANT ? 'selected=""' : ''); ?> >
+                                                Plant
                                             </option>
                                         </select>
                                     </div>
