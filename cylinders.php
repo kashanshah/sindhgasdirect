@@ -30,6 +30,10 @@ $pageNum = 1;
 $search = "";
 foreach ($_GET as $key => $val)
     $$key = $val;
+if(isset($_GET['pageNum'])) {
+    $pageNum=$_GET['pageNum'];
+    $start=($pageNum-1)*$limit;
+}
 
 $sql = "SELECT * FROM cylinders WHERE ID<>0 " . (($_SESSION["RoleID"] == ROLE_ID_ADMIN) ? '' : " AND PlantID='" . $_SESSION["ID"] . "'") .
     ($search == "" ? "" : " AND BarCode LIKE '%".dbinput($search)."%' ") .
