@@ -244,27 +244,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-12">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-									$r = mysql_query("SELECT ID, BarCode, TierWeight, CylinderType FROM cylinders WHERE Enabled = 1") or die(mysql_error());
+                                    $query = "SELECT DISTINCT(cs.CylinderID), cs.ID AS CylinderStatusID, c.ID, c.BarCode, u.ID AS UID, u.Commercial, u.Name AS CustomerName, ct.Capacity, c.TierWeight, c.CylinderType, cs.InvoiceID, cs.CylinderID, u.RoleID, sd.GasRate FROM cylinders c INNER JOIN cylinderstatus cs ON cs.CylinderID=c.ID LEFT JOIN users u ON cs.HandedTo=u.ID LEFT JOIN sale_details sd ON cs.InvoiceID=sd.SaleID LEFT JOIN cylindertypes ct ON ct.ID=cs.CylinderID WHERE cs.DateAdded >= (now()-interval 1 month) AND u.RoleID = " . (int)ROLE_ID_CUSTOMER . " AND cs.PerformedBy = " . (int)$_SESSION["ID"] . " ORDER BY cs.ID DESC";
+//									$r = mysql_query("SELECT  FROM cylinders WHERE Enabled = 1") or die(mysql_error());
+									$r = mysql_query($query) or die(mysql_error());
 									$n = mysql_num_rows($r);
-									if($n == 0)
-									{
+									if($n == 0){
 //										echo '<option value="0">No Cylinder Added</option>';
 									}
 									else
 									{
 										while($Rs = mysql_fetch_assoc($r)) { 
-											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_CUSTOMER && getCurrentHandedBy($Rs["ID"]) == $_SESSION["ID"]){
+											if(true){
+//											if(getCurrentStatus($Rs["ID"]) == ROLE_ID_CUSTOMER && getCurrentHandedBy($Rs["ID"]) == $_SESSION["ID"] || true){
 										?>
 										<option 
-											data-customername="<?php echo getValue('users', 'Name', 'ID', getCurrentHandedTo($Rs["ID"])); ?>" 
-											data-customerid="<?php echo getCurrentHandedTo($Rs["ID"]); ?>" 
-											data-invoiceid="<?php echo getCurrentHandedInvoiceID($Rs["ID"]); ?>" 
+											data-customername="<?php echo $Rs["CustomerName"]; ?>"
+											data-customerid="<?php echo $Rs["UID"]; ?>"
+											data-invoiceid="<?php echo $Rs["InvoiceID"]; ?>"
 											data-tierweight="<?php echo $Rs["TierWeight"]; ?>" 
 											data-weight="<?php echo $Rs["TierWeight"]; ?>" 
 											BarCode="<?php echo $Rs["BarCode"]; ?>" 
-											data-gasrate="<?php echo getCylinderGasRate($Rs["ID"]); ?>"
-                                            data-capacity="<?php echo financials(getValue('cylindertypes', 'Capacity', 'ID', $Rs["CylinderType"])); ?>"
-                                            data-commercial="<?php echo isCommercialUser(getCurrentHandedTo($Rs["ID"])); ?>"
+											data-gasrate="<?php echo $Rs["GasRate"]; ?>"
+                                            data-capacity="<?php echo $Rs["Capacity"]; ?>"
+                                            data-commercial="<?php echo $Rs["Commercial"]; ?>"
 											value="<?php echo $Rs['ID']; ?>" <?php if($CylinderID==$Rs['ID']) { echo 'selected=""'; } ?>><?php echo $Rs['BarCode']; ?> - <?php echo $Rs['TierWeight'] ?>kg</option>
 										<?php 
 											}
