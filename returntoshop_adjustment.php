@@ -272,7 +272,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-md-12">
 							<select name="CylinderID" id="CylinderID" class="form-control">
 								<?php
-                                    $query = "SELECT DISTINCT(cs.CylinderID), cs.ID AS CylinderStatusID, c.ID, c.BarCode, u.ID AS UID, u.Commercial, u.Name AS CustomerName, ct.Capacity, c.TierWeight, c.CylinderType, cs.InvoiceID, cs.CylinderID, u.RoleID, sd.GasRate FROM cylinders c INNER JOIN cylinderstatus cs ON cs.CylinderID=c.ID LEFT JOIN users u ON cs.HandedTo=u.ID LEFT JOIN sale_details sd ON cs.InvoiceID=sd.SaleID LEFT JOIN cylindertypes ct ON ct.ID=cs.CylinderID WHERE cs.DateAdded >= (now()-interval 1 month) AND u.RoleID = " . (int)ROLE_ID_CUSTOMER . " AND cs.PerformedBy = " . (int)$_SESSION["ID"] . " ORDER BY cs.ID DESC";
+                                    $query = "SELECT DISTINCT(cs.CylinderID), cs.ID AS CylinderStatusID, c.ID, c.BarCode, u.ID AS UID, u.Commercial, u.Name AS CustomerName, ct.Capacity, c.TierWeight, c.CylinderType, cs.InvoiceID, cs.CylinderID, u.RoleID, sd.GasRate FROM cylinders c INNER JOIN cylinderstatus cs ON cs.CylinderID=c.ID LEFT JOIN users u ON cs.HandedTo=u.ID LEFT JOIN sale_details sd ON cs.InvoiceID=sd.SaleID LEFT JOIN cylindertypes ct ON ct.ID=cs.CylinderID WHERE cs.DateAdded >= (now()-interval 3 month) AND u.RoleID = " . (int)ROLE_ID_CUSTOMER . " AND cs.PerformedBy = " . (int)$_SESSION["ID"] . " ORDER BY cs.ID DESC";
                                     //									$r = mysql_query("SELECT  FROM cylinders WHERE Enabled = 1") or die(mysql_error());
                                     $r = mysql_query($query) or die(mysql_error());
                                     $n = mysql_num_rows($r);
